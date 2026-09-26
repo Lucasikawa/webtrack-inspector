@@ -88,6 +88,24 @@ function onCookieChanged({ removed, cookie }) {
   }
 }
 
+function onStorageSnapshot(snapshot, sender) {
+  if (!sender.tab) return;
+  const report = reports.get(sender.tab.id);
+  // Retrato atrasado da página anterior: o frame de topo precisa ser do mesmo site.
+  if (!report || (sender.frameId === 0 && Parties.siteOf(sender.url) !== report.site)) return;
+  report.addStorageSnapshot({ ...snapshot, frameId: sender.frameId });
+}
+
+// Enquanto o popup está aberto, pede aos frames da aba um retrato novo do
+// armazenamento, no máximo a cada 3 s.
+const lastStorageRequest = new Map(); // tabId -> Date.now()
+function requestStorageSnapshot(tabId) {
+  const now = Date.now();
+  if (now - (lastStorageRequest.get(tabId) || 0) < 3000) return;
+  lastStorageRequest.set(tabId, now);
+  browser.tabs.sendMessage(tabId, { type: 'collectStorage' }).catch(() => {});
+}
+
 function onCompleted(details) {
   if (details.frameId !== 0) return;
   const report = reports.get(details.tabId);
@@ -133,10 +151,15 @@ browser.webNavigation.onCompleted.addListener(onCompleted);
 browser.tabs.onRemoved.addListener(tabId => {
   reports.delete(tabId);
   pending.delete(tabId);
+  lastStorageRequest.delete(tabId);
 });
 
-browser.runtime.onMessage.addListener(message => {
-  if (message && message.type === 'getReport') {
+browser.runtime.onMessage.addListener((message, sender) => {
+  if (!message) return undefined;
+  if (message.type === 'storageSnapshot') {
+    onStorageSnapshot(message.snapshot, sender);
+  } else if (message.type === 'getReport') {
+    requestStorageSnapshot(message.tabId);
     const report = reports.get(message.tabId);
     return Promise.resolve(report ? report.toJSON() : null);
   }

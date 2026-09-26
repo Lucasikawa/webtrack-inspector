@@ -28,6 +28,7 @@ class TabReport {
     this.totalRequests = 0;
     this.hosts = new Map(); // host -> dados agregados das requisições
     this.cookies = new Map(); // nome|domínio|path -> cookie observado
+    this.storage = new Map(); // origem -> último retrato do armazenamento HTML5
     this.loadedMs = null; // tempo até o evento load do documento de topo
     this.setUrl(url);
   }
@@ -173,6 +174,47 @@ class TabReport {
     };
   }
 
+  // Retrato enviado pelo content script de um frame (content/storage.js).
+  // Frames da mesma origem compartilham o armazenamento: guarda um por origem.
+  addStorageSnapshot(snapshot) {
+    const { collectedAt, url, isTop, frameId, ...content } = snapshot;
+    const signature = JSON.stringify(content);
+    const prev = this.storage.get(snapshot.origin);
+    const wasTop = Boolean(prev && prev.isTop);
+    if (prev && prev.signature === signature && (wasTop || !isTop)) return;
+    this.storage.set(snapshot.origin, {
+      ...snapshot,
+      isTop: isTop || wasTop,
+      site: Parties.siteOf(snapshot.origin),
+      signature,
+    });
+    this.version++;
+  }
+
+  storageJSON() {
+    const items = s => s.localStorage.count + s.sessionStorage.count + s.indexedDB.count + s.cacheStorage.count;
+    const origins = [...this.storage.values()]
+      .map(({ signature, frameId, ...s }) => ({ ...s, thirdParty: Parties.isThirdParty(s.site, this.site), items: items(s) }))
+      .sort((a, b) => a.thirdParty - b.thirdParty || b.isTop - a.isTop || b.items - a.items || a.origin.localeCompare(b.origin));
+    const sum = fn => origins.reduce((n, s) => n + fn(s), 0);
+    return {
+      summary: {
+        origins: origins.length,
+        originsWithData: origins.filter(s => s.items > 0).length,
+        thirdPartyOriginsWithData: origins.filter(s => s.thirdParty && s.items > 0).length,
+        items: sum(s => s.items),
+        localStorageKeys: sum(s => s.localStorage.count),
+        localStorageBytes: sum(s => s.localStorage.bytes),
+        sessionStorageKeys: sum(s => s.sessionStorage.count),
+        sessionStorageBytes: sum(s => s.sessionStorage.bytes),
+        indexedDBDatabases: sum(s => s.indexedDB.count),
+        cacheStorageCaches: sum(s => s.cacheStorage.count),
+        blockedOrigins: origins.filter(s => !s.localStorage.available).length,
+      },
+      origins,
+    };
+  }
+
   thirdPartySiteCount() {
     const sites = new Set();
     for (const entry of this.hosts.values()) if (entry.thirdParty) sites.add(entry.site);
@@ -242,6 +284,7 @@ class TabReport {
       thirdParty,
       firstParty,
       cookies: this.cookiesJSON(),
+      storage: this.storageJSON(),
     };
   }
 }

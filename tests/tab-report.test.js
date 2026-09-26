@@ -119,3 +119,49 @@ test('involvesSite atribui cookies ao próprio site e a sites contatados há pou
   assert.equal(report.involvesSite('criteo.com'), true);
   assert.equal(report.involvesSite('facebook.com'), false);
 });
+
+function snapshot(origin, isTop, local = [], extra = {}) {
+  const store = keys => ({ available: true, count: keys.length, bytes: keys.length * 20, keys: keys.map(key => ({ key, size: 8 })) });
+  return {
+    origin, url: `${origin}/`, isTop,
+    localStorage: store(local),
+    sessionStorage: store([]),
+    indexedDB: { available: true, count: 0, databases: [] },
+    cacheStorage: { available: true, count: 0, names: [] },
+    collectedAt: Date.now(),
+    ...extra,
+  };
+}
+
+test('agrega armazenamento HTML5 por origem e separa 1ª de 3ª parte', () => {
+  const report = new TabReport(1, 'https://privacy-test-pages.site/privacy-protections/storage-blocking/');
+  report.addStorageSnapshot(snapshot('https://privacy-test-pages.site', true, ['data'], {
+    indexedDB: { available: true, count: 1, databases: [{ name: 'data', version: 1 }] },
+  }));
+  report.addStorageSnapshot(snapshot('https://good.third-party.site', false, ['data']));
+  report.addStorageSnapshot(snapshot('https://broken.third-party.site', false, [], {
+    localStorage: { available: false, error: 'SecurityError', count: 0, bytes: 0, keys: [] },
+  }));
+
+  const { summary, origins } = report.toJSON().storage;
+  assert.equal(origins[0].origin, 'https://privacy-test-pages.site');
+  assert.equal(origins[0].thirdParty, false);
+  assert.equal(summary.origins, 3);
+  assert.equal(summary.originsWithData, 2);
+  assert.equal(summary.thirdPartyOriginsWithData, 1);
+  assert.equal(summary.localStorageKeys, 2);
+  assert.equal(summary.indexedDBDatabases, 1);
+  assert.equal(summary.blockedOrigins, 1);
+});
+
+test('retrato repetido não gera nova versão; iframe da mesma origem não desfaz isTop', () => {
+  const report = new TabReport(1, 'https://example.com/');
+  report.addStorageSnapshot(snapshot('https://example.com', true, ['a']));
+  const version = report.version;
+  report.addStorageSnapshot(snapshot('https://example.com', true, ['a']));
+  report.addStorageSnapshot(snapshot('https://example.com', false, ['a']));
+  assert.equal(report.version, version);
+  report.addStorageSnapshot(snapshot('https://example.com', false, ['a', 'b']));
+  assert.equal(report.toJSON().storage.origins[0].isTop, true);
+  assert.equal(report.toJSON().storage.summary.localStorageKeys, 2);
+});
