@@ -52,6 +52,19 @@ function onBeforeRequest(details) {
   if (report.addRequest(details)) updateBadge(tabId);
 }
 
+// Relatório que deve receber um evento posterior ao onBeforeRequest da mesma
+// requisição: o main_frame pertence à navegação pendente; o resto, à página atual.
+function reportForEvent(details) {
+  if (details.tabId < 0) return null;
+  if (details.type === 'main_frame') return pending.get(details.tabId) || reports.get(details.tabId);
+  return reports.get(details.tabId);
+}
+
+function onErrorOccurred(details) {
+  const report = reportForEvent(details);
+  if (report) report.addError(details);
+}
+
 function onCommitted(details) {
   if (details.frameId !== 0) return;
   const { tabId } = details;
@@ -83,6 +96,7 @@ browser.browserAction.setBadgeBackgroundColor({ color: '#9a3412' });
 browser.browserAction.setBadgeTextColor({ color: '#ffffff' });
 
 browser.webRequest.onBeforeRequest.addListener(onBeforeRequest, { urls: ['<all_urls>'] });
+browser.webRequest.onErrorOccurred.addListener(onErrorOccurred, { urls: ['<all_urls>'] });
 browser.webNavigation.onCommitted.addListener(onCommitted);
 browser.tabs.onRemoved.addListener(tabId => {
   reports.delete(tabId);

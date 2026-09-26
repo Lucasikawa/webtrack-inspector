@@ -60,3 +60,18 @@ test('redirecionamento do main_frame reclassifica as partes', () => {
   assert.deepEqual(json.navigationChain, ['https://t.co/abc', 'https://www.example.com/']);
   assert.deepEqual(json.thirdParty.map(s => s.site), ['t.co']);
 });
+
+test('marca sites cujas requisições o Firefox cancelou pela Proteção Aprimorada', () => {
+  const report = new TabReport(1, 'https://privacy-test-pages.site/tracker-reporting/1major-via-img.html');
+  report.addRequest(req('https://facebook.com/tr?test=1', 'image'));
+  report.addError({ url: 'https://facebook.com/tr?test=1', error: 'NS_ERROR_SOCIALTRACKING_URI' });
+  report.addRequest(req('https://good.third-party.site/x.js'));
+  report.addError({ url: 'https://good.third-party.site/x.js', error: 'NS_BINDING_ABORTED' });
+
+  const json = report.toJSON();
+  const fb = json.thirdParty.find(s => s.site === 'facebook.com');
+  assert.equal(fb.blockedByFirefox, true);
+  assert.deepEqual(fb.errors, { NS_ERROR_SOCIALTRACKING_URI: 1 });
+  assert.equal(json.thirdParty.find(s => s.site === 'third-party.site').blockedByFirefox, false);
+  assert.equal(json.totals.blockedByFirefoxSites, 1);
+});

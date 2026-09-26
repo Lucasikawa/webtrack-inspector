@@ -56,11 +56,13 @@ function renderStats(totals) {
 
 function renderSite(site) {
   const hosts = site.hosts.map(x => `${x.host} (${x.requests})`).join(' · ');
-  const meta = [typeList(site.types), site.classifications.join(', ')].filter(Boolean).join(' · ');
+  const meta = [typeList(site.types), site.classifications.join(', '), Object.keys(site.errors).join(', ')]
+    .filter(Boolean).join(' · ');
   return h('li', { class: 'site' },
     h('div', { class: 'site-row' },
       h('span', { class: 'site-name' }, site.site),
       site.tracker && h('span', { class: 'pill tracker' }, 'rastreador'),
+      site.blockedByFirefox && h('span', { class: 'pill' }, 'bloqueado pelo Firefox'),
       h('span', { class: 'count' }, `${site.requests} req.`)),
     h('div', { class: 'site-hosts' }, hosts),
     meta && h('div', { class: 'site-meta' }, meta));

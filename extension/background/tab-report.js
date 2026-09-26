@@ -5,6 +5,10 @@
 // as demais (ex.: consentmanager, anti_fraud) não.
 const TRACKER_FLAG = /tracking|fingerprinting|cryptomining/;
 
+// Erros de rede com que a Proteção Aprimorada do Firefox cancela requisições
+// (ex.: NS_ERROR_TRACKING_URI, NS_ERROR_SOCIALTRACKING_URI).
+const FIREFOX_BLOCK_ERROR = /NS_ERROR_\w*(TRACKING|FINGERPRINTING|CRYPTOMINING)_URI/;
+
 // Relatório de uma navegação de nível superior (uma página) em uma aba.
 class TabReport {
   static normalizeUrl(url) {
@@ -52,6 +56,7 @@ class TabReport {
         requests: 0,
         types: new Set(),
         classifications: new Set(),
+        errors: {}, // erro de rede -> quantidade
         firstSeenMs: Date.now() - this.startedAt,
       };
       this.hosts.set(host, entry);
@@ -71,6 +76,14 @@ class TabReport {
     }
     this.version++;
     return isNewSite && entry.thirdParty;
+  }
+
+  // Registra uma requisição que falhou (webRequest.onErrorOccurred).
+  addError(details) {
+    const entry = this.hosts.get(Parties.hostOf(details.url));
+    if (!entry || !details.error) return;
+    entry.errors[details.error] = (entry.errors[details.error] || 0) + 1;
+    this.version++;
   }
 
   thirdPartySiteCount() {
@@ -94,9 +107,11 @@ class TabReport {
           hosts: [],
           types: new Set(),
           classifications: new Set(),
+          errors: {},
         };
         bySite.set(e.site, s);
       }
+      for (const [error, n] of Object.entries(e.errors)) s.errors[error] = (s.errors[error] || 0) + n;
       s.requests += e.requests;
       s.firstSeenMs = Math.min(s.firstSeenMs, e.firstSeenMs);
       s.firefoxThirdParty = s.firefoxThirdParty || e.firefoxThirdParty;
@@ -111,6 +126,7 @@ class TabReport {
       types: [...s.types].sort(),
       classifications: [...s.classifications].sort(),
       tracker: [...s.classifications].some(c => TRACKER_FLAG.test(c)),
+      blockedByFirefox: Object.keys(s.errors).some(e => FIREFOX_BLOCK_ERROR.test(e)),
     }));
     const byRelevance = (a, b) =>
       b.tracker - a.tracker || b.requests - a.requests || a.site.localeCompare(b.site);
@@ -132,6 +148,7 @@ class TabReport {
         thirdPartySites: thirdParty.length,
         thirdPartyHosts: sum(thirdParty, s => s.hosts.length),
         trackerSites: thirdParty.filter(s => s.tracker).length,
+        blockedByFirefoxSites: thirdParty.filter(s => s.blockedByFirefox).length,
         firstPartyHosts: sum(firstParty, s => s.hosts.length),
       },
       thirdParty,
