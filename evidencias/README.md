@@ -12,15 +12,17 @@ evidencias/
   ddg/<teste>/
     plugin.png                        print da página de teste + popup do plugin
     resultados.json                   "Download results" da própria página (esperado)
-    plugin.json                       exportação do relatório do plugin
+    plugin-*.json                     "Exportar JSON" do popup
   sites/<site>/
     <site>.har                        DevTools → Rede → "Salvar tudo como HAR"
     plugin-<aba>.png                  um print por aba do popup
-    plugin.json                       exportação do relatório do plugin
+    plugin-*.json                     "Exportar JSON" do popup
     blacklight.png | blacklight.pdf   resultado do Blacklight (mesmo dia)
     ublock.png | ublock.txt           popup e logger do uBlock Origin
     notas.md                          horário da coleta e observações
 ```
+
+Roteiro de cada página do DuckDuckGo em [`ddg/README.md`](ddg/README.md).
 
 Nomes de `<teste>`: `tracker-reporting`, `request-blocking`, `storage-blocking`,
 `storage-partitioning`, `fingerprinting`, `bounce-tracking`, `query-parameters`,
