@@ -75,3 +75,47 @@ test('marca sites cujas requisições o Firefox cancelou pela Proteção Aprimor
   assert.equal(json.thirdParty.find(s => s.site === 'third-party.site').blockedByFirefox, false);
   assert.equal(json.totals.blockedByFirefoxSites, 1);
 });
+
+test('classifica cookies em 1ª/3ª parte e sessão/persistente, mesclando HTTP e API', () => {
+  const report = new TabReport(1, 'https://www.uol.com.br/');
+  const cookie = (name, domain, session, extra = {}) => ({
+    key: `${name}|${domain}|/`, name, domain, path: '/', site: Parties.siteOf(domain),
+    session, expires: session ? null : report.startedAt + 400 * 86400000, partitioned: null, ...extra,
+  });
+
+  report.addCookie(cookie('sid', 'www.uol.com.br', true), 'http', 'https://www.uol.com.br/');
+  report.addCookie(cookie('sid', 'www.uol.com.br', true, { partitioned: false }), 'store');
+  report.addCookie(cookie('_ga', 'uol.com.br', false), 'store'); // document.cookie
+  report.addCookie(cookie('IDE', 'doubleclick.net', false), 'http', 'https://ad.doubleclick.net/x');
+  report.addCookie(cookie('ts', 'criteo.com', true, { partitioned: true }), 'store');
+
+  const { summary, list } = report.toJSON().cookies;
+  assert.equal(list.length, 4);
+  assert.deepEqual(summary.firstParty, { session: 1, persistent: 1 });
+  assert.deepEqual(summary.thirdParty, { session: 1, persistent: 1 });
+  assert.equal(summary.viaHttp, 2);
+  assert.equal(summary.viaJs, 2);
+  assert.equal(summary.notStored, 1); // IDE: Set-Cookie sem gravação observada
+  assert.equal(summary.partitioned, 1);
+  assert.equal(summary.longLived, 2);
+  assert.equal(list.find(c => c.name === 'sid').sourceUrl, 'https://www.uol.com.br/');
+});
+
+test('cookies observados mais de 10 s após o load não contam como do carregamento', () => {
+  const report = new TabReport(1, 'https://example.com/');
+  report.markLoaded();
+  report.loadedMs -= 20000; // simula load ocorrido 20 s atrás
+  report.addCookie({ key: 'late|example.com|/', name: 'late', domain: 'example.com', path: '/',
+    site: 'example.com', session: true, expires: null }, 'store');
+  const { summary } = report.toJSON().cookies;
+  assert.equal(summary.duringLoad, 0);
+  assert.equal(summary.afterLoad, 1);
+});
+
+test('involvesSite atribui cookies ao próprio site e a sites contatados há pouco', () => {
+  const report = new TabReport(1, 'https://www.quintoandar.com.br/');
+  report.addRequest(req('https://gum.criteo.com/sync'));
+  assert.equal(report.involvesSite('quintoandar.com.br'), true);
+  assert.equal(report.involvesSite('criteo.com'), true);
+  assert.equal(report.involvesSite('facebook.com'), false);
+});

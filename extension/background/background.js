@@ -65,6 +65,35 @@ function onErrorOccurred(details) {
   if (report) report.addError(details);
 }
 
+function onHeadersReceived(details) {
+  const report = reportForEvent(details);
+  if (!report) return;
+  for (const cookie of Cookies.parseSetCookieHeaders(details.responseHeaders, details.url)) {
+    report.addCookie(cookie, 'http', details.url);
+  }
+}
+
+function onCookieChanged({ removed, cookie }) {
+  // Remoções (inclusive a que antecede uma sobrescrita) não são injeções.
+  if (removed) return;
+  const record = Cookies.fromBrowserCookie(cookie);
+  // Com a Total Cookie Protection, cookies de terceiros ficam numa partição
+  // identificada pelo site de topo, o que diz exatamente a que página pertencem.
+  const partitionSite = cookie.partitionKey && cookie.partitionKey.topLevelSite
+    ? Parties.siteOf(cookie.partitionKey.topLevelSite)
+    : null;
+  for (const report of [...reports.values(), ...pending.values()]) {
+    const belongs = partitionSite ? partitionSite === report.site : report.involvesSite(record.site);
+    if (belongs) report.addCookie(record, 'store');
+  }
+}
+
+function onCompleted(details) {
+  if (details.frameId !== 0) return;
+  const report = reports.get(details.tabId);
+  if (report && report.site === Parties.siteOf(details.url)) report.markLoaded();
+}
+
 function onCommitted(details) {
   if (details.frameId !== 0) return;
   const { tabId } = details;
@@ -97,7 +126,10 @@ browser.browserAction.setBadgeTextColor({ color: '#ffffff' });
 
 browser.webRequest.onBeforeRequest.addListener(onBeforeRequest, { urls: ['<all_urls>'] });
 browser.webRequest.onErrorOccurred.addListener(onErrorOccurred, { urls: ['<all_urls>'] });
+browser.webRequest.onHeadersReceived.addListener(onHeadersReceived, { urls: ['<all_urls>'] }, ['responseHeaders']);
+browser.cookies.onChanged.addListener(onCookieChanged);
 browser.webNavigation.onCommitted.addListener(onCommitted);
+browser.webNavigation.onCompleted.addListener(onCompleted);
 browser.tabs.onRemoved.addListener(tabId => {
   reports.delete(tabId);
   pending.delete(tabId);

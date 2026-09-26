@@ -9,6 +9,10 @@ const TRACKER_FLAG = /tracking|fingerprinting|cryptomining/;
 // (ex.: NS_ERROR_TRACKING_URI, NS_ERROR_SOCIALTRACKING_URI).
 const FIREFOX_BLOCK_ERROR = /NS_ERROR_\w*(TRACKING|FINGERPRINTING|CRYPTOMINING)_URI/;
 
+// "Injetado no carregamento" = observado até 10 s depois do evento load.
+const LOAD_GRACE_MS = 10000;
+const DAY_MS = 24 * 60 * 60 * 1000;
+
 // Relatório de uma navegação de nível superior (uma página) em uma aba.
 class TabReport {
   static normalizeUrl(url) {
@@ -23,7 +27,19 @@ class TabReport {
     this.navigationChain = []; // URLs do main_frame, incluindo redirecionamentos
     this.totalRequests = 0;
     this.hosts = new Map(); // host -> dados agregados das requisições
+    this.cookies = new Map(); // nome|domínio|path -> cookie observado
+    this.loadedMs = null; // tempo até o evento load do documento de topo
     this.setUrl(url);
+  }
+
+  elapsed() {
+    return Date.now() - this.startedAt;
+  }
+
+  markLoaded() {
+    if (this.loadedMs !== null) return;
+    this.loadedMs = this.elapsed();
+    this.version++;
   }
 
   setUrl(url) {
@@ -57,11 +73,13 @@ class TabReport {
         types: new Set(),
         classifications: new Set(),
         errors: {}, // erro de rede -> quantidade
-        firstSeenMs: Date.now() - this.startedAt,
+        firstSeenMs: this.elapsed(),
+        lastSeenAt: 0,
       };
       this.hosts.set(host, entry);
     }
 
+    entry.lastSeenAt = Date.now();
     this.totalRequests++;
     entry.requests++;
     entry.types.add(details.type);
@@ -84,6 +102,75 @@ class TabReport {
     if (!entry || !details.error) return;
     entry.errors[details.error] = (entry.errors[details.error] || 0) + 1;
     this.version++;
+  }
+
+  // source 'http': Set-Cookie de uma resposta desta aba (sourceUrl = URL da resposta).
+  // source 'store': cookie gravado, visto pela API de cookies.
+  addCookie(cookie, source, sourceUrl = null) {
+    let entry = this.cookies.get(cookie.key);
+    if (!entry) {
+      entry = { ...cookie, viaHttp: false, stored: false, sourceUrl: null, firstSeenMs: this.elapsed() };
+      this.cookies.set(cookie.key, entry);
+    }
+    if (source === 'http') {
+      entry.viaHttp = true;
+      entry.sourceUrl = entry.sourceUrl || sourceUrl;
+      if (!entry.stored) Object.assign(entry, cookie);
+    } else {
+      // A API de cookies reflete o que o navegador de fato gravou.
+      entry.stored = true;
+      Object.assign(entry, cookie);
+    }
+    this.version++;
+  }
+
+  // A API de cookies não informa a aba. Um cookie gravado é atribuído a esta
+  // página se for do próprio site ou de um site que ela contatou há pouco.
+  involvesSite(site, withinMs = 30000) {
+    if (site === this.site) return true;
+    const now = Date.now();
+    for (const entry of this.hosts.values()) {
+      if (entry.site === site && now - entry.lastSeenAt <= withinMs) return true;
+    }
+    return false;
+  }
+
+  cookiesJSON() {
+    const loadLimit = this.loadedMs === null ? Infinity : this.loadedMs + LOAD_GRACE_MS;
+    const list = [...this.cookies.values()]
+      .map(c => ({
+        ...c,
+        thirdParty: Parties.isThirdParty(c.site, this.site),
+        duringLoad: c.firstSeenMs <= loadLimit,
+        // Validade no momento em que o cookie foi definido, em dias.
+        lifetimeDays: c.expires === null
+          ? null
+          : Math.round(((c.expires - this.startedAt - c.firstSeenMs) / DAY_MS) * 10) / 10,
+      }))
+      .sort((a, b) => b.thirdParty - a.thirdParty || a.site.localeCompare(b.site) || a.name.localeCompare(b.name));
+
+    const load = list.filter(c => c.duringLoad);
+    const count = predicate => load.filter(predicate).length;
+    return {
+      summary: {
+        duringLoad: load.length,
+        afterLoad: list.length - load.length,
+        firstParty: {
+          session: count(c => !c.thirdParty && c.session),
+          persistent: count(c => !c.thirdParty && !c.session),
+        },
+        thirdParty: {
+          session: count(c => c.thirdParty && c.session),
+          persistent: count(c => c.thirdParty && !c.session),
+        },
+        longLived: count(c => c.lifetimeDays !== null && c.lifetimeDays > 365),
+        viaHttp: count(c => c.viaHttp),
+        viaJs: count(c => !c.viaHttp && c.stored),
+        notStored: count(c => c.viaHttp && !c.stored),
+        partitioned: count(c => c.partitioned === true),
+      },
+      list,
+    };
   }
 
   thirdPartySiteCount() {
@@ -140,6 +227,7 @@ class TabReport {
       host: this.host,
       site: this.site,
       startedAt: this.startedAt,
+      loadedMs: this.loadedMs,
       version: this.version,
       navigationChain: this.navigationChain,
       totals: {
@@ -153,6 +241,7 @@ class TabReport {
       },
       thirdParty,
       firstParty,
+      cookies: this.cookiesJSON(),
     };
   }
 }

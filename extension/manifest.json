@@ -25,12 +25,14 @@
     "webRequest",
     "webNavigation",
     "tabs",
+    "cookies",
     "<all_urls>"
   ],
   "background": {
     "scripts": [
       "lib/tldts.min.js",
       "background/parties.js",
+      "background/cookies.js",
       "background/tab-report.js",
       "background/background.js"
     ],
