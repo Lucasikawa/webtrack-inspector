@@ -165,3 +165,11 @@ test('retrato repetido não gera nova versão; iframe da mesma origem não desfa
   assert.equal(report.toJSON().storage.origins[0].isTop, true);
   assert.equal(report.toJSON().storage.summary.localStorageKeys, 2);
 });
+
+test('validade de cookies curtos não é arredondada para zero', () => {
+  const report = new TabReport(1, 'https://www.quintoandar.com.br/');
+  report.addCookie({ key: '_hjSession|quintoandar.com.br|/', name: '_hjSession', domain: 'quintoandar.com.br',
+    path: '/', site: 'quintoandar.com.br', session: false, expires: report.startedAt + 30 * 60000 }, 'store');
+  const [cookie] = report.toJSON().cookies.list;
+  assert.ok(cookie.lifetimeDays > 0.02 && cookie.lifetimeDays < 0.022, `lifetimeDays=${cookie.lifetimeDays}`);
+});

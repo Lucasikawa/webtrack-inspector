@@ -60,7 +60,8 @@ function formatBytes(bytes) {
 
 function formatLifetime(days) {
   if (days === null) return 'fim da sessão';
-  if (days < 1) return plural(Math.max(1, Math.round(days * 24)), 'hora', 'horas');
+  if (days < 1 / 24) return plural(Math.max(1, Math.round(days * 24 * 60)), 'minuto', 'minutos');
+  if (days < 1) return plural(Math.round(days * 24), 'hora', 'horas');
   if (days < 31) return plural(Math.round(days), 'dia', 'dias');
   if (days < 365) return plural(Math.round(days / 30), 'mês', 'meses');
   const years = Math.round((days / 365) * 10) / 10;

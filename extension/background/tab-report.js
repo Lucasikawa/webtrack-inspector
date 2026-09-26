@@ -143,10 +143,11 @@ class TabReport {
         ...c,
         thirdParty: Parties.isThirdParty(c.site, this.site),
         duringLoad: c.firstSeenMs <= loadLimit,
-        // Validade no momento em que o cookie foi definido, em dias.
+        // Validade no momento em que o cookie foi definido, em dias (precisão de
+        // ~1 min, para cookies de sessão do Hotjar e afins, que duram 30 min).
         lifetimeDays: c.expires === null
           ? null
-          : Math.round(((c.expires - this.startedAt - c.firstSeenMs) / DAY_MS) * 10) / 10,
+          : Math.round(((c.expires - this.startedAt - c.firstSeenMs) / DAY_MS) * 1000) / 1000,
       }))
       .sort((a, b) => b.thirdParty - a.thirdParty || a.site.localeCompare(b.site) || a.name.localeCompare(b.name));
 
