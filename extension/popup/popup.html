@@ -13,11 +13,15 @@
 
   <section class="stats" id="stats" aria-label="Resumo da página"></section>
 
-  <main id="content"></main>
+  <nav class="tabs" role="tablist" aria-label="Seções do relatório">
+    <button type="button" class="tab" role="tab" data-tab="third-party">Terceiros</button>
+    <button type="button" class="tab" role="tab" data-tab="cookies">Cookies</button>
+    <button type="button" class="tab" role="tab" data-tab="storage">Storage</button>
+  </nav>
 
-  <footer class="foot">
-    Rastreadores classificados pelas listas da Proteção Aprimorada contra Rastreamento do Firefox.
-  </footer>
+  <main id="content" role="tabpanel"></main>
+
+  <footer class="foot" id="foot"></footer>
 
   <script src="popup.js"></script>
 </body>
