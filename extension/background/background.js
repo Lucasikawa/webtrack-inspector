@@ -106,6 +106,28 @@ function requestStorageSnapshot(tabId) {
   browser.tabs.sendMessage(tabId, { type: 'collectStorage' }).catch(() => {});
 }
 
+// Salva o relatório da aba em JSON, com metadados para rastrear a evidência.
+async function exportReport(tabId) {
+  const report = reports.get(tabId);
+  if (!report) return { ok: false, error: 'Sem relatório para esta aba.' };
+  const manifest = browser.runtime.getManifest();
+  const data = {
+    tool: { name: manifest.name, version: manifest.version },
+    exportedAt: new Date().toISOString(),
+    userAgent: navigator.userAgent,
+    report: report.toJSON(),
+  };
+  const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' }));
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+  const stamp = data.exportedAt.slice(0, 19).replace(/[:T]/g, '-');
+  try {
+    await browser.downloads.download({ url, filename: `plugin-${report.site}-${stamp}.json`, saveAs: true });
+    return { ok: true };
+  } catch (error) {
+    return { ok: false, error: error.message };
+  }
+}
+
 function onCompleted(details) {
   if (details.frameId !== 0) return;
   const report = reports.get(details.tabId);
@@ -162,6 +184,8 @@ browser.runtime.onMessage.addListener((message, sender) => {
     requestStorageSnapshot(message.tabId);
     const report = reports.get(message.tabId);
     return Promise.resolve(report ? report.toJSON() : null);
+  } else if (message.type === 'exportReport') {
+    return exportReport(message.tabId);
   }
   return undefined;
 });

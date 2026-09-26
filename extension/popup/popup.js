@@ -312,7 +312,15 @@ for (const button of document.querySelectorAll('.tab')) {
   });
 }
 
-document.getElementById('foot').textContent = `v${browser.runtime.getManifest().version}`;
+document.getElementById('version').textContent = `v${browser.runtime.getManifest().version}`;
+
+document.getElementById('export').addEventListener('click', async () => {
+  const status = document.getElementById('foot-status');
+  status.textContent = 'Exportando…';
+  // O diálogo de salvar pode fechar o popup; o download segue no background.
+  const result = await browser.runtime.sendMessage({ type: 'exportReport', tabId });
+  status.textContent = result && result.ok ? 'Relatório exportado.' : `Falha: ${result ? result.error : 'sem resposta'}`;
+});
 
 let tabId = null;
 let lastVersion = null;

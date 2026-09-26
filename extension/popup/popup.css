@@ -306,5 +306,20 @@ details.section > summary {
   padding: 8px 14px 10px;
   border-top: 1px solid var(--border);
   color: var(--muted);
-  font-size: 10.5px;
+  font-size: 11px;
 }
+
+.foot .version { margin-left: auto; }
+
+.button {
+  font: inherit;
+  font-weight: 600;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+
+.button:hover { border-color: var(--muted); }
