@@ -1,0 +1,17 @@
+{
+  "name": "detector-rastreadores",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Extensão para Firefox que detecta rastreadores e violações de privacidade no cliente web",
+  "scripts": {
+    "vendor": "node scripts/vendor.mjs",
+    "lint": "web-ext lint --source-dir extension",
+    "start": "web-ext run --source-dir extension --url https://privacy-test-pages.site/",
+    "build": "web-ext build --source-dir extension --artifacts-dir dist --overwrite-dest",
+    "test": "node --test tests/"
+  },
+  "devDependencies": {
+    "tldts": "^7.4.15",
+    "web-ext": "^10.7.0"
+  }
+}
