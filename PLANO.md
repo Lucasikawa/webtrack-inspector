@@ -131,7 +131,20 @@ Commits pequenos por funcionalidade (`feat:`, `fix:`, `docs:`, `test:`,
 | HAR grande ou com dados sensíveis | Perfil limpo, sem login; compactar se passar de 50 MB |
 | Proteções do Firefox distorcem os testes do DDG | Registrar o modo do ETP; separar divergências do navegador das do plugin |
 
+## Sites reais
+
+Escolha livre (autorizada pelo professor), cobrindo níveis crescentes de rastreamento
+para que o score discrimine e o plugin seja exercitado em todas as detecções.
+
+| Site | URL | Perfil | Por que foi escolhido |
+|---|---|---|---|
+| sp.gov.br | https://www.sp.gov.br/ | Pouco rastreamento | Linha de base; ainda assim envia dados ao Google com recurso de publicidade (`stats.g.doubleclick.net`) |
+| quintoandar.com.br | https://www.quintoandar.com.br/ | Médio/alto | Gravação de sessão (Hotjar), cookie sync (`gum.criteo.com`), rastreamento em subdomínio próprio (`tracking.quintoandar.com.br`) |
+| uol.com.br | https://www.uol.com.br/ | Alto | Publicidade programática (leilão de anúncios), sincronização de IDs (ID5, Lotame), muitos cookies e muito localStorage |
+
+A pré-análise de cada site está em `evidencias/sites/<site>/notas.md`.
+
 ## Pendências
 
-- [ ] Lista dos 3 sites sorteados por matrícula.
+- [x] Escolher os 3 sites reais.
 - [ ] Confirmar a data de entrega.
