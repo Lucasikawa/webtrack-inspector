@@ -1,0 +1,183 @@
+{
+  "tool": {
+    "name": "Detector de Rastreadores",
+    "version": "0.2.0"
+  },
+  "exportedAt": "2026-09-27T00:50:46.858Z",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:156.0) Gecko/20100101 Firefox/156.0",
+  "report": {
+    "tabId": 17,
+    "url": "https://privacy-test-pages.site/tracker-reporting/1major-via-fetch.html",
+    "host": "privacy-test-pages.site",
+    "site": "privacy-test-pages.site",
+    "startedAt": 1790470242805,
+    "loadedMs": 301,
+    "version": 8,
+    "navigationChain": [
+      "https://privacy-test-pages.site/tracker-reporting/1major-via-fetch.html"
+    ],
+    "totals": {
+      "requests": 4,
+      "thirdPartyRequests": 1,
+      "thirdPartySites": 1,
+      "thirdPartyHosts": 1,
+      "trackerSites": 1,
+      "blockedByFirefoxSites": 0,
+      "firstPartyHosts": 1
+    },
+    "thirdParty": [
+      {
+        "site": "facebook.com",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 1,
+        "firstSeenMs": 304,
+        "hosts": [
+          {
+            "host": "facebook.com",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "xmlhttprequest"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_social_tracking",
+          "any_strict_tracking",
+          "tracking_social"
+        ],
+        "errors": {},
+        "tracker": true,
+        "blockedByFirefox": false
+      }
+    ],
+    "firstParty": [
+      {
+        "site": "privacy-test-pages.site",
+        "thirdParty": false,
+        "firefoxThirdParty": false,
+        "requests": 3,
+        "firstSeenMs": 2,
+        "hosts": [
+          {
+            "host": "privacy-test-pages.site",
+            "requests": 3
+          }
+        ],
+        "types": [
+          "image",
+          "main_frame",
+          "script"
+        ],
+        "classifications": [],
+        "errors": {},
+        "tracker": false,
+        "blockedByFirefox": false
+      }
+    ],
+    "cookies": {
+      "summary": {
+        "duringLoad": 1,
+        "afterLoad": 0,
+        "firstParty": {
+          "session": 0,
+          "persistent": 0
+        },
+        "thirdParty": {
+          "session": 0,
+          "persistent": 1
+        },
+        "longLived": 0,
+        "viaHttp": 1,
+        "viaJs": 0,
+        "notStored": 1,
+        "partitioned": 0
+      },
+      "list": [
+        {
+          "key": "fr|facebook.com|/",
+          "name": "fr",
+          "domain": "facebook.com",
+          "hostOnly": false,
+          "path": "/",
+          "site": "facebook.com",
+          "session": false,
+          "expires": 1798246243000,
+          "secure": true,
+          "httpOnly": true,
+          "sameSite": null,
+          "partitioned": null,
+          "valueLength": 66,
+          "viaHttp": true,
+          "stored": false,
+          "sourceUrl": "https://facebook.com/tr?test=1",
+          "firstSeenMs": 320,
+          "thirdParty": true,
+          "duringLoad": true,
+          "lifetimeDays": 90
+        }
+      ]
+    },
+    "storage": {
+      "summary": {
+        "origins": 1,
+        "originsWithData": 1,
+        "thirdPartyOriginsWithData": 0,
+        "items": 3,
+        "localStorageKeys": 1,
+        "localStorageBytes": 14,
+        "sessionStorageKeys": 0,
+        "sessionStorageBytes": 0,
+        "indexedDBDatabases": 1,
+        "cacheStorageCaches": 1,
+        "blockedOrigins": 0
+      },
+      "origins": [
+        {
+          "origin": "https://privacy-test-pages.site",
+          "url": "https://privacy-test-pages.site/tracker-reporting/1major-via-fetch.html",
+          "isTop": true,
+          "localStorage": {
+            "available": true,
+            "count": 1,
+            "bytes": 14,
+            "keys": [
+              {
+                "key": "data",
+                "size": 3
+              }
+            ]
+          },
+          "sessionStorage": {
+            "available": true,
+            "count": 0,
+            "bytes": 0,
+            "keys": []
+          },
+          "indexedDB": {
+            "available": true,
+            "count": 1,
+            "databases": [
+              {
+                "name": "data",
+                "version": 1
+              }
+            ]
+          },
+          "cacheStorage": {
+            "available": true,
+            "count": 1,
+            "names": [
+              "data"
+            ]
+          },
+          "collectedAt": 1790470243110,
+          "site": "privacy-test-pages.site",
+          "thirdParty": false,
+          "items": 3
+        }
+      ]
+    }
+  }
+}

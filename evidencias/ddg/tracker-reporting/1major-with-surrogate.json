@@ -1,0 +1,160 @@
+{
+  "tool": {
+    "name": "Detector de Rastreadores",
+    "version": "0.2.0"
+  },
+  "exportedAt": "2026-09-27T00:49:25.148Z",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:156.0) Gecko/20100101 Firefox/156.0",
+  "report": {
+    "tabId": 17,
+    "url": "https://privacy-test-pages.site/tracker-reporting/1major-with-surrogate.html",
+    "host": "privacy-test-pages.site",
+    "site": "privacy-test-pages.site",
+    "startedAt": 1790470159603,
+    "loadedMs": 607,
+    "version": 7,
+    "navigationChain": [
+      "https://privacy-test-pages.site/tracker-reporting/1major-with-surrogate.html"
+    ],
+    "totals": {
+      "requests": 3,
+      "thirdPartyRequests": 1,
+      "thirdPartySites": 1,
+      "thirdPartyHosts": 1,
+      "trackerSites": 1,
+      "blockedByFirefoxSites": 0,
+      "firstPartyHosts": 1
+    },
+    "thirdParty": [
+      {
+        "site": "doubleclick.net",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 1,
+        "firstSeenMs": 461,
+        "hosts": [
+          {
+            "host": "doubleclick.net",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "script"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_ad"
+        ],
+        "errors": {
+          "NS_ERROR_CORRUPTED_CONTENT": 1
+        },
+        "tracker": true,
+        "blockedByFirefox": false
+      }
+    ],
+    "firstParty": [
+      {
+        "site": "privacy-test-pages.site",
+        "thirdParty": false,
+        "firefoxThirdParty": false,
+        "requests": 2,
+        "firstSeenMs": 2,
+        "hosts": [
+          {
+            "host": "privacy-test-pages.site",
+            "requests": 2
+          }
+        ],
+        "types": [
+          "image",
+          "main_frame"
+        ],
+        "classifications": [],
+        "errors": {},
+        "tracker": false,
+        "blockedByFirefox": false
+      }
+    ],
+    "cookies": {
+      "summary": {
+        "duringLoad": 0,
+        "afterLoad": 0,
+        "firstParty": {
+          "session": 0,
+          "persistent": 0
+        },
+        "thirdParty": {
+          "session": 0,
+          "persistent": 0
+        },
+        "longLived": 0,
+        "viaHttp": 0,
+        "viaJs": 0,
+        "notStored": 0,
+        "partitioned": 0
+      },
+      "list": []
+    },
+    "storage": {
+      "summary": {
+        "origins": 1,
+        "originsWithData": 1,
+        "thirdPartyOriginsWithData": 0,
+        "items": 3,
+        "localStorageKeys": 1,
+        "localStorageBytes": 14,
+        "sessionStorageKeys": 0,
+        "sessionStorageBytes": 0,
+        "indexedDBDatabases": 1,
+        "cacheStorageCaches": 1,
+        "blockedOrigins": 0
+      },
+      "origins": [
+        {
+          "origin": "https://privacy-test-pages.site",
+          "url": "https://privacy-test-pages.site/tracker-reporting/1major-with-surrogate.html",
+          "isTop": true,
+          "localStorage": {
+            "available": true,
+            "count": 1,
+            "bytes": 14,
+            "keys": [
+              {
+                "key": "data",
+                "size": 3
+              }
+            ]
+          },
+          "sessionStorage": {
+            "available": true,
+            "count": 0,
+            "bytes": 0,
+            "keys": []
+          },
+          "indexedDB": {
+            "available": true,
+            "count": 1,
+            "databases": [
+              {
+                "name": "data",
+                "version": 1
+              }
+            ]
+          },
+          "cacheStorage": {
+            "available": true,
+            "count": 1,
+            "names": [
+              "data"
+            ]
+          },
+          "collectedAt": 1790470160213,
+          "site": "privacy-test-pages.site",
+          "thirdParty": false,
+          "items": 3
+        }
+      ]
+    }
+  }
+}
