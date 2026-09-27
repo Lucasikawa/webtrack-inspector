@@ -144,10 +144,13 @@ class TabReport {
   cookiesJSON() {
     const loadLimit = this.loadedMs === null ? Infinity : this.loadedMs + LOAD_GRACE_MS;
     const list = [...this.cookies.values()]
+      .map(c => {
+        const writers = this.writersOf(`cookie|${c.site}|${c.name}`);
+        return { ...c, writers, writersThirdParty: writers.some(w => this.isThirdPartyUrl(w)) };
+      })
       .map(c => ({
         ...c,
         thirdParty: Parties.isThirdParty(c.site, this.site),
-        writers: this.writersOf(`cookie|${c.site}|${c.name}`),
         duringLoad: c.firstSeenMs <= loadLimit,
         // Validade no momento em que o cookie foi definido, em dias (precisão de
         // ~1 min, para cookies de sessão do Hotjar e afins, que duram 30 min).
@@ -189,7 +192,7 @@ class TabReport {
         partitioned: count(c => c.partitioned === true),
         // Cookies de primeira parte gravados via document.cookie por scripts de
         // terceiros (ex.: _ga do Google Analytics).
-        firstPartyByThirdPartyScript: count(c => !c.thirdParty && c.writers.some(w => this.isThirdPartyUrl(w))),
+        firstPartyByThirdPartyScript: count(c => !c.thirdParty && c.writersThirdParty),
       },
       list,
     };

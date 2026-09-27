@@ -298,10 +298,21 @@ h2 {
   font-size: 11px;
 }
 
-.keys li span + span {
+.keys .writer {
   margin-left: auto;
   color: var(--muted);
+  max-width: 55%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
+
+.keys .size {
+  color: var(--muted);
+  white-space: nowrap;
+}
+
+.keys .mono + .size { margin-left: auto; }
 
 details > summary {
   cursor: pointer;

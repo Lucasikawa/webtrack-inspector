@@ -20,7 +20,22 @@ const TYPE_LABELS = {
   other: 'outro',
 };
 
-const TABS = ['third-party', 'cookies', 'storage'];
+const TABS = ['third-party', 'cookies', 'storage', 'alerts'];
+const TAB_LABELS = { 'third-party': 'Terceiros', cookies: 'Cookies', storage: 'Storage', alerts: 'Alertas' };
+
+const TECHNIQUE_LABELS = {
+  canvas: 'Canvas fingerprint',
+  webgl: 'WebGL fingerprint',
+  'webgl-info': 'Consulta à GPU (WebGL)',
+  fonts: 'Enumeração de fontes',
+};
+
+const CRITERIA_LABELS = {
+  size: 'canvas menor que 16×16',
+  text: 'texto com menos de 10 caracteres e 1 cor',
+  noInteraction: 'uso interativo (save/restore ou eventos)',
+  extraction: 'área lida menor que 16×16',
+};
 
 // Cria elementos sem innerHTML: hosts, URLs e nomes de cookies vêm da página e
 // não são confiáveis.
@@ -56,6 +71,22 @@ function chip(value, singular, pluralForm = singular) {
 function formatBytes(bytes) {
   if (bytes < 1024) return `${bytes} B`;
   return `${(bytes / 1024).toLocaleString('pt-BR', { maximumFractionDigits: 1 })} KB`;
+}
+
+// URL de script encurtada para exibição: host + caminho, sem query. Se for
+// longa, preserva o host e o fim do caminho (o nome do arquivo).
+function shortScript(url) {
+  if (!url) return 'script desconhecido';
+  try {
+    const u = new URL(url);
+    const text = u.host + u.pathname;
+    if (text.length <= 64) return text;
+    const segments = u.pathname.split('/').filter(Boolean);
+    const tail = segments.slice(-2).join('/');
+    return tail.length < 40 ? `${u.host}/…/${tail}` : `${u.host}/…/${segments[segments.length - 1].slice(0, 40)}`;
+  } catch {
+    return url.slice(0, 64);
+  }
 }
 
 function formatLifetime(days) {
@@ -113,13 +144,13 @@ function renderTabs(report) {
       'third-party': report.totals.thirdPartySites,
       cookies: report.cookies.list.length,
       storage: report.storage.summary.originsWithData,
+      alerts: report.fingerprinting.summary.detections,
     }
     : {};
   for (const button of document.querySelectorAll('.tab')) {
     const tab = button.dataset.tab;
     button.setAttribute('aria-selected', String(tab === ui.tab));
-    const label = { 'third-party': 'Terceiros', cookies: 'Cookies', storage: 'Storage' }[tab];
-    button.replaceChildren(label, counts[tab] !== undefined ? h('span', { class: 'tab-count' }, ` ${counts[tab]}`) : '');
+    button.replaceChildren(TAB_LABELS[tab], counts[tab] !== undefined ? h('span', { class: 'tab-count' }, ` ${counts[tab]}`) : '');
   }
 }
 
@@ -173,15 +204,18 @@ function renderCookie(cookie) {
     cookie.partitioned && 'particionado',
     !cookie.duringLoad && 'após o load',
   ].filter(Boolean).join(' · ');
+  const byThirdPartyScript = !cookie.thirdParty && cookie.writersThirdParty;
   return h('li', { class: 'item' },
     h('div', { class: 'row' },
       h('span', { class: 'name mono' }, cookie.name || '(sem nome)'),
       h('span', { class: 'tags' },
         cookie.viaHttp && !cookie.stored && h('span', { class: 'pill warn', title: 'Set-Cookie recebido, mas o Firefox não gravou (bloqueado ou rejeitado)' }, 'não gravado'),
+        byThirdPartyScript && h('span', { class: 'pill warn', title: 'Cookie de primeira parte gravado por script de terceiro' }, 'script de 3ª parte'),
         cookie.lifetimeDays > 365 && h('span', { class: 'pill warn' }, '> 1 ano'),
         h('span', { class: 'pill' }, cookie.session ? 'sessão' : 'persistente'))),
     h('div', { class: 'meta' }, flags),
-    cookie.sourceUrl && h('div', { class: 'meta' }, `Set-Cookie em ${cookie.sourceUrl}`));
+    cookie.sourceUrl && h('div', { class: 'meta' }, `Set-Cookie em ${cookie.sourceUrl}`),
+    cookie.writers.length > 0 && h('div', { class: 'meta' }, `document.cookie por ${cookie.writers.map(shortScript).join(', ')}`));
 }
 
 function renderCookies(report) {
@@ -216,7 +250,8 @@ function renderCookies(report) {
       chip(summary.viaJs, 'via JavaScript'),
       chip(summary.partitioned, 'particionado', 'particionados'),
       chip(summary.longLived, 'com validade > 1 ano'),
-      chip(summary.notStored, 'Set-Cookie não gravado', 'Set-Cookie não gravados')),
+      chip(summary.notStored, 'Set-Cookie não gravado', 'Set-Cookie não gravados'),
+      chip(summary.firstPartyByThirdPartyScript, 'de 1ª parte gravado por script de 3ª parte', 'de 1ª parte gravados por scripts de 3ª parte')),
     thirdParty.length && h('h2', {}, `Terceira parte (${thirdParty.length})`),
     thirdParty.length && h('ul', { class: 'list' }, thirdParty.map(renderCookie)),
     firstParty.length && h('h2', {}, `Primeira parte (${firstParty.length})`),
@@ -232,7 +267,10 @@ function renderStorageOrigin(origin) {
     : h('span', { class: 'off' }, `${label}: bloqueado (${info.error})`);
   const keyList = (title, keys) => keys.length && [
     h('div', { class: 'meta' }, title),
-    h('ul', { class: 'keys' }, keys.map(k => h('li', {}, h('span', { class: 'mono' }, k.key), h('span', {}, formatBytes(k.size * 2))))),
+    h('ul', { class: 'keys' }, keys.map(k => h('li', {},
+      h('span', { class: 'mono' }, k.key),
+      k.writers.length > 0 && h('span', { class: 'writer', title: k.writers.join('\n') }, shortScript(k.writers[0])),
+      h('span', { class: 'size' }, formatBytes(k.size * 2))))),
   ];
   const names = [
     ...origin.indexedDB.databases.map(db => `IndexedDB: ${db.name} (v${db.version})`),
@@ -278,6 +316,70 @@ function renderStorage(report) {
   ];
 }
 
+// Aba Alertas
+
+function renderDetection(d) {
+  const where = d.inline ? 'script inline da página' : shortScript(d.script);
+  let details = '';
+  if (d.technique === 'canvas' || d.technique === 'webgl') {
+    const read = d.area ? `${d.method} de ${d.area.w}×${d.area.h}` : `${d.method}${d.format ? ` (${d.format})` : ''}`;
+    details = [
+      `canvas ${d.width}×${d.height}`,
+      d.technique === 'canvas' && `${plural(d.chars, 'caractere', 'caracteres')}, ${plural(d.colors, 'cor', 'cores')}`,
+      read,
+      d.copiedFrom && `copiado de ${d.copiedFrom}`,
+    ].filter(Boolean).join(' · ');
+  } else if (d.technique === 'webgl-info') {
+    details = `getParameter(${d.parameter})`;
+  } else if (d.technique === 'fonts') {
+    details = `${d.fonts} fontes testadas, mesmo texto medido ${d.repeats} vezes`;
+  }
+  const frame = otherFrameOrigin(d.frameOrigin);
+  return h('li', { class: 'item' },
+    h('div', { class: 'row' },
+      h('span', { class: 'name' }, TECHNIQUE_LABELS[d.technique] || d.technique),
+      h('span', { class: 'tags' },
+        h('span', { class: d.scriptThirdParty ? 'pill tracker' : 'pill' }, d.scriptThirdParty ? 'script de 3ª parte' : 'script de 1ª parte'))),
+    h('div', { class: 'meta', title: d.script || '' }, where),
+    details && h('div', { class: 'meta' }, details),
+    frame && h('div', { class: 'meta' }, `no iframe ${frame}`),
+    d.textSample && h('div', { class: 'meta mono' }, `“${d.textSample}”`));
+}
+
+// Origem do frame, só quando não é o documento de topo.
+function otherFrameOrigin(frameOrigin) {
+  if (!frameOrigin || !lastReport) return null;
+  try {
+    return new URL(lastReport.url).origin === frameOrigin ? null : frameOrigin;
+  } catch {
+    return null;
+  }
+}
+
+function renderAlerts(report) {
+  const { summary, detections, discarded } = report.fingerprinting;
+  const discardedBlock = discarded.length > 0 && detailsBlock('discarded', 'section',
+    `Leituras de canvas descartadas pela heurística (${discarded.length})`,
+    h('ul', { class: 'list' }, discarded.map(d => h('li', { class: 'item' },
+      h('div', { class: 'meta', title: d.script || '' }, `${shortScript(d.script)} · canvas ${d.width}×${d.height} · ${d.method}`),
+      h('div', { class: 'meta' }, `falhou: ${Object.entries(d.criteria).filter(([, ok]) => !ok).map(([k]) => CRITERIA_LABELS[k] || k).join('; ')}`)))));
+
+  return [
+    h('h2', {}, 'Fingerprinting'),
+    detections.length
+      ? h('div', { class: 'chips' },
+        chip(summary.detections, 'detecção', 'detecções'),
+        chip(summary.scripts, 'script', 'scripts'),
+        chip(summary.thirdPartyScripts, 'de 3ª parte', 'de 3ª parte'))
+      : h('p', { class: 'empty' }, 'Nenhuma técnica de fingerprinting detectada nesta página.'),
+    detections.length > 0 && h('ul', { class: 'list' }, detections.map(renderDetection)),
+    discardedBlock,
+    h('p', { class: 'note' },
+      'Canvas: heurística de Englehardt & Narayanan (ACM CCS 2016) — canvas ≥ 16×16, texto com ≥ 10 caracteres ou ≥ 2 cores, '
+      + 'sem uso interativo e imagem extraída. WebGL: leitura de canvas WebGL ≥ 16×16. Fontes: ≥ 50 fontes para o mesmo texto.'),
+  ];
+}
+
 // Renderização geral
 
 let lastReport = null;
@@ -300,7 +402,7 @@ function render(report) {
   document.getElementById('page-url').textContent = report.url;
   renderStats(report);
 
-  const renderers = { 'third-party': renderThirdParty, cookies: renderCookies, storage: renderStorage };
+  const renderers = { 'third-party': renderThirdParty, cookies: renderCookies, storage: renderStorage, alerts: renderAlerts };
   content.replaceChildren(...renderers[ui.tab](report).filter(Boolean));
 }
 
