@@ -44,12 +44,14 @@ Divergências prováveis a explicar:
 
 URL: `https://privacy-test-pages.site/privacy-protections/storage-blocking/`
 
-Fluxo:
-1. Clicar em **Store data**.
-2. Recarregar a página (o plugin inicia um relatório novo).
-3. Clicar em **Retrieve data**, aguardar e clicar em **Download the result**
-   (salvar como `resultados.json`).
-4. Prints das abas **Cookies** e **Storage**; exportar o JSON do plugin.
+Fluxo (os cookies são criados no **Store**; o **Retrieve** só lê, então a aba
+Cookies fica vazia depois dele):
+1. Clicar em **Store data**, aguardar ~5 s e clicar no resumo para expandir a lista.
+2. Popup na aba **Cookies** → print `store-cookies.png`; aba **Storage** → print
+   `store-storage.png`; **Exportar JSON** → `plugin-store.json`.
+3. Recarregar a página, clicar em **Retrieve data**, aguardar ~5 s e expandir a lista.
+4. Popup na aba **Storage** → print `retrieve-storage.png`; **Download the result**
+   → `resultados.json` (resultado esperado, reportado pela página).
 
 O que a página testa (código em `privacy-protections/storage-blocking/`):
 
