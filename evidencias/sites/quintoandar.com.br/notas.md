@@ -20,6 +20,22 @@ com o banner. Serviu só para escolher o site; **não é evidência** do relató
     de primeira parte, que o uBlock Origin desmascara no Firefox e o plugin não)
   - Amplitude, Braze e AppsFlyer: analytics de produto e atribuição de marketing
 
+## Pré-análise no Firefox (27/09/2026, plugin 0.3.0, perfil de teste automatizado)
+
+Também não é evidência; orienta o que conferir na coleta.
+
+- 139 requisições, 10 sites de terceira parte (9 rastreadores pelo Firefox);
+  `googletagmanager.com` não é classificado como rastreador pelo Firefox.
+- 23 cookies; 7 de 1ª parte gravados por scripts de 3ª parte, ex.:
+  `crto_mapped_user_id` e `crto_is_user_optout` (Criteo) gravados por
+  `googletagmanager.com/gtm.js` (tag do Criteo injetada pelo GTM).
+- `FPID`, `FPAU`, `FPLC` via HTTP de 1ª parte + iframe de
+  `tracking.quintoandar.com.br`: indício de Google Analytics servido pelo próprio
+  domínio (confirmar no HAR).
+- SDKs de Braze e Amplitude vêm empacotados em `static.quintoandar.com.br`: suas
+  chaves de storage aparecem como gravadas por script de 1ª parte.
+- ~905 KB de localStorage; nenhum fingerprinting detectado.
+
 ## Coletas
 
 | Data e hora | Versão do plugin (commit) | HAR | Prints | Blacklight | uBO |

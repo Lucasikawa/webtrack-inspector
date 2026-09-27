@@ -79,6 +79,36 @@ Divergências prováveis a explicar:
 - WebSQL não existe no Firefox; memória, window.name e history não são
   armazenamento persistente e não são monitorados.
 
+## Fingerprinting (conceito C; canvas é conceito B)
+
+URL: `https://privacy-test-pages.site/privacy-protections/fingerprinting/`
+
+Fluxo:
+1. Abrir a página, clicar em **Start the test** e aguardar ~15 s (a lista de
+   resultados aparece; clicar no resumo para expandir).
+2. Popup na aba **Alertas** → print `alertas.png`; **Exportar JSON** →
+   `plugin.json`.
+3. **Download the result** → `resultados.json` (valores coletados pela página).
+
+A página coleta ~150 dados do navegador. Os que o plugin monitora:
+
+| Teste da página | O que faz | Esperado no plugin (aba Alertas) |
+|---|---|---|
+| `canvas-2d-todataurl` | canvas 2000×200, texto "Cwm fjordbank glyphs…" em 2 cores, `toDataURL` | Canvas fingerprint, `toDataURL (image/png)` |
+| `canvas-2d-imagedata` | mesmo desenho, `getImageData` da área toda e `toDataURL` | Canvas fingerprint, `getImageData de 2000×200` (e `toDataURL`) |
+| `canvas-2d-offscreen-todataurl` | desenha num `OffscreenCanvas`, copia com `drawImage` para um canvas comum e chama `toDataURL` | Canvas fingerprint, "copiado de OffscreenCanvas" |
+| `canvas-webgl` | desenha com shaders WebGL e chama `toDataURL` | WebGL fingerprint |
+| `CanvasRenderingContext2D.measureText` | mede o mesmo texto em dezenas de fontes | Enumeração de fontes |
+
+Os demais (`navigator.*`, `screen.*`, cabeçalhos HTTP, media queries CSS,
+`AudioContext`, WebRTC, codecs, sensores, `Intl`, `document.fonts.check`) **não são
+monitorados**: são leituras de propriedades comuns, feitas por quase todo site, e
+distinguir fingerprinting de uso legítimo exigiria outra heurística. Cada um vira
+uma linha de divergência no relatório, com essa justificativa.
+
+Validado em Firefox 156 (perfil de teste automatizado): as 5 detecções acima
+aparecem, todas atribuídas a `fingerprinting/helpers/tests.js` (1ª parte).
+
 ## Tabela do relatório
 
 Modelo para `relatorio/`. Uma linha por subteste.

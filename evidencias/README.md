@@ -22,7 +22,8 @@ evidencias/
     notas.md                          horário da coleta e observações
 ```
 
-Roteiro de cada página do DuckDuckGo em [`ddg/README.md`](ddg/README.md).
+Roteiro de cada página do DuckDuckGo em [`ddg/README.md`](ddg/README.md); coleta
+nos sites reais em [`sites/README.md`](sites/README.md).
 
 Nomes de `<teste>`: `tracker-reporting`, `request-blocking`, `storage-blocking`,
 `storage-partitioning`, `fingerprinting`, `bounce-tracking`, `query-parameters`,

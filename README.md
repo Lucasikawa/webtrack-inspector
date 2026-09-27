@@ -13,7 +13,8 @@ de privacidade no cliente web. Projeto da Avaliação Intermediária de Ciberseg
 | C | Armazenamento HTML5 (localStorage, sessionStorage, IndexedDB, Cache API) | ✅ |
 | C | Requisições canceladas pela proteção do próprio Firefox | ✅ |
 | B | Cookies de primeira × terceira parte, sessão × persistentes | ✅ |
-| B | Canvas fingerprint | ⏳ |
+| B | Canvas fingerprint (heurística de Englehardt & Narayanan), WebGL, consulta à GPU e enumeração de fontes | ✅ |
+| B | Script responsável por cada cookie (`document.cookie`) e chave de storage (`setItem`) | ✅ |
 | B | Sincronismo de cookies e bounce tracking | ⏳ |
 | A | Indicadores de sequestro de navegador (hijacking/hook) | ⏳ |
 | A | Pontuação de privacidade com metodologia explícita | ⏳ |
@@ -36,8 +37,9 @@ Requer Firefox 140 ou superior.
    botão de extensões, ícone de peça de quebra-cabeça).
 6. Abra ou recarregue uma página e clique no ícone para ver o relatório.
    O número no ícone é a quantidade de sites de terceira parte contatados.
-7. O popup tem as abas **Terceiros**, **Cookies** e **Storage**; o botão
-   **Exportar JSON** salva o relatório da página (usado nas evidências).
+7. O popup tem as abas **Terceiros**, **Cookies**, **Storage** e **Alertas**
+   (fingerprinting); o botão **Exportar JSON** salva o relatório da página (usado
+   nas evidências).
 
 Extensões temporárias são removidas quando o Firefox é fechado; repita os passos 2–4
 a cada nova sessão. Para ver os erros do background, use o botão **Inspecionar**
@@ -64,9 +66,11 @@ extension/
   background/
     parties.js             eTLD+1 via Public Suffix List (tldts)
     cookies.js             interpretação de Set-Cookie e da API de cookies
-    tab-report.js          relatório de uma página: hosts, cookies, storage
+    fingerprint.js         heurísticas de canvas/WebGL fingerprinting
+    tab-report.js          relatório de uma página: hosts, cookies, storage, fingerprinting
     background.js          estado por aba e listeners (webRequest, webNavigation, cookies)
   content/
+    hooks.js               instrumentação no contexto da página (document_start)
     storage.js             retrato do armazenamento HTML5 de cada frame
   popup/                   interface exibida ao clicar no ícone
   lib/                     bibliotecas de terceiros (tldts, MIT)
@@ -112,6 +116,53 @@ chaves e os tamanhos de localStorage e sessionStorage, os bancos IndexedDB
 (`indexedDB.databases()`) e os caches da Cache API. Valores não são lidos. Um
 `SecurityError` indica armazenamento bloqueado para aquela origem.
 
+**Instrumentação no contexto da página.** `content/hooks.js` roda em
+`document_start`, antes de qualquer script da página, em todos os frames. Com as
+APIs de content script do Firefox (`window.wrappedJSObject` e `exportFunction`), ele
+substitui métodos dos protótipos da página por wrappers que registram a chamada e
+repassam para a função original. Nenhum `<script>` é injetado, então a CSP da
+página não interfere. O script responsável por cada chamada vem da pilha
+(`new Error().stack`), ignorando os frames da extensão.
+
+Instrumentado: `HTMLCanvasElement.getContext/toDataURL/toBlob/addEventListener`,
+`CanvasRenderingContext2D` e `OffscreenCanvasRenderingContext2D`
+(`fillText`, `strokeText`, `save`, `restore`, `drawImage`, `getImageData`,
+`measureText`), `OffscreenCanvas.getContext/transferToImageBitmap/convertToBlob`,
+`WebGLRenderingContext`/`WebGL2RenderingContext` (`readPixels`, `getParameter`),
+o setter de `document.cookie` e `Storage.setItem`.
+
+**Canvas fingerprint.** Heurística de Englehardt & Narayanan, *Online Tracking: A
+1-million-site Measurement and Analysis* (ACM CCS 2016, seção 6.1), a mesma do
+OpenWPM e do Blacklight. Uma leitura de canvas é fingerprinting quando:
+1. o canvas tem pelo menos 16 × 16 px;
+2. o texto desenhado tem pelo menos 10 caracteres distintos ou 2 cores;
+3. o script não usa `save`/`restore` nem listeners de eventos no canvas;
+4. a imagem é extraída com `toDataURL`/`toBlob`, ou com `getImageData` de uma
+   área de pelo menos 16 × 16 px.
+
+`drawImage` de outro canvas (ou de um `ImageBitmap` de um `OffscreenCanvas`)
+transfere o texto observado para o canvas de destino. Critérios próprios,
+complementares: leitura de um canvas WebGL de pelo menos 16 × 16 px; consulta a
+`UNMASKED_VENDOR_WEBGL`/`UNMASKED_RENDERER_WEBGL` (fabricante e modelo reais da
+GPU); enumeração de fontes, com o critério da seção 6.3 do mesmo artigo (o mesmo
+texto medido pelo menos 50 vezes em pelo menos 50 fontes).
+
+**Autoria de cookies e storage.** O primeiro script que grava cada cookie via
+`document.cookie` e cada chave via `setItem` aparece no popup. Um cookie de
+primeira parte gravado por script de terceiro (ex.: `_ga`, gravado por
+`googletagmanager.com`) é marcado.
+
+**Limitações da instrumentação.**
+- Workers não recebem content scripts: canvas em `OffscreenCanvas` dentro de um
+  Web Worker não é observado.
+- Um iframe `about:blank` recém-criado pode ser usado antes de a instrumentação
+  chegar a ele.
+- SDKs de terceiros empacotados no JavaScript do próprio site aparecem como
+  script de primeira parte (a pilha mostra a URL do arquivo, não a origem do
+  código).
+- Escritas diretas em propriedades (`localStorage.chave = valor`) não passam por
+  `setItem` e não têm autor identificado.
+
 **Atribuição de requisições à página.** Uma navegação começa na requisição
 `main_frame` (acompanhando redirecionamentos) e só passa a ser a página exibida
 quando é confirmada (`webNavigation.onCommitted`) ou quando chega o primeiro
@@ -126,6 +177,7 @@ contaminam o relatório da nova.
 | `webNavigation` | início, confirmação e `load` de cada navegação |
 | `tabs` | aba ativa no popup e mensagens aos content scripts |
 | `cookies` | cookies gravados de fato, inclusive particionados e de JavaScript |
+| content scripts em `<all_urls>` | retrato do storage e instrumentação de canvas, cookies e storage |
 | `downloads` | salvar o relatório exportado em JSON |
 
 Nenhum dado sai do navegador: tudo fica em memória e só é gravado em disco quando

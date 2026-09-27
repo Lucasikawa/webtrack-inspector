@@ -25,6 +25,16 @@ com o banner. Serviu só para escolher o site; **não é evidência** do relató
   - O leilão muda a cada carregamento: HAR, plugin, uBO e Blacklight precisam sair
     da mesma sessão de coleta; HAR pode ficar grande (compactar se passar de 50 MB)
 
+## Pré-análise no Firefox (27/09/2026, plugin 0.3.0, perfil de teste automatizado)
+
+Também não é evidência; orienta o que conferir na coleta.
+
+- 294 requisições, 43 sites de terceira parte (35 rastreadores pelo Firefox).
+- 38 cookies de 1ª parte gravados por scripts de 3ª parte.
+- 51 chaves de localStorage em 2 origens com dados.
+- Nenhum fingerprinting detectado em 15 s no modo headless; conferir com o
+  navegador normal (scripts de anúncio podem rodar mais tarde ou depender de GPU).
+
 ## Coletas
 
 | Data e hora | Versão do plugin (commit) | HAR | Prints | Blacklight | uBO |
