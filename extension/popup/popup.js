@@ -102,7 +102,7 @@ function renderStats(report) {
   document.getElementById('stats').replaceChildren(
     stat(report.totals.thirdPartySites, 'sites de 3ª parte'),
     stat(report.totals.trackerSites, 'rastreadores', true),
-    stat(report.cookies.summary.duringLoad, 'cookies injetados'),
+    stat(report.cookies.summary.total, 'cookies injetados'),
     stat(report.storage.summary.items, 'itens em storage'),
   );
 }
@@ -198,15 +198,18 @@ function renderCookies(report) {
       h('tr', {}, h('th', {}, '3ª parte'), h('td', {}, String(tp.session)), h('td', {}, String(tp.persistent)),
         h('td', { class: 'total' }, String(tp.session + tp.persistent)))));
 
+  const partyTotal = m => m.session + m.persistent;
   const loadNote = report.loadedMs === null
     ? 'Página ainda carregando.'
-    : `Janela: até 10 s após o load (load em ${(report.loadedMs / 1000).toLocaleString('pt-BR', { maximumFractionDigits: 1 })} s).`;
+    : `No carregamento (até 10 s após o load, ocorrido em ${(report.loadedMs / 1000).toLocaleString('pt-BR', { maximumFractionDigits: 1 })} s): `
+      + `${summary.duringLoad} (1ª parte ${partyTotal(summary.load.firstParty)}, 3ª parte ${partyTotal(summary.load.thirdParty)}).`
+      + (summary.afterLoad ? ` Depois disso: ${summary.afterLoad} (ex.: criados por interação com a página).` : '');
 
   const thirdParty = list.filter(c => c.thirdParty);
   const firstParty = list.filter(c => !c.thirdParty);
   return [
-    h('h2', {}, 'Cookies injetados no carregamento'),
-    h('p', { class: 'note' }, `${loadNote}${summary.afterLoad ? ` Mais ${summary.afterLoad} depois disso.` : ''}`),
+    h('h2', {}, 'Cookies injetados na página'),
+    h('p', { class: 'note' }, loadNote),
     matrix,
     h('div', { class: 'chips' },
       chip(summary.viaHttp, 'via HTTP'),

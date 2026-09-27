@@ -151,12 +151,10 @@ class TabReport {
       }))
       .sort((a, b) => b.thirdParty - a.thirdParty || a.site.localeCompare(b.site) || a.name.localeCompare(b.name));
 
-    const load = list.filter(c => c.duringLoad);
-    const count = predicate => load.filter(predicate).length;
-    return {
-      summary: {
-        duringLoad: load.length,
-        afterLoad: list.length - load.length,
+    // Matriz 1ª/3ª parte x sessão/persistente de um conjunto de cookies.
+    const matrix = cookies => {
+      const count = predicate => cookies.filter(predicate).length;
+      return {
         firstParty: {
           session: count(c => !c.thirdParty && c.session),
           persistent: count(c => !c.thirdParty && !c.session),
@@ -165,6 +163,19 @@ class TabReport {
           session: count(c => c.thirdParty && c.session),
           persistent: count(c => c.thirdParty && !c.session),
         },
+      };
+    };
+    const count = predicate => list.filter(predicate).length;
+    const load = list.filter(c => c.duringLoad);
+    return {
+      // Todos os cookies da página; "load" restringe aos do carregamento
+      // (cookies criados depois, por interação, ficam de fora dele).
+      summary: {
+        total: list.length,
+        duringLoad: load.length,
+        afterLoad: list.length - load.length,
+        ...matrix(list),
+        load: matrix(load),
         longLived: count(c => c.lifetimeDays !== null && c.lifetimeDays > 365),
         viaHttp: count(c => c.viaHttp),
         viaJs: count(c => !c.viaHttp && c.stored),

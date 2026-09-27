@@ -101,15 +101,19 @@ test('classifica cookies em 1ª/3ª parte e sessão/persistente, mesclando HTTP 
   assert.equal(list.find(c => c.name === 'sid').sourceUrl, 'https://www.uol.com.br/');
 });
 
-test('cookies observados mais de 10 s após o load não contam como do carregamento', () => {
+test('cookies criados mais de 10 s após o load entram no total, mas não no carregamento', () => {
+  // Caso do Storage blocking do DDG: os cookies nascem ao clicar em "Store data".
   const report = new TabReport(1, 'https://example.com/');
   report.markLoaded();
   report.loadedMs -= 20000; // simula load ocorrido 20 s atrás
   report.addCookie({ key: 'late|example.com|/', name: 'late', domain: 'example.com', path: '/',
     site: 'example.com', session: true, expires: null }, 'store');
   const { summary } = report.toJSON().cookies;
+  assert.equal(summary.total, 1);
   assert.equal(summary.duringLoad, 0);
   assert.equal(summary.afterLoad, 1);
+  assert.deepEqual(summary.firstParty, { session: 1, persistent: 0 });
+  assert.deepEqual(summary.load.firstParty, { session: 0, persistent: 0 });
 });
 
 test('involvesSite atribui cookies ao próprio site e a sites contatados há pouco', () => {

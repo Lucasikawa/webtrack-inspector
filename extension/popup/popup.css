@@ -32,11 +32,27 @@
 
 * { box-sizing: border-box; }
 
+/* Cabeçalho, abas e rodapé fixos; só o conteúdo rola. Se o documento inteiro
+   rolasse, a barra vertical do Firefox estreitaria a área e criaria rolagem
+   horizontal. */
 body {
   margin: 0;
   width: 460px;
+  max-height: 590px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   background: var(--bg);
   color: var(--text);
+}
+
+body > * { flex-shrink: 0; }
+
+main {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .page {
