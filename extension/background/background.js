@@ -96,6 +96,13 @@ function onStorageSnapshot(snapshot, sender) {
   report.addStorageSnapshot({ ...snapshot, frameId: sender.frameId });
 }
 
+function onHookEvents(events, sender) {
+  if (!sender.tab || !Array.isArray(events)) return;
+  const report = reports.get(sender.tab.id);
+  if (!report || (sender.frameId === 0 && Parties.siteOf(sender.url) !== report.site)) return;
+  for (const event of events) report.addHookEvent(event);
+}
+
 // Enquanto o popup está aberto, pede aos frames da aba um retrato novo do
 // armazenamento, no máximo a cada 3 s.
 const lastStorageRequest = new Map(); // tabId -> Date.now()
@@ -180,6 +187,8 @@ browser.runtime.onMessage.addListener((message, sender) => {
   if (!message) return undefined;
   if (message.type === 'storageSnapshot') {
     onStorageSnapshot(message.snapshot, sender);
+  } else if (message.type === 'hookEvents') {
+    onHookEvents(message.events, sender);
   } else if (message.type === 'getReport') {
     requestStorageSnapshot(message.tabId);
     const report = reports.get(message.tabId);

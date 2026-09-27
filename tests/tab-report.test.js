@@ -4,6 +4,7 @@ const test = require('node:test');
 const assert = require('node:assert/strict');
 
 globalThis.Parties = require('../extension/background/parties.js');
+globalThis.Fingerprint = require('../extension/background/fingerprint.js');
 const TabReport = require('../extension/background/tab-report.js');
 
 const req = (url, type = 'script', extra = {}) => ({ url, type, ...extra });
@@ -176,4 +177,43 @@ test('validade de cookies curtos não é arredondada para zero', () => {
     path: '/', site: 'quintoandar.com.br', session: false, expires: report.startedAt + 30 * 60000 }, 'store');
   const [cookie] = report.toJSON().cookies.list;
   assert.ok(cookie.lifetimeDays > 0.02 && cookie.lifetimeDays < 0.022, `lifetimeDays=${cookie.lifetimeDays}`);
+});
+
+test('associa cookies e chaves de storage ao script que os gravou', () => {
+  const page = 'https://privacy-test-pages.site/privacy-protections/storage-blocking/';
+  const report = new TabReport(1, page);
+  const frame = { frameOrigin: 'https://privacy-test-pages.site', frameUrl: page };
+  const tracker = 'https://broken.third-party.site/privacy-protections/storage-blocking/3rdparty.js';
+  report.addHookEvent({ kind: 'cookieWrite', name: 'tptdata', script: tracker, ...frame });
+  report.addHookEvent({ kind: 'storageWrite', area: 'localStorage', key: 'data', script: `${page}main.js`, ...frame });
+  report.addCookie({ key: 'tptdata|privacy-test-pages.site|/', name: 'tptdata', domain: 'privacy-test-pages.site',
+    path: '/', site: 'privacy-test-pages.site', session: false, expires: report.startedAt + 400 * 86400000 }, 'store');
+  report.addStorageSnapshot(snapshot('https://privacy-test-pages.site', true, ['data']));
+
+  const json = report.toJSON();
+  assert.deepEqual(json.cookies.list[0].writers, [tracker]);
+  assert.equal(json.cookies.summary.firstPartyByThirdPartyScript, 1);
+  assert.deepEqual(json.storage.origins[0].localStorage.keys[0].writers, [`${page}main.js`]);
+});
+
+test('classifica leituras de canvas e separa as descartadas pela heurística', () => {
+  const page = 'https://www.uol.com.br/';
+  const report = new TabReport(1, page);
+  const canvas = {
+    kind: 'canvas', method: 'toDataURL', contextType: '2d', width: 240, height: 60, chars: 25, colors: 3,
+    saveRestore: false, listeners: false, frameOrigin: 'https://www.uol.com.br', frameUrl: page,
+  };
+  report.addHookEvent({ ...canvas, script: 'https://cdn.fingerprint-vendor.com/fp.js' });
+  report.addHookEvent({ ...canvas, script: `${page}#inline`, width: 8, height: 8 });
+  report.addHookEvent({ kind: 'webglInfo', parameter: 'UNMASKED_RENDERER_WEBGL', script: 'https://cdn.fingerprint-vendor.com/fp.js',
+    frameOrigin: 'https://www.uol.com.br', frameUrl: page });
+
+  const { summary, detections, discarded } = report.toJSON().fingerprinting;
+  assert.deepEqual(summary.byTechnique, { canvas: 1, 'webgl-info': 1 });
+  assert.equal(summary.thirdPartyScripts, 1);
+  assert.equal(detections[0].scriptSite, 'fingerprint-vendor.com');
+  assert.equal(detections[0].scriptThirdParty, true);
+  assert.equal(discarded.length, 1);
+  assert.equal(discarded[0].inline, true);
+  assert.equal(discarded[0].criteria.size, false);
 });

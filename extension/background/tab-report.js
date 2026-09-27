@@ -13,6 +13,9 @@ const FIREFOX_BLOCK_ERROR = /NS_ERROR_\w*(TRACKING|FINGERPRINTING|CRYPTOMINING)_
 const LOAD_GRACE_MS = 10000;
 const DAY_MS = 24 * 60 * 60 * 1000;
 
+// Limite de eventos de fingerprinting guardados por página.
+const MAX_HOOK_EVENTS = 200;
+
 // Relatório de uma navegação de nível superior (uma página) em uma aba.
 class TabReport {
   static normalizeUrl(url) {
@@ -29,6 +32,8 @@ class TabReport {
     this.hosts = new Map(); // host -> dados agregados das requisições
     this.cookies = new Map(); // nome|domínio|path -> cookie observado
     this.storage = new Map(); // origem -> último retrato do armazenamento HTML5
+    this.hookEvents = []; // leituras de canvas, consultas à GPU, sondagem de fontes
+    this.writers = new Map(); // cookie ou chave de storage -> scripts que gravaram
     this.loadedMs = null; // tempo até o evento load do documento de topo
     this.setUrl(url);
   }
@@ -142,6 +147,7 @@ class TabReport {
       .map(c => ({
         ...c,
         thirdParty: Parties.isThirdParty(c.site, this.site),
+        writers: this.writersOf(`cookie|${c.site}|${c.name}`),
         duringLoad: c.firstSeenMs <= loadLimit,
         // Validade no momento em que o cookie foi definido, em dias (precisão de
         // ~1 min, para cookies de sessão do Hotjar e afins, que duram 30 min).
@@ -181,6 +187,9 @@ class TabReport {
         viaJs: count(c => !c.viaHttp && c.stored),
         notStored: count(c => c.viaHttp && !c.stored),
         partitioned: count(c => c.partitioned === true),
+        // Cookies de primeira parte gravados via document.cookie por scripts de
+        // terceiros (ex.: _ga do Google Analytics).
+        firstPartyByThirdPartyScript: count(c => !c.thirdParty && c.writers.some(w => this.isThirdPartyUrl(w))),
       },
       list,
     };
@@ -205,8 +214,18 @@ class TabReport {
 
   storageJSON() {
     const items = s => s.localStorage.count + s.sessionStorage.count + s.indexedDB.count + s.cacheStorage.count;
+    const withWriters = (origin, area, info) => ({
+      ...info,
+      keys: (info.keys || []).map(k => ({ ...k, writers: this.writersOf(`storage|${origin}|${area}|${k.key}`) })),
+    });
     const origins = [...this.storage.values()]
-      .map(({ signature, frameId, ...s }) => ({ ...s, thirdParty: Parties.isThirdParty(s.site, this.site), items: items(s) }))
+      .map(({ signature, frameId, ...s }) => ({
+        ...s,
+        localStorage: withWriters(s.origin, 'localStorage', s.localStorage),
+        sessionStorage: withWriters(s.origin, 'sessionStorage', s.sessionStorage),
+        thirdParty: Parties.isThirdParty(s.site, this.site),
+        items: items(s),
+      }))
       .sort((a, b) => a.thirdParty - b.thirdParty || b.isTop - a.isTop || b.items - a.items || a.origin.localeCompare(b.origin));
     const sum = fn => origins.reduce((n, s) => n + fn(s), 0);
     return {
@@ -224,6 +243,92 @@ class TabReport {
         blockedOrigins: origins.filter(s => !s.localStorage.available).length,
       },
       origins,
+    };
+  }
+
+  // Evento de content/hooks.js.
+  addHookEvent(event) {
+    if (event.kind === 'cookieWrite') {
+      this.addWriter(`cookie|${Parties.siteOf(event.frameOrigin)}|${event.name}`, event.script);
+    } else if (event.kind === 'storageWrite') {
+      this.addWriter(`storage|${event.frameOrigin}|${event.area}|${event.key}`, event.script);
+    } else if (this.hookEvents.length < MAX_HOOK_EVENTS) {
+      this.hookEvents.push({ ...event, receivedMs: this.elapsed() });
+    } else {
+      return;
+    }
+    this.version++;
+  }
+
+  addWriter(key, script) {
+    if (!script) return;
+    if (!this.writers.has(key)) this.writers.set(key, new Set());
+    this.writers.get(key).add(script);
+  }
+
+  writersOf(key) {
+    return [...(this.writers.get(key) || [])];
+  }
+
+  isThirdPartyUrl(url) {
+    return Parties.isThirdParty(Parties.siteOf(url), this.site);
+  }
+
+  // Script identificado pela pilha de chamadas. Script inline aparece com a URL
+  // do próprio documento.
+  describeScript(url, frameUrl) {
+    return {
+      script: url || null,
+      scriptSite: url ? Parties.siteOf(url) : null,
+      scriptThirdParty: url ? this.isThirdPartyUrl(url) : false,
+      inline: Boolean(url && frameUrl && TabReport.normalizeUrl(url) === TabReport.normalizeUrl(frameUrl)),
+    };
+  }
+
+  fingerprintJSON() {
+    const detections = [];
+    const discarded = [];
+    for (const e of this.hookEvents) {
+      const base = { ...this.describeScript(e.script, e.frameUrl), frameOrigin: e.frameOrigin, receivedMs: e.receivedMs };
+      if (e.kind === 'canvas') {
+        const { technique, criteria } = Fingerprint.evaluateCanvas(e);
+        const item = {
+          technique,
+          ...base,
+          method: e.method,
+          format: e.format || null,
+          contextType: e.contextType,
+          width: e.width,
+          height: e.height,
+          area: e.area || null,
+          chars: e.chars,
+          colors: e.colors,
+          textSample: e.textSample,
+          offscreen: Boolean(e.offscreen),
+          copiedFrom: e.copiedFrom || null,
+          criteria,
+        };
+        (technique ? detections : discarded).push(item);
+      } else if (e.kind === 'webglInfo') {
+        detections.push({ technique: 'webgl-info', ...base, parameter: e.parameter });
+      } else if (e.kind === 'fontProbe') {
+        detections.push({ technique: 'fonts', ...base, fonts: e.fonts, repeats: e.repeats, textSample: e.textSample });
+      }
+    }
+    const byTechnique = {};
+    for (const d of detections) byTechnique[d.technique] = (byTechnique[d.technique] || 0) + 1;
+    const scripts = new Set(detections.map(d => d.script));
+    const thirdPartyScripts = new Set(detections.filter(d => d.scriptThirdParty).map(d => d.script));
+    return {
+      summary: {
+        detections: detections.length,
+        scripts: scripts.size,
+        thirdPartyScripts: thirdPartyScripts.size,
+        byTechnique,
+        discarded: discarded.length,
+      },
+      detections,
+      discarded,
     };
   }
 
@@ -297,6 +402,7 @@ class TabReport {
       firstParty,
       cookies: this.cookiesJSON(),
       storage: this.storageJSON(),
+      fingerprinting: this.fingerprintJSON(),
     };
   }
 }
