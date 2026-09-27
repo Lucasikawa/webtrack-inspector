@@ -34,7 +34,26 @@ Também não é evidência; orienta o que conferir na coleta.
   `googletagmanager.com/gtag/js`.
 - 4 `Set-Cookie` não gravados pelo Firefox.
 
+## Achados da coleta de 27/09/2026
+
+- **Fingerprinting depende de quem visita.** Na coleta manual o plugin não viu
+  fingerprinting, mas o Blacklight (navegador automatizado) marcou "trackers
+  designed to evade third-party cookie blockers", e o Firefox automatizado do
+  teste de 27/09 registrou canvas, WebGL, GPU e fontes pelo script do Imperva
+  (`/oporth-beyon-…`). Hipótese: a proteção anti-bot só faz o fingerprinting
+  pesado quando detecta automação (`navigator.webdriver`).
+- Blacklight: 2 ad trackers, 2 cookies de terceiros, Google Analytics com
+  "remarketing audiences". Plugin: 4 sites de 3ª parte (2 rastreadores pelo
+  Firefox: `jsdelivr.net` como `tracking_content`, `google.com`), 8 cookies,
+  4 `Set-Cookie` não gravados.
+- uBO: 2 bloqueios (`googletagmanager.com/gtm.js` e `gtag/js`, substituídos por
+  scripts neutros `<<`); mostra o CNAME de `cdn.jsdelivr.net` →
+  `cdn.jsdelivr.net.cdn.cloudflare.net`.
+- Ordem da coleta: plugin + HAR dos 3 sites, depois uBO dos 3, depois Blacklight
+  dos 3 (intervalo de ~45 min entre plugin e Blacklight).
+
 ## Coletas
 
 | Data e hora | Versão do plugin (commit) | HAR | Prints | Blacklight | uBO |
 |---|---|---|---|---|---|
+| 27/09/2026 19:53 | 0.3.0 (`82e536d`) | 19:53:20–19:53:28, 66 entradas | 19:55–19:58; JSON 19:55:43 | 20:36 (19:36 ET) | 20:15–20:24, uBO 1.75.0 |

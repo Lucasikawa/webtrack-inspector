@@ -1,0 +1,308 @@
+{
+  "tool": {
+    "name": "Detector de Rastreadores",
+    "version": "0.3.0"
+  },
+  "exportedAt": "2026-09-27T20:22:55.392Z",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:156.0) Gecko/20100101 Firefox/156.0",
+  "report": {
+    "tabId": 28,
+    "url": "https://privacy-test-pages.site/privacy-protections/fingerprinting/",
+    "host": "privacy-test-pages.site",
+    "site": "privacy-test-pages.site",
+    "startedAt": 1790540501380,
+    "loadedMs": 1705,
+    "version": 18,
+    "navigationChain": [
+      "https://privacy-test-pages.site/privacy-protections/fingerprinting/"
+    ],
+    "totals": {
+      "requests": 9,
+      "thirdPartyRequests": 0,
+      "thirdPartySites": 0,
+      "thirdPartyHosts": 0,
+      "trackerSites": 0,
+      "blockedByFirefoxSites": 0,
+      "firstPartyHosts": 1
+    },
+    "thirdParty": [],
+    "firstParty": [
+      {
+        "site": "privacy-test-pages.site",
+        "thirdParty": false,
+        "firefoxThirdParty": false,
+        "requests": 9,
+        "firstSeenMs": 3,
+        "hosts": [
+          {
+            "host": "privacy-test-pages.site",
+            "requests": 9
+          }
+        ],
+        "types": [
+          "image",
+          "main_frame",
+          "script",
+          "stylesheet",
+          "xmlhttprequest"
+        ],
+        "classifications": [],
+        "errors": {},
+        "tracker": false,
+        "blockedByFirefox": false
+      }
+    ],
+    "cookies": {
+      "summary": {
+        "total": 0,
+        "duringLoad": 0,
+        "afterLoad": 0,
+        "firstParty": {
+          "session": 0,
+          "persistent": 0
+        },
+        "thirdParty": {
+          "session": 0,
+          "persistent": 0
+        },
+        "load": {
+          "firstParty": {
+            "session": 0,
+            "persistent": 0
+          },
+          "thirdParty": {
+            "session": 0,
+            "persistent": 0
+          }
+        },
+        "longLived": 0,
+        "viaHttp": 0,
+        "viaJs": 0,
+        "notStored": 0,
+        "partitioned": 0,
+        "firstPartyByThirdPartyScript": 0
+      },
+      "list": []
+    },
+    "storage": {
+      "summary": {
+        "origins": 1,
+        "originsWithData": 1,
+        "thirdPartyOriginsWithData": 0,
+        "items": 3,
+        "localStorageKeys": 1,
+        "localStorageBytes": 14,
+        "sessionStorageKeys": 0,
+        "sessionStorageBytes": 0,
+        "indexedDBDatabases": 1,
+        "cacheStorageCaches": 1,
+        "blockedOrigins": 0
+      },
+      "origins": [
+        {
+          "origin": "https://privacy-test-pages.site",
+          "url": "https://privacy-test-pages.site/privacy-protections/fingerprinting/",
+          "isTop": true,
+          "localStorage": {
+            "available": true,
+            "count": 1,
+            "bytes": 14,
+            "keys": [
+              {
+                "key": "data",
+                "size": 3,
+                "writers": []
+              }
+            ]
+          },
+          "sessionStorage": {
+            "available": true,
+            "count": 0,
+            "bytes": 0,
+            "keys": []
+          },
+          "indexedDB": {
+            "available": true,
+            "count": 1,
+            "databases": [
+              {
+                "name": "data",
+                "version": 1
+              }
+            ]
+          },
+          "cacheStorage": {
+            "available": true,
+            "count": 1,
+            "names": [
+              "data"
+            ]
+          },
+          "collectedAt": 1790540503091,
+          "site": "privacy-test-pages.site",
+          "thirdParty": false,
+          "items": 3
+        }
+      ]
+    },
+    "fingerprinting": {
+      "summary": {
+        "detections": 6,
+        "scripts": 1,
+        "thirdPartyScripts": 0,
+        "byTechnique": {
+          "fonts": 1,
+          "canvas": 4,
+          "webgl": 1
+        },
+        "discarded": 0
+      },
+      "detections": [
+        {
+          "technique": "fonts",
+          "script": "https://privacy-test-pages.site/privacy-protections/fingerprinting/helpers/tests.js",
+          "scriptSite": "privacy-test-pages.site",
+          "scriptThirdParty": false,
+          "inline": false,
+          "frameOrigin": "https://privacy-test-pages.site",
+          "receivedMs": 6294,
+          "fonts": 50,
+          "repeats": 50,
+          "textSample": "abcdefghijklmnopqrstuvwxyz0123456789 !@#$%^&*()_-+="
+        },
+        {
+          "technique": "canvas",
+          "script": "https://privacy-test-pages.site/privacy-protections/fingerprinting/helpers/tests.js",
+          "scriptSite": "privacy-test-pages.site",
+          "scriptThirdParty": false,
+          "inline": false,
+          "frameOrigin": "https://privacy-test-pages.site",
+          "receivedMs": 6294,
+          "method": "toDataURL",
+          "format": "image/png",
+          "contextType": "2d",
+          "width": 2000,
+          "height": 200,
+          "area": null,
+          "chars": 29,
+          "colors": 2,
+          "textSample": "Cwm fjordbank glyphs vext quiz, 😃",
+          "offscreen": false,
+          "copiedFrom": null,
+          "criteria": {
+            "size": true,
+            "text": true,
+            "noInteraction": true,
+            "extraction": true
+          }
+        },
+        {
+          "technique": "canvas",
+          "script": "https://privacy-test-pages.site/privacy-protections/fingerprinting/helpers/tests.js",
+          "scriptSite": "privacy-test-pages.site",
+          "scriptThirdParty": false,
+          "inline": false,
+          "frameOrigin": "https://privacy-test-pages.site",
+          "receivedMs": 6294,
+          "method": "getImageData",
+          "format": null,
+          "contextType": "2d",
+          "width": 2000,
+          "height": 200,
+          "area": {
+            "w": 2000,
+            "h": 200
+          },
+          "chars": 29,
+          "colors": 2,
+          "textSample": "Cwm fjordbank glyphs vext quiz, 😃",
+          "offscreen": false,
+          "copiedFrom": null,
+          "criteria": {
+            "size": true,
+            "text": true,
+            "noInteraction": true,
+            "extraction": true
+          }
+        },
+        {
+          "technique": "canvas",
+          "script": "https://privacy-test-pages.site/privacy-protections/fingerprinting/helpers/tests.js",
+          "scriptSite": "privacy-test-pages.site",
+          "scriptThirdParty": false,
+          "inline": false,
+          "frameOrigin": "https://privacy-test-pages.site",
+          "receivedMs": 6294,
+          "method": "toDataURL",
+          "format": "image/png",
+          "contextType": "2d",
+          "width": 2000,
+          "height": 200,
+          "area": null,
+          "chars": 29,
+          "colors": 2,
+          "textSample": "Cwm fjordbank glyphs vext quiz, 😃",
+          "offscreen": false,
+          "copiedFrom": null,
+          "criteria": {
+            "size": true,
+            "text": true,
+            "noInteraction": true,
+            "extraction": true
+          }
+        },
+        {
+          "technique": "canvas",
+          "script": "https://privacy-test-pages.site/privacy-protections/fingerprinting/helpers/tests.js",
+          "scriptSite": "privacy-test-pages.site",
+          "scriptThirdParty": false,
+          "inline": false,
+          "frameOrigin": "https://privacy-test-pages.site",
+          "receivedMs": 6294,
+          "method": "toDataURL",
+          "format": "image/png",
+          "contextType": "2d",
+          "width": 2000,
+          "height": 200,
+          "area": null,
+          "chars": 29,
+          "colors": 2,
+          "textSample": "Cwm fjordbank glyphs vext quiz, 😃",
+          "offscreen": false,
+          "copiedFrom": "OffscreenCanvas",
+          "criteria": {
+            "size": true,
+            "text": true,
+            "noInteraction": true,
+            "extraction": true
+          }
+        },
+        {
+          "technique": "webgl",
+          "script": "https://privacy-test-pages.site/privacy-protections/fingerprinting/helpers/tests.js",
+          "scriptSite": "privacy-test-pages.site",
+          "scriptThirdParty": false,
+          "inline": false,
+          "frameOrigin": "https://privacy-test-pages.site",
+          "receivedMs": 6294,
+          "method": "toDataURL",
+          "format": "image/png",
+          "contextType": "webgl",
+          "width": 2000,
+          "height": 200,
+          "area": null,
+          "chars": 0,
+          "colors": 0,
+          "textSample": "",
+          "offscreen": false,
+          "copiedFrom": null,
+          "criteria": {
+            "size": true,
+            "extraction": true
+          }
+        }
+      ],
+      "discarded": []
+    }
+  }
+}

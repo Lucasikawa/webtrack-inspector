@@ -9,8 +9,8 @@ Preencher antes da primeira coleta e atualizar se algo mudar.
 | Proteção Aprimorada contra Rastreamento (Padrão/Rigoroso/Personalizado) | Padrão (Standard) |
 | Perfil de medição (`about:profiles`) | perfil dedicado, só com o plugin |
 | Perfil do uBlock Origin | só o uBO, listas padrão |
-| Versão do uBlock Origin | |
-| Versão do plugin (commit) | 0.2.0 (`0387de9`) e 0.2.1 (`c384d1a`), ver registro |
+| Versão do uBlock Origin | 1.75.0 (listas padrão) |
+| Versão do plugin (commit) | 0.2.0 (`0387de9`), 0.2.1 (`c384d1a`) e 0.3.0 (`82e536d`), ver registro |
 | Rede / localização aproximada | VPN desligada |
 
 No modo Padrão, o Firefox bloqueia rastreadores de redes sociais, cookies de
@@ -27,3 +27,5 @@ iframes de terceiros particionados).
 | 26/09/2026 21:19–21:52 | DDG Tracker Reporting (5 páginas) | 0.2.0 | Prints e JSON de cada página |
 | 26/09/2026 21:36–21:58 | DDG Storage blocking (Store, Retrieve) | 0.2.0 | `store-storage.png`, `retrieve-storage.png`, `resultados.json` |
 | 26/09/2026 22:42 | DDG Storage blocking (Store) | 0.2.1 | `store-cookies.png`, `plugin-store.json` (matriz corrigida) |
+| 27/09/2026 17:22–17:23 | DDG Fingerprinting | 0.3.0 | `alertas.png`, `plugin.json` (6 detecções), `resultados.json` |
+| 27/09/2026 19:53–20:45 | Sites reais: plugin + HAR, depois uBO, depois Blacklight | 0.3.0 | ver `sites/<site>/notas.md`; HAR do UOL refeito |

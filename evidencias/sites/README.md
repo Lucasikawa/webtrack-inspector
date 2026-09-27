@@ -26,6 +26,9 @@ Arquivos de cada site ficam em `evidencias/sites/<site>/`.
    Cookies e dados de sites e Cache → Limpar. (O perfil é dedicado, não há nada a
    perder.)
 2. Abra uma aba vazia e o DevTools na aba **Rede**: **Cmd + Option + E**.
+   **O DevTools precisa estar aberto antes de digitar a URL**: requisições feitas
+   antes de ele abrir não entram no HAR (o primeiro item do HAR tem de ser o
+   documento principal do site).
 3. No DevTools, marque **Desativar cache**; na engrenagem (⚙), marque **Persistir
    logs**.
 4. Digite a URL do site e aguarde **30 s sem mexer na página** (não clique no
@@ -35,7 +38,8 @@ Arquivos de cada site ficam em `evidencias/sites/<site>/`.
 6. Abra o popup do plugin e tire um print de cada aba, com a página ao fundo:
    `plugin-terceiros.png`, `plugin-cookies.png`, `plugin-storage.png`,
    `plugin-alertas.png`.
-7. **Exportar JSON** → `plugin.json`.
+7. **Exportar JSON** → `plugin.json`, logo após o último print (páginas com
+   anúncios continuam carregando e os números mudam em segundos).
 
 ## 2. uBlock Origin (perfil `ublock`)
 
@@ -52,9 +56,13 @@ Arquivos de cada site ficam em `evidencias/sites/<site>/`.
 
 1. Abra `https://themarkup.org/blacklight`, informe a URL do site e inicie a
    análise (leva cerca de 1 minuto).
-2. Salve o resultado completo: **Cmd + P** → **Salvar como PDF** →
-   `blacklight.pdf` (ou prints da página inteira).
-3. Copie a URL da página de resultado para o `notas.md` do site.
+2. **Expanda as seções** (seta à direita de cada uma) que tiverem resultado:
+   ad trackers, cookies de terceiros, "evade cookie blockers", gravação de sessão,
+   pixels e Google Analytics, e também as empresas listadas em "ad-tech companies".
+   As listas de domínios só aparecem expandidas e são o que a reconciliação usa.
+3. Salve o resultado completo: **Cmd + P** → **Salvar como PDF** →
+   `blacklight.pdf`.
+4. Copie a URL da página de resultado para o `notas.md` do site.
 
 ## 4. Registro
 

@@ -36,7 +36,21 @@ Também não é evidência; orienta o que conferir na coleta.
   chaves de storage aparecem como gravadas por script de 1ª parte.
 - ~905 KB de localStorage; nenhum fingerprinting detectado.
 
+## Achados da coleta de 27/09/2026
+
+- `_fbp` (cookie do Facebook Pixel) definido via HTTP por
+  `tracking.quintoandar.com.br/g/collect`: coleta servida por subdomínio próprio
+  (server-side tagging), invisível como terceiro para o plugin e para o Blacklight
+  ("Facebook Pixel not found").
+- uBO desmascara CNAME: `id.quintoandar.com.br` → `d5tahiiw7y2sk.cloudfront.net`.
+- Blacklight: 5 ad trackers, 0 cookies de terceiros, **gravação de sessão**
+  (Hotjar), empresas Alphabet, Criteo, HotJar. Plugin: 9 sites de 3ª parte (8
+  rastreadores), 15 cookies, todos de 1ª parte (4 gravados por scripts de 3ª parte).
+- uBO: 13 bloqueios, 4 de 9 domínios conectados (amplitude, google-analytics,
+  googletagmanager, hotjar, sentry bloqueados).
+
 ## Coletas
 
 | Data e hora | Versão do plugin (commit) | HAR | Prints | Blacklight | uBO |
 |---|---|---|---|---|---|
+| 27/09/2026 20:05 | 0.3.0 (`82e536d`) | 20:05:34–20:08:38, 171 entradas | 20:06:56–20:07:17; JSON 20:07:14 | 20:39 (19:39 ET) | 20:26–20:27, uBO 1.75.0 |

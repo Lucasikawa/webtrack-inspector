@@ -1,0 +1,453 @@
+{
+  "tool": {
+    "name": "Detector de Rastreadores",
+    "version": "0.3.0"
+  },
+  "exportedAt": "2026-09-27T22:55:43.595Z",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:156.0) Gecko/20100101 Firefox/156.0",
+  "report": {
+    "tabId": 32,
+    "url": "https://www.sp.gov.br/sp",
+    "host": "www.sp.gov.br",
+    "site": "www.sp.gov.br",
+    "startedAt": 1790549600962,
+    "loadedMs": 2427,
+    "version": 187,
+    "navigationChain": [
+      "https://www.sp.gov.br/",
+      "https://www.sp.gov.br/sp"
+    ],
+    "totals": {
+      "requests": 61,
+      "thirdPartyRequests": 9,
+      "thirdPartySites": 4,
+      "thirdPartyHosts": 4,
+      "trackerSites": 2,
+      "blockedByFirefoxSites": 0,
+      "firstPartyHosts": 1
+    },
+    "thirdParty": [
+      {
+        "site": "jsdelivr.net",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 3,
+        "firstSeenMs": 382,
+        "hosts": [
+          {
+            "host": "cdn.jsdelivr.net",
+            "requests": 3
+          }
+        ],
+        "types": [
+          "image",
+          "script"
+        ],
+        "classifications": [
+          "any_strict_tracking",
+          "tracking_content"
+        ],
+        "errors": {},
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "google.com",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 1,
+        "firstSeenMs": 7408,
+        "hosts": [
+          {
+            "host": "analytics.google.com",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "xmlhttprequest"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_analytics"
+        ],
+        "errors": {},
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "vlibras.gov.br",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 3,
+        "firstSeenMs": 370,
+        "hosts": [
+          {
+            "host": "vlibras.gov.br",
+            "requests": 3
+          }
+        ],
+        "types": [
+          "image",
+          "script"
+        ],
+        "classifications": [],
+        "errors": {},
+        "tracker": false,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "googletagmanager.com",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 2,
+        "firstSeenMs": 370,
+        "hosts": [
+          {
+            "host": "www.googletagmanager.com",
+            "requests": 2
+          }
+        ],
+        "types": [
+          "script"
+        ],
+        "classifications": [],
+        "errors": {},
+        "tracker": false,
+        "blockedByFirefox": false
+      }
+    ],
+    "firstParty": [
+      {
+        "site": "www.sp.gov.br",
+        "thirdParty": false,
+        "firefoxThirdParty": false,
+        "requests": 52,
+        "firstSeenMs": 0,
+        "hosts": [
+          {
+            "host": "www.sp.gov.br",
+            "requests": 52
+          }
+        ],
+        "types": [
+          "font",
+          "image",
+          "main_frame",
+          "script",
+          "stylesheet",
+          "xmlhttprequest"
+        ],
+        "classifications": [],
+        "errors": {},
+        "tracker": false,
+        "blockedByFirefox": false
+      }
+    ],
+    "cookies": {
+      "summary": {
+        "total": 8,
+        "duringLoad": 8,
+        "afterLoad": 0,
+        "firstParty": {
+          "session": 1,
+          "persistent": 3
+        },
+        "thirdParty": {
+          "session": 3,
+          "persistent": 1
+        },
+        "load": {
+          "firstParty": {
+            "session": 1,
+            "persistent": 3
+          },
+          "thirdParty": {
+            "session": 3,
+            "persistent": 1
+          }
+        },
+        "longLived": 1,
+        "viaHttp": 5,
+        "viaJs": 3,
+        "notStored": 4,
+        "partitioned": 0,
+        "firstPartyByThirdPartyScript": 1
+      },
+      "list": [
+        {
+          "key": "incap_ses_987_3308181|sp.gov.br|/",
+          "name": "incap_ses_987_3308181",
+          "domain": "sp.gov.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "sp.gov.br",
+          "session": true,
+          "expires": null,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": null,
+          "partitioned": null,
+          "valueLength": 56,
+          "viaHttp": true,
+          "stored": false,
+          "sourceUrl": "https://www.sp.gov.br/",
+          "firstSeenMs": 31,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": true,
+          "duringLoad": true,
+          "lifetimeDays": null
+        },
+        {
+          "key": "nlbi_3308181|sp.gov.br|/",
+          "name": "nlbi_3308181",
+          "domain": "sp.gov.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "sp.gov.br",
+          "session": true,
+          "expires": null,
+          "secure": false,
+          "httpOnly": true,
+          "sameSite": null,
+          "partitioned": null,
+          "valueLength": 48,
+          "viaHttp": true,
+          "stored": false,
+          "sourceUrl": "https://www.sp.gov.br/",
+          "firstSeenMs": 31,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": true,
+          "duringLoad": true,
+          "lifetimeDays": null
+        },
+        {
+          "key": "nlbi_3308181_2147483392|sp.gov.br|/",
+          "name": "nlbi_3308181_2147483392",
+          "domain": "sp.gov.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "sp.gov.br",
+          "session": true,
+          "expires": null,
+          "secure": false,
+          "httpOnly": true,
+          "sameSite": null,
+          "partitioned": null,
+          "valueLength": 48,
+          "viaHttp": true,
+          "stored": false,
+          "sourceUrl": "https://www.sp.gov.br/oporth-beyon-a-dispot-sengerly-is-Macb-So-shou-f?d=www.sp.gov.br",
+          "firstSeenMs": 2444,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": true,
+          "duringLoad": true,
+          "lifetimeDays": null
+        },
+        {
+          "key": "visid_incap_3308181|sp.gov.br|/",
+          "name": "visid_incap_3308181",
+          "domain": "sp.gov.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "sp.gov.br",
+          "session": false,
+          "expires": 1822026318000,
+          "secure": false,
+          "httpOnly": true,
+          "sameSite": null,
+          "partitioned": null,
+          "valueLength": 64,
+          "viaHttp": true,
+          "stored": false,
+          "sourceUrl": "https://www.sp.gov.br/",
+          "firstSeenMs": 31,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": true,
+          "duringLoad": true,
+          "lifetimeDays": 364.314
+        },
+        {
+          "key": "___utmvc|www.sp.gov.br|/",
+          "name": "___utmvc",
+          "domain": "www.sp.gov.br",
+          "hostOnly": true,
+          "path": "/",
+          "site": "www.sp.gov.br",
+          "session": false,
+          "expires": 1790549623000,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "unspecified",
+          "partitioned": false,
+          "valueLength": 3060,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 2362,
+          "writers": [
+            "https://www.sp.gov.br/_Incapsula_Resource?SWJIYLWA=719d34d31c8e3a6e6fffd425f7e032f3&ns=51&cb=1435485862"
+          ],
+          "writersThirdParty": false,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 0
+        },
+        {
+          "key": "_ga_G3W3M6971H|www.sp.gov.br|/",
+          "name": "_ga_G3W3M6971H",
+          "domain": "www.sp.gov.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "www.sp.gov.br",
+          "session": false,
+          "expires": 1825109603354,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "unspecified",
+          "partitioned": false,
+          "valueLength": 45,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 2393,
+          "writers": [
+            "https://www.googletagmanager.com/gtag/js?id=G-G3W3M6971H"
+          ],
+          "writersThirdParty": true,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 400
+        },
+        {
+          "key": "DigestTracker|www.sp.gov.br|/",
+          "name": "DigestTracker",
+          "domain": "www.sp.gov.br",
+          "hostOnly": true,
+          "path": "/",
+          "site": "www.sp.gov.br",
+          "session": true,
+          "expires": null,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "unspecified",
+          "partitioned": false,
+          "valueLength": 11,
+          "viaHttp": true,
+          "stored": true,
+          "sourceUrl": "https://www.sp.gov.br/sp",
+          "firstSeenMs": 185,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": null
+        },
+        {
+          "key": "reese84|www.sp.gov.br|/",
+          "name": "reese84",
+          "domain": "www.sp.gov.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "www.sp.gov.br",
+          "session": false,
+          "expires": 1793141603383,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "lax",
+          "partitioned": false,
+          "valueLength": 614,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 2422,
+          "writers": [
+            "https://www.sp.gov.br/oporth-beyon-a-dispot-sengerly-is-Macb-So-shou-f"
+          ],
+          "writersThirdParty": false,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 30
+        }
+      ]
+    },
+    "storage": {
+      "summary": {
+        "origins": 1,
+        "originsWithData": 1,
+        "thirdPartyOriginsWithData": 0,
+        "items": 2,
+        "localStorageKeys": 2,
+        "localStorageBytes": 1526,
+        "sessionStorageKeys": 0,
+        "sessionStorageBytes": 0,
+        "indexedDBDatabases": 0,
+        "cacheStorageCaches": 0,
+        "blockedOrigins": 0
+      },
+      "origins": [
+        {
+          "origin": "https://www.sp.gov.br",
+          "url": "https://www.sp.gov.br/sp",
+          "isTop": true,
+          "localStorage": {
+            "available": true,
+            "count": 2,
+            "bytes": 1526,
+            "keys": [
+              {
+                "key": "loginTimestamp",
+                "size": 13,
+                "writers": [
+                  "https://www.sp.gov.br/statics/js/custom.js"
+                ]
+              },
+              {
+                "key": "reese84",
+                "size": 729,
+                "writers": [
+                  "https://www.sp.gov.br/oporth-beyon-a-dispot-sengerly-is-Macb-So-shou-f"
+                ]
+              }
+            ]
+          },
+          "sessionStorage": {
+            "available": true,
+            "count": 0,
+            "bytes": 0,
+            "keys": []
+          },
+          "indexedDB": {
+            "available": true,
+            "count": 0,
+            "databases": []
+          },
+          "cacheStorage": {
+            "available": true,
+            "count": 0,
+            "names": []
+          },
+          "collectedAt": 1790549603402,
+          "site": "www.sp.gov.br",
+          "thirdParty": false,
+          "items": 2
+        }
+      ]
+    },
+    "fingerprinting": {
+      "summary": {
+        "detections": 0,
+        "scripts": 0,
+        "thirdPartyScripts": 0,
+        "byTechnique": {},
+        "discarded": 0
+      },
+      "detections": [],
+      "discarded": []
+    }
+  }
+}

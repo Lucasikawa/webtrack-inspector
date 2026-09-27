@@ -35,7 +35,19 @@ Também não é evidência; orienta o que conferir na coleta.
 - Nenhum fingerprinting detectado em 15 s no modo headless; conferir com o
   navegador normal (scripts de anúncio podem rodar mais tarde ou depender de GPU).
 
+## Achados da coleta de 27/09/2026
+
+- Blacklight: **82 ad trackers e 206 cookies de terceiros**, "When you visit this
+  site, it tells X", Google Analytics com remarketing; 20 empresas de ad-tech.
+  Plugin: 50–55 sites de 3ª parte, 59–67 cookies (26 particionados), 44–49
+  rastreadores. A diferença de escala é o principal ponto de reconciliação
+  (Chrome headless nos EUA, sem Total Cookie Protection, leilão diferente).
+- uBO: 24 bloqueios, 14 de 21 domínios conectados; desmascara vários CNAMEs de
+  CDN (`conteudo.imguol.com.br`, `h.jsuol.com.br`, `player.fantascope.uol.com.br`
+  → `*.cloudfront.net`).
+
 ## Coletas
 
 | Data e hora | Versão do plugin (commit) | HAR | Prints | Blacklight | uBO |
 |---|---|---|---|---|---|
+| 27/09/2026 20:09 | 0.3.0 (`82e536d`) | **refazer**: HAR de 20:09:31 incompleto (começou 8 s após a navegação) | 20:12; JSON 20:11:28 | 20:43 (19:43 ET) | 20:28–20:32, uBO 1.75.0 |
