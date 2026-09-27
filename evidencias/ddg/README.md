@@ -106,8 +106,10 @@ monitorados**: são leituras de propriedades comuns, feitas por quase todo site,
 distinguir fingerprinting de uso legítimo exigiria outra heurística. Cada um vira
 uma linha de divergência no relatório, com essa justificativa.
 
-Validado em Firefox 156 (perfil de teste automatizado): as 5 detecções acima
-aparecem, todas atribuídas a `fingerprinting/helpers/tests.js` (1ª parte).
+Resultado esperado: **6 detecções**, todas atribuídas a
+`fingerprinting/helpers/tests.js` (1ª parte). São 6 e não 5 porque o teste
+`canvas-2d-imagedata` lê o mesmo canvas duas vezes (`getImageData` e depois
+`toDataURL`), e cada leitura conta como uma detecção.
 
 ## Tabela do relatório
 
