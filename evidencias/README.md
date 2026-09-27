@@ -41,8 +41,8 @@ Nomes de `<teste>`: `tracker-reporting`, `request-blocking`, `storage-blocking`,
 
 | Item | C | B | A | Feito |
 |---|---|---|---|---|
-| DDG Tracker Reporting | ✔ | ✔ | ✔ | ☐ |
-| DDG Storage blocking | ✔ | ✔ | ✔ | ☐ |
+| DDG Tracker Reporting | ✔ | ✔ | ✔ | ☑ |
+| DDG Storage blocking | ✔ | ✔ | ✔ | ☑ |
 | DDG Fingerprinting / canvas | ✔ | ✔ | ✔ | ☐ |
 | DDG Tracker Blocking (request-blocking) | | ✔ | ✔ | ☐ |
 | DDG Storage partitioning | | ✔ | ✔ | ☐ |
