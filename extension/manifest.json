@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Detector de Rastreadores",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Detecta conexões a terceiros, cookies, armazenamento HTML5, fingerprinting, sincronismo de cookies e indícios de sequestro de navegador.",
   "browser_specific_settings": {
     "gecko": {
@@ -27,6 +27,8 @@
     "tabs",
     "cookies",
     "downloads",
+    "webRequestBlocking",
+    "storage",
     "<all_urls>"
   ],
   "background": {
@@ -37,6 +39,7 @@
       "background/fingerprint.js",
       "background/tracking.js",
       "background/categories.js",
+      "background/blocklist.js",
       "background/tab-report.js",
       "background/background.js"
     ],

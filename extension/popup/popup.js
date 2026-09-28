@@ -20,8 +20,8 @@ const TYPE_LABELS = {
   other: 'outro',
 };
 
-const TABS = ['third-party', 'cookies', 'storage', 'alerts'];
-const TAB_LABELS = { 'third-party': 'Terceiros', cookies: 'Cookies', storage: 'Storage', alerts: 'Alertas' };
+const TABS = ['third-party', 'cookies', 'storage', 'alerts', 'blocklist'];
+const TAB_LABELS = { 'third-party': 'Terceiros', cookies: 'Cookies', storage: 'Storage', alerts: 'Alertas', blocklist: 'Bloqueio' };
 
 const TECHNIQUE_LABELS = {
   canvas: 'Canvas fingerprint',
@@ -114,7 +114,20 @@ function formatLifetime(days) {
 const ui = {
   tab: 'third-party',
   openDetails: new Set(),
+  blocklist: [], // domínios bloqueados (storage.local, via background)
+  blockError: null,
 };
+
+async function updateBlocklist(change) {
+  const result = await browser.runtime.sendMessage({ type: 'updateBlocklist', ...change });
+  ui.blocklist = result.list;
+  ui.blockError = result.error;
+  render(lastReport);
+}
+
+function isListed(site) {
+  return ui.blocklist.includes(site);
+}
 
 try {
   const saved = localStorage.getItem('popupTab');
@@ -155,6 +168,7 @@ function renderTabs(report) {
       cookies: report.cookies.list.length,
       storage: report.storage.summary.originsWithData,
       alerts: alertCount(report),
+      blocklist: ui.blocklist.length,
     }
     : {};
   for (const button of document.querySelectorAll('.tab')) {
@@ -175,8 +189,10 @@ function renderSite(site) {
       h('span', { class: 'name' }, site.site),
       site.tracker && h('span', { class: 'pill tracker' }, 'rastreador'),
       site.blockedByFirefox && h('span', { class: 'pill' }, 'bloqueado pelo Firefox'),
+      site.blockedByPlugin > 0 && h('span', { class: 'pill tracker' }, `${site.blockedByPlugin} bloqueadas`),
       ...site.categories.map(c => h('span', { class: 'pill warn' }, CATEGORY_LABELS[c] || c)),
-      h('span', { class: 'count' }, `${site.requests} req.`)),
+      h('span', { class: 'count' }, `${site.requests} req.`),
+      site.thirdParty && blockButton(site.site)),
     h('div', { class: 'meta' }, hosts),
     meta && h('div', { class: 'meta' }, meta));
 }
@@ -325,6 +341,46 @@ function renderStorage(report) {
       summary.blockedOrigins && chip(summary.blockedOrigins, 'origem com acesso bloqueado', 'origens com acesso bloqueado')),
     h('ul', { class: 'list' }, origins.map(renderStorageOrigin)),
     h('p', { class: 'note' }, 'Inclui iframes de terceiros. Só nomes de chaves e tamanhos são lidos; os valores não saem da página.'),
+  ];
+}
+
+// Aba Bloqueio
+
+function blockButton(domain) {
+  const listed = isListed(domain);
+  const button = h('button', { type: 'button', class: 'button small', title: listed ? 'Remover da lista de bloqueio' : 'Bloquear requisições a este site' },
+    listed ? 'Desbloquear' : 'Bloquear');
+  button.addEventListener('click', () => updateBlocklist(listed ? { remove: domain } : { add: domain }));
+  return button;
+}
+
+function renderBlocklist(report) {
+  const input = h('input', { type: 'text', id: 'block-input', placeholder: 'ex.: doubleclick.net', autocomplete: 'off', spellcheck: false });
+  const add = h('button', { type: 'submit', class: 'button' }, 'Adicionar');
+  const form = h('form', { class: 'block-form' }, input, add);
+  form.addEventListener('submit', event => {
+    event.preventDefault();
+    if (input.value.trim()) updateBlocklist({ add: input.value });
+  });
+  const blocked = report ? report.blocked || {} : {};
+  const total = Object.values(blocked).reduce((a, b) => a + b, 0);
+  return [
+    h('h2', {}, 'Lista de bloqueio personalizada'),
+    h('p', { class: 'note' },
+      'Requisições de terceira parte a estes domínios e seus subdomínios são canceladas. A navegação principal e os '
+      + 'recursos do próprio site nunca são bloqueados. Vale a partir das próximas requisições: recarregue a página.'),
+    form,
+    ui.blockError && h('p', { class: 'note error' }, ui.blockError),
+    report && h('div', { class: 'chips' }, chip(total, 'requisição bloqueada nesta página', 'requisições bloqueadas nesta página')),
+    ui.blocklist.length
+      ? h('ul', { class: 'list' }, ui.blocklist.map(domain => {
+        const remove = h('button', { type: 'button', class: 'button small' }, 'Remover');
+        remove.addEventListener('click', () => updateBlocklist({ remove: domain }));
+        return h('li', { class: 'item' }, h('div', { class: 'row' },
+          h('span', { class: 'name mono' }, domain),
+          h('span', { class: 'tags' }, blocked[domain] ? h('span', { class: 'count' }, `${blocked[domain]} nesta página`) : '', remove)));
+      }))
+      : h('p', { class: 'empty' }, 'Nenhum domínio bloqueado. Adicione acima ou use "Bloquear" na aba Terceiros.'),
   ];
 }
 
@@ -550,8 +606,9 @@ function render(report) {
     document.getElementById('page-site').textContent = 'Sem dados para esta aba';
     document.getElementById('page-url').textContent = '';
     document.getElementById('stats').replaceChildren();
-    content.replaceChildren(h('p', { class: 'empty' },
-      'Recarregue a página com a extensão ativa para iniciar a análise.'));
+    content.replaceChildren(...(ui.tab === 'blocklist'
+      ? renderBlocklist(null).flat().filter(Boolean)
+      : [h('p', { class: 'empty' }, 'Recarregue a página com a extensão ativa para iniciar a análise.')]));
     return;
   }
 
@@ -559,7 +616,9 @@ function render(report) {
   document.getElementById('page-url').textContent = report.url;
   renderStats(report);
 
-  const renderers = { 'third-party': renderThirdParty, cookies: renderCookies, storage: renderStorage, alerts: renderAlerts };
+  const renderers = {
+    'third-party': renderThirdParty, cookies: renderCookies, storage: renderStorage, alerts: renderAlerts, blocklist: renderBlocklist,
+  };
   content.replaceChildren(...renderers[ui.tab](report).flat().filter(Boolean));
 }
 
@@ -593,6 +652,11 @@ async function refresh() {
   const version = report ? `${report.startedAt}:${report.version}` : 'vazio';
   if (version === lastVersion) return;
   lastVersion = version;
+  // Não redesenha enquanto o usuário digita um domínio.
+  if (document.activeElement && document.activeElement.id === 'block-input') {
+    lastReport = report;
+    return;
+  }
   render(report);
 }
 
@@ -607,6 +671,7 @@ document.getElementById('open-tab').addEventListener('click', () => {
 });
 
 async function init() {
+  ui.blocklist = await browser.runtime.sendMessage({ type: 'getBlocklist' });
   if (forcedTab) {
     tabId = forcedTab;
   } else {

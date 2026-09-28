@@ -425,3 +425,16 @@ test('assinaturas conhecidas de hook (script hook.js, cookie e global)', () => {
   assert.deepEqual(report.toJSON().hijack.signatures,
     ['cookie BEEFHOOK (localhost)', 'global beef', 'script hook.js (127.0.0.1)']);
 });
+
+test('requisições bloqueadas pela lista, por site e por regra', () => {
+  const report = new TabReport(1, 'https://privacy-test-pages.site/privacy-protections/request-blocking/');
+  for (const type of ['script', 'image', 'xmlhttprequest']) {
+    const details = req(`https://bad.third-party.site/block-me/${type}`, type);
+    report.addRequest(details);
+    report.addBlocked(details, 'bad.third-party.site');
+  }
+  const json = report.toJSON();
+  assert.equal(json.totals.blockedByPluginRequests, 3);
+  assert.deepEqual(json.blocked, { 'bad.third-party.site': 3 });
+  assert.equal(json.thirdParty[0].blockedByPlugin, 3);
+});

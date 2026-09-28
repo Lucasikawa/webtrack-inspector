@@ -39,8 +39,8 @@ EXT_ID = MANIFEST['browser_specific_settings']['gecko']['id']
 UUID = '6c1f0b7e-2d3a-4c8e-9f10-7a5b3c2d1e0f'  # fixo: permite abrir moz-extension://UUID/...
 DDG = 'https://privacy-test-pages.site'
 DEFAULT_FIREFOX = '/Applications/Firefox.app/Contents/MacOS/firefox'
-TABS = ['third-party', 'cookies', 'storage', 'alerts']
-TAB_FILES = {'third-party': 'terceiros', 'cookies': 'cookies', 'storage': 'storage', 'alerts': 'alertas'}
+TABS = ['third-party', 'cookies', 'storage', 'alerts', 'blocklist']
+TAB_FILES = {'third-party': 'terceiros', 'cookies': 'cookies', 'storage': 'storage', 'alerts': 'alertas', 'blocklist': 'bloqueio'}
 
 # Executado numa página da extensão: relatório de cada aba comum.
 GET_REPORTS = """
@@ -215,12 +215,41 @@ def scenario_query(browser, checks):
     checks.expect(params == ['fbclid', 'fb_source'], f'query-parameters: fbclid e fb_source detectados ({params})')
 
 
+def scenario_blocking(browser, checks):
+    # Adiciona bad.third-party.site à lista de bloqueio pela API da extensão.
+    browser.driver.switch_to.window(browser.ext)
+    result = browser.driver.execute_async_script("""
+        const done = arguments[arguments.length - 1];
+        const b = window.browser || window.wrappedJSObject.browser;
+        b.runtime.sendMessage({ type: 'updateBlocklist', add: 'bad.third-party.site' }).then(done, e => done(String(e)));
+    """)
+    checks.expect(isinstance(result, dict) and 'bad.third-party.site' in result.get('list', []), 'bloqueio: domínio adicionado à lista')
+    browser.visit(f'{DDG}/privacy-protections/request-blocking/', wait=2)
+    browser.click('start', wait=12)
+    report = browser.report()['report']
+    blocked = report['totals']['blockedByPluginRequests']
+    checks.expect(blocked >= 15, f'bloqueio: requisições a bad.third-party.site canceladas ({blocked})')
+    # Bloqueado aparece como "failed" (fetch, XHR, WebSocket...) ou "hasn't
+    # loaded" (elementos HTML/CSS); nenhum teste pode aparecer como carregado.
+    statuses = browser.driver.execute_script(
+        "return [...document.querySelectorAll('li li .status')].map(e => e.className)")
+    loaded = sum('loaded' in s for s in statuses)
+    checks.expect(statuses and loaded == 0, f'bloqueio: nenhum dos {len(statuses)} testes da página carregou ({loaded} carregados)')
+    browser.driver.switch_to.window(browser.ext)
+    browser.driver.execute_async_script("""
+        const done = arguments[arguments.length - 1];
+        (window.browser || window.wrappedJSObject.browser).runtime.sendMessage({ type: 'updateBlocklist', remove: 'bad.third-party.site' }).then(done);
+    """)
+    browser.driver.switch_to.window(browser.page)
+
+
 SCENARIOS = {
     'ddg-tracker': scenario_tracker,
     'ddg-storage': scenario_storage,
     'ddg-fingerprint': scenario_fingerprint,
     'ddg-bounce': scenario_bounce,
     'ddg-query': scenario_query,
+    'ddg-blocking': scenario_blocking,
 }
 
 
@@ -253,7 +282,7 @@ def collect_url(browser, url, wait, out):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('targets', nargs='+', help="'ddg' (todos), 'ddg-tracker', 'ddg-storage', 'ddg-fingerprint', 'ddg-bounce', 'ddg-query' ou URLs")
+    parser.add_argument('targets', nargs='+', help="'ddg' (todos), 'ddg-tracker', 'ddg-storage', 'ddg-fingerprint', 'ddg-bounce', 'ddg-query', 'ddg-blocking' ou URLs")
     parser.add_argument('--out', type=Path, help='pasta para salvar JSON e prints (só para URLs)')
     parser.add_argument('--wait', type=float, default=30, help='segundos de espera em cada URL (padrão 30)')
     parser.add_argument('--headful', action='store_true', help='mostra a janela do Firefox')

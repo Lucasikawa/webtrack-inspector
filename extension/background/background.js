@@ -7,6 +7,37 @@
 const reports = new Map(); // tabId -> TabReport
 const pending = new Map(); // tabId -> TabReport
 
+// Lista de bloqueio personalizada, persistida em storage.local.
+let blocklist = new Set();
+browser.storage.local.get('blocklist').then(data => {
+  blocklist = new Set(data.blocklist || []);
+});
+
+async function updateBlocklist({ add, remove }) {
+  const next = new Set(blocklist);
+  let error = null;
+  if (add) {
+    const domain = Blocklist.normalize(add);
+    if (domain) next.add(domain);
+    else error = `Domínio inválido: ${add}`;
+  }
+  if (remove) next.delete(remove);
+  blocklist = next;
+  await browser.storage.local.set({ blocklist: [...next].sort() });
+  return { list: [...next].sort(), error };
+}
+
+// Cancela requisições de terceira parte a domínios da lista. Nunca bloqueia a
+// navegação principal nem recursos do próprio site da página.
+function blockIfListed(details, report) {
+  if (!blocklist.size || details.type === 'main_frame') return undefined;
+  const host = Parties.hostOf(details.url);
+  const rule = Blocklist.match(host, blocklist);
+  if (!rule || !Parties.isThirdParty(Parties.siteOf(host), report.site)) return undefined;
+  report.addBlocked(details, rule);
+  return { cancel: true };
+}
+
 // URL do documento de topo que originou a requisição.
 function topLevelUrl(details) {
   if (details.frameId === 0) return details.documentUrl;
@@ -36,9 +67,20 @@ function newReport(tabId, url, requestId = null) {
   return report;
 }
 
+// Requisições sem aba (ex.: fetch de um Service Worker): não entram em nenhum
+// relatório, mas a lista de bloqueio vale se quem as disparou é de outro site.
+function blockWithoutTab(details) {
+  const origin = details.originUrl || details.documentUrl;
+  if (!blocklist.size || !origin || !/^https?:/.test(origin)) return undefined;
+  const host = Parties.hostOf(details.url);
+  const rule = Blocklist.match(host, blocklist);
+  if (!rule || !Parties.isThirdParty(Parties.siteOf(host), Parties.siteOf(origin))) return undefined;
+  return { cancel: true };
+}
+
 function onBeforeRequest(details) {
   const { tabId } = details;
-  if (tabId < 0) return; // requisições sem aba: service workers, o próprio navegador
+  if (tabId < 0) return blockWithoutTab(details); // service workers, o próprio navegador
 
   if (details.type === 'main_frame') {
     const next = pending.get(tabId);
@@ -64,6 +106,7 @@ function onBeforeRequest(details) {
     reports.set(tabId, report);
   }
   if (report.addRequest(details)) updateBadge(tabId);
+  return blockIfListed(details, report);
 }
 
 // Relatório que deve receber um evento posterior ao onBeforeRequest da mesma
@@ -209,7 +252,7 @@ function updateBadge(tabId) {
 browser.browserAction.setBadgeBackgroundColor({ color: '#9a3412' });
 browser.browserAction.setBadgeTextColor({ color: '#ffffff' });
 
-browser.webRequest.onBeforeRequest.addListener(onBeforeRequest, { urls: ['<all_urls>'] });
+browser.webRequest.onBeforeRequest.addListener(onBeforeRequest, { urls: ['<all_urls>'] }, ['blocking']);
 browser.webRequest.onErrorOccurred.addListener(onErrorOccurred, { urls: ['<all_urls>'] });
 browser.webRequest.onBeforeSendHeaders.addListener(onBeforeSendHeaders, { urls: ['<all_urls>'] }, ['requestHeaders']);
 browser.webRequest.onHeadersReceived.addListener(onHeadersReceived, { urls: ['<all_urls>'] }, ['responseHeaders']);
@@ -234,6 +277,10 @@ browser.runtime.onMessage.addListener((message, sender) => {
     return Promise.resolve(report ? report.toJSON() : null);
   } else if (message.type === 'exportReport') {
     return exportReport(message.tabId);
+  } else if (message.type === 'getBlocklist') {
+    return Promise.resolve([...blocklist].sort());
+  } else if (message.type === 'updateBlocklist') {
+    return updateBlocklist(message);
   }
   return undefined;
 });

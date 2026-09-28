@@ -67,6 +67,7 @@ class TabReport {
     this.listeners = new Map(); // script|evento -> listener de teclado/digitação
     this.globals = null; // último retrato de globais adicionadas e funções substituídas
     this.signatures = new Set(); // assinaturas conhecidas de hook (BeEF)
+    this.blockedByRule = new Map(); // regra da lista de bloqueio -> requisições canceladas
     this.interacted = false; // houve clique, toque ou tecla nesta página
     this.committedAt = null;
     this.previous = null; // resumo da página anterior na aba (bounce tracking)
@@ -119,6 +120,7 @@ class TabReport {
         classifications: new Set(),
         errors: {}, // erro de rede -> quantidade
         categories: new Set(), // categorias no formato do Blacklight
+        blockedByPlugin: 0, // requisições canceladas pela lista de bloqueio
         firstSeenMs: this.elapsed(),
         lastSeenAt: 0,
       };
@@ -146,6 +148,14 @@ class TabReport {
     this.trackPersistence(details, entry);
     this.version++;
     return isNewSite && entry.thirdParty;
+  }
+
+  // Requisição cancelada pela lista de bloqueio personalizada.
+  addBlocked(details, rule) {
+    const entry = this.hosts.get(Parties.hostOf(details.url));
+    if (entry) entry.blockedByPlugin++;
+    this.blockedByRule.set(rule, (this.blockedByRule.get(rule) || 0) + 1);
+    this.version++;
   }
 
   // Conexões persistentes e assinaturas de hook numa requisição.
@@ -685,9 +695,11 @@ class TabReport {
           classifications: new Set(),
           errors: {},
           categories: new Set(),
+          blockedByPlugin: 0,
         };
         bySite.set(e.site, s);
       }
+      s.blockedByPlugin += e.blockedByPlugin;
       e.categories.forEach(c => s.categories.add(c));
       for (const [error, n] of Object.entries(e.errors)) s.errors[error] = (s.errors[error] || 0) + n;
       s.requests += e.requests;
@@ -733,6 +745,7 @@ class TabReport {
         windowThirdPartySites: thirdParty.filter(s => s.firstSeenMs <= CAPTURE_WINDOW_MS).length,
         windowTrackerSites: thirdParty.filter(s => s.tracker && s.firstSeenMs <= CAPTURE_WINDOW_MS).length,
         blockedByFirefoxSites: thirdParty.filter(s => s.blockedByFirefox).length,
+        blockedByPluginRequests: [...this.blockedByRule.values()].reduce((a, b) => a + b, 0),
         firstPartyHosts: sum(firstParty, s => s.hosts.length),
       },
       thirdParty,
@@ -745,6 +758,7 @@ class TabReport {
       bounces: this.bouncesJSON(),
       trackingParams: this.trackingParamsJSON(),
       hijack: this.hijackJSON(),
+      blocked: Object.fromEntries(this.blockedByRule),
       interacted: this.interacted,
       transition: this.transition,
       previous: previous ? { url: previous.url, site: previous.site } : null,
