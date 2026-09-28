@@ -30,6 +30,16 @@ const TECHNIQUE_LABELS = {
   fonts: 'Enumeração de fontes',
 };
 
+// Rótulos curtos das categorias do Blacklight (as regras estão em categories.js).
+const CATEGORY_LABELS = {
+  'session-recording': 'gravação de sessão',
+  'facebook-pixel': 'pixel do Facebook',
+  'tiktok-pixel': 'pixel do TikTok',
+  'x-pixel': 'pixel do X',
+  'ga-remarketing': 'GA remarketing',
+  'linkedin-insight': 'LinkedIn Insight',
+};
+
 const CRITERIA_LABELS = {
   size: 'canvas menor que 16×16',
   text: 'texto com menos de 10 caracteres e 1 cor',
@@ -165,6 +175,7 @@ function renderSite(site) {
       h('span', { class: 'name' }, site.site),
       site.tracker && h('span', { class: 'pill tracker' }, 'rastreador'),
       site.blockedByFirefox && h('span', { class: 'pill' }, 'bloqueado pelo Firefox'),
+      ...site.categories.map(c => h('span', { class: 'pill warn' }, CATEGORY_LABELS[c] || c)),
       h('span', { class: 'count' }, `${site.requests} req.`)),
     h('div', { class: 'meta' }, hosts),
     meta && h('div', { class: 'meta' }, meta));
@@ -358,7 +369,7 @@ function otherFrameOrigin(frameOrigin) {
 }
 
 function alertCount(report) {
-  return report.fingerprinting.summary.detections + report.bounces.length
+  return report.fingerprinting.summary.detections + report.categories.length + report.bounces.length
     + report.sync.summary.events + report.trackingParams.length;
 }
 
@@ -401,6 +412,16 @@ function renderTracking(report) {
   const bounces = report.bounces;
   const params = report.trackingParams;
   return [
+    h('h2', {}, 'Categorias (testes do Blacklight)'),
+    report.categories.length
+      ? h('ul', { class: 'list' }, report.categories.map(c => h('li', { class: 'item' },
+        h('div', { class: 'row' },
+          h('span', { class: 'name' }, c.label),
+          h('span', { class: 'count' }, `${c.requests} req.`)),
+        h('div', { class: 'meta' }, c.sites.join(', ')),
+        h('div', { class: 'meta', title: c.example }, shortScript(c.example)))))
+      : h('p', { class: 'empty' }, 'Nenhuma gravação de sessão, pixel de rede social ou GA com remarketing.'),
+
     h('h2', {}, 'Bounce tracking'),
     bounces.length
       ? h('ul', { class: 'list' }, bounces.map(renderBounce))

@@ -6,6 +6,7 @@ const assert = require('node:assert/strict');
 globalThis.Parties = require('../extension/background/parties.js');
 globalThis.Fingerprint = require('../extension/background/fingerprint.js');
 globalThis.Tracking = require('../extension/background/tracking.js');
+globalThis.Categories = require('../extension/background/categories.js');
 const TabReport = require('../extension/background/tab-report.js');
 
 const req = (url, type = 'script', extra = {}) => ({ url, type, ...extra });
@@ -346,4 +347,15 @@ test('valor do cookie não vai para o JSON exportado', () => {
   const report = new TabReport(1, 'https://www.uol.com.br/');
   report.addCookie(cookieOf('_ga', 'uol.com.br', 'GA1.1.1567894321.1790000000'), 'store');
   assert.equal('value' in report.toJSON().cookies.list[0], false);
+});
+
+test('categorias no formato do Blacklight, por site e para a página', () => {
+  const report = new TabReport(1, 'https://www.quintoandar.com.br/');
+  report.addRequest(req('https://script.hotjar.com/modules.abc.js'));
+  report.addRequest(req('https://static.hotjar.com/c/hotjar-1203740.js?sv=7'));
+  report.addRequest(req('https://stats.g.doubleclick.net/g/collect?v=2&tid=G-2NHZ8V3TH0', 'beacon'));
+  const json = report.toJSON();
+  assert.deepEqual(json.categories.map(c => c.category), ['ga-remarketing', 'session-recording']);
+  assert.deepEqual(json.categories.find(c => c.category === 'session-recording').sites, ['hotjar.com']);
+  assert.deepEqual(json.thirdParty.find(s => s.site === 'hotjar.com').categories, ['session-recording']);
 });

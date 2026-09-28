@@ -51,6 +51,7 @@ class TabReport {
     this.ownValues = new Map(); // nome -> valor de cookies/storage do próprio site
     this.syncEvents = new Map(); // dono|nome|receptor -> ID repassado a outro site
     this.syncEndpoints = new Map(); // site -> requisições a caminhos típicos de sync
+    this.categoryExamples = new Map(); // categoria -> primeira URL que a revelou
     this.interacted = false; // houve clique, toque ou tecla nesta página
     this.committedAt = null;
     this.previous = null; // resumo da página anterior na aba (bounce tracking)
@@ -102,6 +103,7 @@ class TabReport {
         types: new Set(),
         classifications: new Set(),
         errors: {}, // erro de rede -> quantidade
+        categories: new Set(), // categorias no formato do Blacklight
         firstSeenMs: this.elapsed(),
         lastSeenAt: 0,
       };
@@ -120,6 +122,10 @@ class TabReport {
       for (const flag of [...(cls.firstParty || []), ...(cls.thirdParty || [])]) {
         entry.classifications.add(flag);
       }
+    }
+    for (const category of Categories.categoriesOf(details.url)) {
+      entry.categories.add(category);
+      if (!this.categoryExamples.has(category)) this.categoryExamples.set(category, details.url.slice(0, 300));
     }
     if (entry.thirdParty) this.checkSync(details.url, entry.site);
     this.version++;
@@ -509,6 +515,23 @@ class TabReport {
     };
   }
 
+  // Categorias do Blacklight presentes na página, com os sites que as revelaram.
+  categoriesJSON() {
+    const result = [];
+    for (const [category, example] of this.categoryExamples) {
+      const hosts = [...this.hosts.values()].filter(e => e.categories.has(category));
+      result.push({
+        category,
+        label: Categories.LABELS[category],
+        sites: [...new Set(hosts.map(e => e.site))].sort(),
+        requests: hosts.reduce((n, e) => n + e.requests, 0),
+        firstSeenMs: Math.min(...hosts.map(e => e.firstSeenMs)),
+        example,
+      });
+    }
+    return result.sort((a, b) => a.category.localeCompare(b.category));
+  }
+
   trackingParamsJSON() {
     const found = new Map();
     for (const url of this.navigationChain) {
@@ -542,9 +565,11 @@ class TabReport {
           types: new Set(),
           classifications: new Set(),
           errors: {},
+          categories: new Set(),
         };
         bySite.set(e.site, s);
       }
+      e.categories.forEach(c => s.categories.add(c));
       for (const [error, n] of Object.entries(e.errors)) s.errors[error] = (s.errors[error] || 0) + n;
       s.requests += e.requests;
       s.firstSeenMs = Math.min(s.firstSeenMs, e.firstSeenMs);
@@ -559,6 +584,7 @@ class TabReport {
       hosts: s.hosts.sort((a, b) => b.requests - a.requests),
       types: [...s.types].sort(),
       classifications: [...s.classifications].sort(),
+      categories: [...s.categories].sort(),
       tracker: [...s.classifications].some(c => TRACKER_FLAG.test(c)),
       blockedByFirefox: Object.keys(s.errors).some(e => FIREFOX_BLOCK_ERROR.test(e)),
     }));
@@ -595,6 +621,7 @@ class TabReport {
       cookies: this.cookiesJSON(),
       storage: this.storageJSON(),
       fingerprinting: this.fingerprintJSON(),
+      categories: this.categoriesJSON(),
       sync: this.syncJSON(),
       bounces: this.bouncesJSON(),
       trackingParams: this.trackingParamsJSON(),
