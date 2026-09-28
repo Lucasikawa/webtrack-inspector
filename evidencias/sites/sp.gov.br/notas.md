@@ -42,8 +42,18 @@ Também não é evidência; orienta o que conferir na coleta.
   teste de 27/09 registrou canvas, WebGL, GPU e fontes pelo script do Imperva
   (`/oporth-beyon-…`). Hipótese: a proteção anti-bot só faz o fingerprinting
   pesado quando detecta automação (`navigator.webdriver`).
-- Blacklight: 2 ad trackers, 2 cookies de terceiros, Google Analytics com
-  "remarketing audiences". Plugin: 4 sites de 3ª parte (2 rastreadores pelo
+- Blacklight (`blacklight/raw/inspection.json`, 23:36:48Z = 20:36 BRT, Chrome
+  headless a partir de `us-ca`): visitou `/sp` e depois
+  `/sp/institucional/estrutura/prefeituras-paulistas`; **a segunda página foi
+  bloqueada pelo Imperva** (`html/2.html`: iframe de desafio,
+  "Request unsuccessful. Incapsula incident ID …", IP do cliente `54.241.50.121`,
+  AWS). Canvas fingerprinting por 3 scripts: `newassets.hcaptcha.com/.../hsw.js`
+  (hCaptcha) e dois caminhos ofuscados do Imperva em `www.sp.gov.br`
+  (`/oporth-beyon-…`, `/llne-But-Darkd-…`), além de fingerprinting de fontes.
+  Conclusão: o fingerprinting é do desafio anti-bot, disparado para um navegador
+  automatizado vindo de datacenter; não aparece para um visitante comum.
+- Blacklight: 2 ad trackers (5 requisições casando com a EasyPrivacy), 2 cookies
+  de terceiros (de 6), Google Analytics com "remarketing audiences". Plugin: 4 sites de 3ª parte (2 rastreadores pelo
   Firefox: `jsdelivr.net` como `tracking_content`, `google.com`), 8 cookies,
   4 `Set-Cookie` não gravados.
 - uBO: 2 bloqueios (`googletagmanager.com/gtm.js` e `gtag/js`, substituídos por

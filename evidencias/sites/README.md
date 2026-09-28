@@ -63,7 +63,8 @@ Arquivos de cada site ficam em `evidencias/sites/<site>/`.
    (rastreadores com a regra da EasyList/EasyPrivacy que os classificou, cookies,
    canvas fingerprint, listeners, pixels) e o ambiente da análise; é o arquivo que
    a reconciliação usa. Coloque a pasta em `sites/<site>/blacklight/` (o
-   `raw/inspection-log.ndjson`, muito grande, vai compactado em `.gz`).
+   `raw/inspection-log.ndjson`, de até 150 MB, vai compactado em `.xz`; para abrir:
+   `xz -dk inspection-log.ndjson.xz`).
 4. Copie a URL da página de resultado para o `notas.md` do site.
 
 ## 4. Registro

@@ -43,8 +43,12 @@ Também não é evidência; orienta o que conferir na coleta.
   (server-side tagging), invisível como terceiro para o plugin e para o Blacklight
   ("Facebook Pixel not found").
 - uBO desmascara CNAME: `id.quintoandar.com.br` → `d5tahiiw7y2sk.cloudfront.net`.
-- Blacklight: 5 ad trackers, 0 cookies de terceiros, **gravação de sessão**
-  (Hotjar), empresas Alphabet, Criteo, HotJar. Plugin: 9 sites de 3ª parte (8
+- Blacklight (`blacklight/raw/inspection.json`, 23:39:52Z = 20:39 BRT, Chrome
+  headless a partir de `us-ca`): 5 ad trackers (60 requisições a 11 hosts, 44 pela
+  EasyPrivacy e 16 pela EasyList), 0 cookies de terceiros (de 6), **gravação de
+  sessão** (`script.hotjar.com`, `static.hotjar.com`), nenhum fingerprinting,
+  listeners de mouse (7), teclado (6) e toque (3); empresas Alphabet, Criteo,
+  HotJar. Plugin: 9 sites de 3ª parte (8
   rastreadores), 15 cookies, todos de 1ª parte (4 gravados por scripts de 3ª parte).
 - uBO: 13 bloqueios, 4 de 9 domínios conectados (amplitude, google-analytics,
   googletagmanager, hotjar, sentry bloqueados).
