@@ -7,6 +7,7 @@ globalThis.Parties = require('../extension/background/parties.js');
 globalThis.Fingerprint = require('../extension/background/fingerprint.js');
 globalThis.Tracking = require('../extension/background/tracking.js');
 globalThis.Categories = require('../extension/background/categories.js');
+globalThis.Score = require('../extension/background/score.js');
 const TabReport = require('../extension/background/tab-report.js');
 
 const req = (url, type = 'script', extra = {}) => ({ url, type, ...extra });
@@ -437,4 +438,15 @@ test('requisições bloqueadas pela lista, por site e por regra', () => {
   assert.equal(json.totals.blockedByPluginRequests, 3);
   assert.deepEqual(json.blocked, { 'bad.third-party.site': 3 });
   assert.equal(json.thirdParty[0].blockedByPlugin, 3);
+});
+
+test('o relatório traz o score calculado', () => {
+  const report = new TabReport(1, 'https://www.quintoandar.com.br/');
+  report.addRequest(req('https://static.hotjar.com/c/hotjar-1.js', 'script', {
+    urlClassification: { firstParty: [], thirdParty: ['tracking_analytics'] } }));
+  const { score } = report.toJSON();
+  assert.equal(score.criteria.find(c => c.id === 'trackers').penalty, 2);
+  assert.equal(score.criteria.find(c => c.id === 'surveillance').penalty, 10);
+  assert.equal(score.score, 88);
+  assert.equal(score.grade, 'A');
 });

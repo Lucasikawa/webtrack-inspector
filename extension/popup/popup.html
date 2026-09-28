@@ -7,8 +7,11 @@
 </head>
 <body>
   <header class="page">
-    <div class="page-site" id="page-site">—</div>
-    <div class="page-url" id="page-url"></div>
+    <div class="page-id">
+      <div class="page-site" id="page-site">—</div>
+      <div class="page-url" id="page-url"></div>
+    </div>
+    <button type="button" class="page-score" id="page-score" title="Score de privacidade" hidden></button>
   </header>
 
   <section class="stats" id="stats" aria-label="Resumo da página"></section>
@@ -19,6 +22,7 @@
     <button type="button" class="tab" role="tab" data-tab="storage">Storage</button>
     <button type="button" class="tab" role="tab" data-tab="alerts">Alertas</button>
     <button type="button" class="tab" role="tab" data-tab="blocklist">Bloqueio</button>
+    <button type="button" class="tab" role="tab" data-tab="score">Score</button>
   </nav>
 
   <main id="content" role="tabpanel"></main>

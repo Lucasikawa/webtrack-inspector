@@ -726,7 +726,7 @@ class TabReport {
     const sum = (list, fn) => list.reduce((n, s) => n + fn(s), 0);
 
     const previous = this.previousSnapshot();
-    return {
+    const json = {
       tabId: this.tabId,
       url: this.url,
       host: this.host,
@@ -763,6 +763,8 @@ class TabReport {
       transition: this.transition,
       previous: previous ? { url: previous.url, site: previous.site } : null,
     };
+    json.score = Score.compute(json);
+    return json;
   }
 }
 

@@ -20,8 +20,10 @@ const TYPE_LABELS = {
   other: 'outro',
 };
 
-const TABS = ['third-party', 'cookies', 'storage', 'alerts', 'blocklist'];
-const TAB_LABELS = { 'third-party': 'Terceiros', cookies: 'Cookies', storage: 'Storage', alerts: 'Alertas', blocklist: 'Bloqueio' };
+const TABS = ['third-party', 'cookies', 'storage', 'alerts', 'blocklist', 'score'];
+const TAB_LABELS = {
+  'third-party': 'Terceiros', cookies: 'Cookies', storage: 'Storage', alerts: 'Alertas', blocklist: 'Bloqueio', score: 'Score',
+};
 
 const TECHNIQUE_LABELS = {
   canvas: 'Canvas fingerprint',
@@ -169,6 +171,7 @@ function renderTabs(report) {
       storage: report.storage.summary.originsWithData,
       alerts: alertCount(report),
       blocklist: ui.blocklist.length,
+      score: report.score ? report.score.score : undefined,
     }
     : {};
   for (const button of document.querySelectorAll('.tab')) {
@@ -342,6 +345,44 @@ function renderStorage(report) {
     h('ul', { class: 'list' }, origins.map(renderStorageOrigin)),
     h('p', { class: 'note' }, 'Inclui iframes de terceiros. Só nomes de chaves e tamanhos são lidos; os valores não saem da página.'),
   ];
+}
+
+// Aba Score
+
+function renderScore(report) {
+  const s = report.score;
+  return [
+    h('div', { class: `score-head grade-${s.grade}` },
+      h('span', { class: 'value' }, String(s.score)),
+      h('span', { class: 'grade' }, s.grade),
+      h('span', { class: 'note' }, 'de 100 · faixas: A ≥ 85, B ≥ 70, C ≥ 50, D ≥ 30, F < 30')),
+    h('p', { class: 'note' },
+      `Parte de 100 e desconta pontos em 7 critérios, cada um com teto (os tetos somam 100). Só entra o que foi observado nos `
+      + `primeiros ${s.windowMs / 1000} s da navegação. O score mede o comportamento do site, não a proteção do navegador.`),
+    h('ul', { class: 'list' }, s.criteria.map(c => h('li', { class: 'item' },
+      h('div', { class: 'row' },
+        h('span', { class: 'name' }, c.label),
+        h('span', { class: 'count' }, `−${String(c.penalty).replace('.', ',')} / ${c.max}`)),
+      h('div', { class: 'bar' }, h('span', { style: `width: ${(100 * c.penalty) / c.max}%` })),
+      h('div', { class: 'meta' }, c.rule),
+      c.blacklight && h('div', { class: 'meta' }, `Blacklight: ${c.blacklight}`),
+      c.items.length > 0 && detailsBlock(`score:${c.id}`, '', `${plural(c.items.length, 'ocorrência', 'ocorrências')}`,
+        h('ul', { class: 'keys' }, c.items.map(i => h('li', {},
+          h('span', {}, i.label),
+          h('span', { class: 'size' }, `−${i.points}`)))))))),
+  ];
+}
+
+function renderScoreBadge(report) {
+  const badge = document.getElementById('page-score');
+  if (!report || !report.score) {
+    badge.hidden = true;
+    return;
+  }
+  const { score, grade } = report.score;
+  badge.hidden = false;
+  badge.className = `page-score grade-${grade}`;
+  badge.replaceChildren(h('span', { class: 'value' }, String(score)), h('span', { class: 'grade' }, grade));
 }
 
 // Aba Bloqueio
@@ -603,6 +644,7 @@ function render(report) {
   renderTabs(report);
 
   if (!report || !report.host) {
+    renderScoreBadge(null);
     document.getElementById('page-site').textContent = 'Sem dados para esta aba';
     document.getElementById('page-url').textContent = '';
     document.getElementById('stats').replaceChildren();
@@ -614,10 +656,16 @@ function render(report) {
 
   document.getElementById('page-site').textContent = report.site;
   document.getElementById('page-url').textContent = report.url;
+  renderScoreBadge(report);
   renderStats(report);
 
   const renderers = {
-    'third-party': renderThirdParty, cookies: renderCookies, storage: renderStorage, alerts: renderAlerts, blocklist: renderBlocklist,
+    'third-party': renderThirdParty,
+    cookies: renderCookies,
+    storage: renderStorage,
+    alerts: renderAlerts,
+    blocklist: renderBlocklist,
+    score: renderScore,
   };
   content.replaceChildren(...renderers[ui.tab](report).flat().filter(Boolean));
 }
@@ -633,6 +681,12 @@ for (const button of document.querySelectorAll('.tab')) {
     render(lastReport);
   });
 }
+
+// O selo do score no cabeçalho abre a aba Score.
+document.getElementById('page-score').addEventListener('click', () => {
+  ui.tab = 'score';
+  render(lastReport);
+});
 
 document.getElementById('version').textContent = `v${browser.runtime.getManifest().version}`;
 
@@ -676,7 +730,11 @@ async function init() {
     tabId = forcedTab;
   } else {
     const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
-    tabId = tab.id;
+    // Aberto sobre a aba do próprio relatório (popup.html?tab=<id>), segue a
+    // página daquele relatório, e não a página da extensão.
+    const own = (tab.url || '').startsWith(browser.runtime.getURL('popup/popup.html'))
+      && Number(new URL(tab.url).searchParams.get('tab'));
+    tabId = own || tab.id;
   }
   await refresh();
   setInterval(refresh, 1000);

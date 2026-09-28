@@ -39,8 +39,9 @@ EXT_ID = MANIFEST['browser_specific_settings']['gecko']['id']
 UUID = '6c1f0b7e-2d3a-4c8e-9f10-7a5b3c2d1e0f'  # fixo: permite abrir moz-extension://UUID/...
 DDG = 'https://privacy-test-pages.site'
 DEFAULT_FIREFOX = '/Applications/Firefox.app/Contents/MacOS/firefox'
-TABS = ['third-party', 'cookies', 'storage', 'alerts', 'blocklist']
-TAB_FILES = {'third-party': 'terceiros', 'cookies': 'cookies', 'storage': 'storage', 'alerts': 'alertas', 'blocklist': 'bloqueio'}
+TABS = ['third-party', 'cookies', 'storage', 'alerts', 'blocklist', 'score']
+TAB_FILES = {'third-party': 'terceiros', 'cookies': 'cookies', 'storage': 'storage', 'alerts': 'alertas',
+             'blocklist': 'bloqueio', 'score': 'score'}
 
 # Executado numa página da extensão: relatório de cada aba comum.
 GET_REPORTS = """
@@ -127,6 +128,7 @@ class Browser:
 
 def summary(report):
     t = report['totals']
+    score = report.get('score') or {}
     c = report['cookies']['summary']
     s = report['storage']['summary']
     f = report['fingerprinting']['summary']
@@ -135,7 +137,8 @@ def summary(report):
             f"  cookies={c['total']} (3ª parte={c['thirdParty']['session'] + c['thirdParty']['persistent']}, "
             f"particionados={c['partitioned']}, 1ª parte por script de 3ª={c['firstPartyByThirdPartyScript']})\n"
             f"  storage: {s['items']} itens em {s['originsWithData']} origens\n"
-            f"  fingerprinting: {f['byTechnique']}")
+            f"  fingerprinting: {f['byTechnique']}\n"
+            f"  score: {score.get('score')} ({score.get('grade')})")
 
 
 # Cenários do DDG, com o resultado esperado
