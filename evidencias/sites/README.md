@@ -56,12 +56,14 @@ Arquivos de cada site ficam em `evidencias/sites/<site>/`.
 
 1. Abra `https://themarkup.org/blacklight`, informe a URL do site e inicie a
    análise (leva cerca de 1 minuto).
-2. **Expanda as seções** (seta à direita de cada uma) que tiverem resultado:
-   ad trackers, cookies de terceiros, "evade cookie blockers", gravação de sessão,
-   pixels e Google Analytics, e também as empresas listadas em "ad-tech companies".
-   As listas de domínios só aparecem expandidas e são o que a reconciliação usa.
-3. Salve o resultado completo: **Cmd + P** → **Salvar como PDF** →
-   `blacklight.pdf`.
+2. Salve um print da página de resultado → `blacklight.png`.
+3. **Baixe os dados da análise** (opção de download na página de resultado). Vem
+   uma pasta `blacklight-inspection-<site>` com `report.html`, `screenshots/`,
+   `html/` e `raw/`. O `raw/inspection.json` tem tudo o que o Blacklight detectou
+   (rastreadores com a regra da EasyList/EasyPrivacy que os classificou, cookies,
+   canvas fingerprint, listeners, pixels) e o ambiente da análise; é o arquivo que
+   a reconciliação usa. Coloque a pasta em `sites/<site>/blacklight/` (o
+   `raw/inspection-log.ndjson`, muito grande, vai compactado em `.gz`).
 4. Copie a URL da página de resultado para o `notas.md` do site.
 
 ## 4. Registro
@@ -76,5 +78,5 @@ página demorou, Blacklight falhou).
 - [ ] `plugin-terceiros.png`, `plugin-cookies.png`, `plugin-storage.png`, `plugin-alertas.png`
 - [ ] `plugin.json`
 - [ ] `ublock.png`, `ublock-logger.png` (e `ublock.txt`, se exportou)
-- [ ] `blacklight.pdf`
+- [ ] `blacklight.png` e pasta `blacklight/` (download da análise)
 - [ ] linha preenchida em `notas.md`

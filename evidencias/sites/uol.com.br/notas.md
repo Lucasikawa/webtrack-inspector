@@ -52,6 +52,13 @@ Também não é evidência; orienta o que conferir na coleta.
   (`__eoi`, `__gads`, `__gpi` só aos 123 s).
 - Coleta anterior (20:09) descartada: o DevTools foi aberto depois da navegação e
   o HAR começou 8 s atrasado, sem o documento principal.
+- Ambiente do Blacklight (`blacklight/raw/inspection.json`): Chrome headless
+  138 (User-Agent de Chrome 115 no macOS), a partir de `us-ca`, sem bloqueador,
+  espera `networkidle2` com limite de 30 s, análise de 23:43:56Z a 23:45:04Z
+  (20:43–20:45 BRT). Ad trackers são requisições que casam com regras da
+  EasyList/EasyPrivacy (953 requisições, 193 hosts); 206 de 242 cookies de
+  terceiros; nenhum canvas fingerprint; listeners de mouse (30), teclado (12),
+  toque (9) e sensor (1).
 - uBO: 24 bloqueios, 14 de 21 domínios conectados; desmascara vários CNAMEs de
   CDN (`conteudo.imguol.com.br`, `h.jsuol.com.br`, `player.fantascope.uol.com.br`
   → `*.cloudfront.net`).

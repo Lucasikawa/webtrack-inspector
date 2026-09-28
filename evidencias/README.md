@@ -17,7 +17,8 @@ evidencias/
     <site>.har                        DevTools → Rede → "Salvar tudo como HAR"
     plugin-<aba>.png                  um print por aba do popup
     plugin-*.json                     "Exportar JSON" do popup
-    blacklight.png | blacklight.pdf   resultado do Blacklight (mesmo dia)
+    blacklight.png                    print do resultado do Blacklight
+    blacklight/                       download da análise (report.html, raw/inspection.json…)
     ublock.png | ublock.txt           popup e logger do uBlock Origin
     notas.md                          horário da coleta e observações
 ```
