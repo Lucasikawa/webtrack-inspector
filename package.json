@@ -9,7 +9,8 @@
     "start": "web-ext run --source-dir extension --url https://privacy-test-pages.site/",
     "build": "web-ext build --source-dir extension --artifacts-dir dist --overwrite-dest",
     "test": "node --test tests/",
-    "reconcile": "node tools/reconcile.js evidencias/sites/sp.gov.br evidencias/sites/quintoandar.com.br evidencias/sites/uol.com.br"
+    "reconcile": "node tools/reconcile.js evidencias/sites/sp.gov.br evidencias/sites/quintoandar.com.br evidencias/sites/uol.com.br",
+    "score": "node tools/score.js"
   },
   "devDependencies": {
     "tldts": "^7.4.15",
