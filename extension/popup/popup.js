@@ -439,9 +439,23 @@ async function refresh() {
   render(report);
 }
 
+// Aberto como aba (popup.html?tab=<id>), mostra o relatório daquela aba em
+// tamanho de página: útil para prints completos e para o teste automatizado.
+const forcedTab = Number(new URLSearchParams(location.search).get('tab'));
+if (forcedTab) document.body.classList.add('full');
+
+document.getElementById('open-tab').addEventListener('click', () => {
+  browser.tabs.create({ url: browser.runtime.getURL(`popup/popup.html?tab=${tabId}`) });
+  window.close();
+});
+
 async function init() {
-  const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
-  tabId = tab.id;
+  if (forcedTab) {
+    tabId = forcedTab;
+  } else {
+    const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
+    tabId = tab.id;
+  }
   await refresh();
   setInterval(refresh, 1000);
 }

@@ -5,3 +5,5 @@ web-ext-artifacts/
 *.log
 .claude/
 .preview/
+.venv/
+__pycache__/

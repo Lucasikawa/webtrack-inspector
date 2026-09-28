@@ -39,7 +39,8 @@ Requer Firefox 140 ou superior.
    O número no ícone é a quantidade de sites de terceira parte contatados.
 7. O popup tem as abas **Terceiros**, **Cookies**, **Storage** e **Alertas**
    (fingerprinting); o botão **Exportar JSON** salva o relatório da página (usado
-   nas evidências).
+   nas evidências) e **Abrir em aba** mostra o mesmo relatório numa aba, em
+   tamanho de página.
 
 Extensões temporárias são removidas quando o Firefox é fechado; repita os passos 2–4
 a cada nova sessão. Para ver os erros do background, use o botão **Inspecionar**
@@ -54,6 +55,22 @@ npm run lint     # valida a extensão com o web-ext lint
 npm start        # abre um Firefox temporário com a extensão carregada
 npm run vendor   # atualiza extension/lib/ a partir de node_modules
 ```
+
+### Teste de integração num Firefox real
+
+`tools/smoke_test.py` abre uma instância separada do Firefox (headless, perfil
+temporário), carrega a extensão e verifica os resultados esperados nas páginas de
+teste do DuckDuckGo (rastreadores, autoria de cookies, storage de iframes,
+canvas/WebGL/fontes). Também coleta evidências automatizadas de uma URL.
+
+```bash
+python3 -m venv .venv && .venv/bin/pip install -r tools/requirements.txt
+.venv/bin/python tools/smoke_test.py ddg
+.venv/bin/python tools/smoke_test.py --out evidencias/sites/sp.gov.br/automatizado https://www.sp.gov.br/
+```
+
+O Firefox automatizado tem `navigator.webdriver = true`: sites com proteção
+anti-bot o tratam como robô (como fazem com o Blacklight).
 
 A pasta `extension/` é carregada diretamente, sem build. As bibliotecas usadas em
 tempo de execução ficam versionadas em `extension/lib/`.

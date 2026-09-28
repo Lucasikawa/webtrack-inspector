@@ -350,3 +350,18 @@ details.section > summary {
 }
 
 .button:hover { border-color: var(--muted); }
+
+/* Relatório aberto numa aba: largura de página e sem rolagem interna, para que
+   o print de página inteira mostre tudo. */
+body.full {
+  width: auto;
+  max-width: 960px;
+  max-height: none;
+  margin: 0 auto;
+  overflow: visible;
+  border-left: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+}
+
+body.full main { overflow: visible; }
+body.full #open-tab { display: none; }
