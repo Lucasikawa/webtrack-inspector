@@ -83,8 +83,11 @@ function onErrorOccurred(details) {
 function onBeforeSendHeaders(details) {
   const report = reportForEvent(details);
   if (!report) return;
-  const header = (details.requestHeaders || []).find(h => h.name.toLowerCase() === 'cookie');
+  const headers = details.requestHeaders || [];
+  const header = headers.find(h => h.name.toLowerCase() === 'cookie');
   if (header && header.value) report.addRequestCookies(details.url, header.value);
+  const accept = headers.find(h => h.name.toLowerCase() === 'accept');
+  if (accept && /text\/event-stream/i.test(accept.value || '')) report.markEventStream(details.url);
 }
 
 function onHeadersReceived(details) {

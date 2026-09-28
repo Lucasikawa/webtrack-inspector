@@ -368,9 +368,14 @@ function otherFrameOrigin(frameOrigin) {
   }
 }
 
+function hijackCount(report) {
+  const h = report.hijack.summary;
+  return h.thirdPartySockets + h.polling + (h.overridden ? 1 : 0) + h.thirdPartyKeyboardScripts + h.signatures;
+}
+
 function alertCount(report) {
   return report.fingerprinting.summary.detections + report.categories.length + report.bounces.length
-    + report.sync.summary.events + report.trackingParams.length;
+    + report.sync.summary.events + report.trackingParams.length + hijackCount(report);
 }
 
 // ID longo abreviado para exibição (o JSON exportado tem o valor completo).
@@ -456,6 +461,56 @@ function renderTracking(report) {
   ];
 }
 
+function renderHijack(report) {
+  const hj = report.hijack;
+  const sockets = [...hj.websockets, ...hj.eventStreams.map(s => ({ ...s, stream: true }))].filter(s => s.thirdParty);
+  const item = (name, tags, ...lines) => h('li', { class: 'item' },
+    h('div', { class: 'row' }, h('span', { class: 'name' }, name), h('span', { class: 'tags' }, ...tags)),
+    ...lines.filter(Boolean).map(line => h('div', { class: 'meta' }, line)));
+  const items = [
+    ...hj.signatures.map(sig => item(`Assinatura de hook conhecida: ${sig}`, [h('span', { class: 'pill tracker' }, 'BeEF')])),
+    ...sockets.map(sock => item(
+      `${sock.stream ? 'EventSource' : 'WebSocket'} para ${sock.site}`,
+      [h('span', { class: 'pill tracker' }, 'conexão persistente')],
+      sock.url,
+      sock.messagesSent && 'mensagens enviadas pela página',
+      sock.errors && sock.errors.length > 0 && `erro: ${sock.errors.join(', ')}`)),
+    ...hj.polling.map(p => item(
+      `Polling para ${p.site}`,
+      [h('span', { class: 'pill warn' }, `a cada ${(p.meanIntervalMs / 1000).toLocaleString('pt-BR', { maximumFractionDigits: 1 })} s`)],
+      `${p.endpoint} · ${p.requests} requisições em ${Math.round(p.spanMs / 1000)} s (variação ${p.cv})`)),
+    ...hj.keyboard.filter(k => k.scriptThirdParty).map(k => item(
+      'Captura de teclado por script de 3ª parte',
+      [h('span', { class: 'pill tracker' }, k.types.join(', '))],
+      shortScript(k.script),
+      `em: ${k.targets.join(', ')}`)),
+  ];
+  const overridden = hj.globals ? hj.globals.overridden : [];
+  return [
+    h('h2', {}, 'Sequestro de navegador (hijacking/hook)'),
+    items.length
+      ? h('ul', { class: 'list' }, items)
+      : h('p', { class: 'empty' }, 'Nenhuma conexão persistente com terceiros, polling, captura de teclado por terceiros ou assinatura de hook.'),
+    overridden.length > 0 && detailsBlock('overridden', 'section',
+      `Funções nativas substituídas por scripts da página (${overridden.length})`,
+      h('ul', { class: 'list' }, overridden.map(o => h('li', { class: 'item' },
+        h('div', { class: 'name mono' }, o.name),
+        o.source && h('div', { class: 'meta mono' }, o.source))))),
+    hj.globals && hj.globals.addedCount > 0 && detailsBlock('added-globals', 'section',
+      `Globais adicionadas ao window por scripts da página (${hj.globals.addedCount})`,
+      h('p', { class: 'meta mono' }, hj.globals.added.join(', '))),
+    hj.keyboard.some(k => !k.scriptThirdParty) && detailsBlock('fp-keyboard', 'section',
+      `Listeners de teclado de scripts de 1ª parte (${hj.keyboard.filter(k => !k.scriptThirdParty).length})`,
+      h('ul', { class: 'list' }, hj.keyboard.filter(k => !k.scriptThirdParty).map(k => h('li', { class: 'item' },
+        h('div', { class: 'meta' }, `${shortScript(k.script)} · ${k.types.join(', ')}`))))),
+    h('p', { class: 'note' },
+      'Indícios, não prova: conexão WebSocket/EventSource com terceiro; o mesmo endpoint de terceiro chamado ≥ 5 vezes em ≥ 10 s '
+      + 'com intervalos regulares; funções como fetch, XMLHttpRequest ou document.write com referência diferente da capturada antes '
+      + 'dos scripts da página; listeners de teclado registrados por scripts de terceiros; assinaturas do BeEF (hook.js, global beef, '
+      + 'cookie BEEFHOOK).'),
+  ];
+}
+
 function renderAlerts(report) {
   const { summary, detections, discarded } = report.fingerprinting;
   const discardedBlock = discarded.length > 0 && detailsBlock('discarded', 'section',
@@ -478,6 +533,7 @@ function renderAlerts(report) {
       'Canvas: heurística de Englehardt & Narayanan (ACM CCS 2016) — canvas ≥ 16×16, texto com ≥ 10 caracteres ou ≥ 2 cores, '
       + 'sem uso interativo e imagem extraída. WebGL: leitura de canvas WebGL ≥ 16×16. Fontes: ≥ 50 fontes para o mesmo texto.'),
     ...renderTracking(report),
+    ...renderHijack(report),
   ];
 }
 

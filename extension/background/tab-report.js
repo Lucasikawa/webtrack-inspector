@@ -29,6 +29,15 @@ const USER_TRANSITIONS = new Set(['typed', 'auto_bookmark', 'reload', 'generated
 // Valores triviais demais para provar que um identificador foi repassado.
 const TRIVIAL_VALUES = new Set(['', '0', '1', 'true', 'false', 'null', 'undefined']);
 
+// Polling persistente: o mesmo endpoint de terceiro chamado pelo menos 5 vezes,
+// ao longo de 10 s ou mais, em intervalos regulares (coeficiente de variação
+// até 0,35) entre 250 ms e 60 s. É como o hook do BeEF busca comandos.
+const POLL_TYPES = new Set(['xmlhttprequest', 'script', 'image', 'imageset', 'beacon', 'ping', 'other']);
+const POLL_MIN_REQUESTS = 5;
+const POLL_MIN_SPAN_MS = 10000;
+const POLL_MAX_CV = 0.35;
+const MAX_POLL_SAMPLES = 300;
+
 // Relatório de uma navegação de nível superior (uma página) em uma aba.
 class TabReport {
   static normalizeUrl(url) {
@@ -52,6 +61,12 @@ class TabReport {
     this.syncEvents = new Map(); // dono|nome|receptor -> ID repassado a outro site
     this.syncEndpoints = new Map(); // site -> requisições a caminhos típicos de sync
     this.categoryExamples = new Map(); // categoria -> primeira URL que a revelou
+    this.websockets = new Map(); // URL -> conexão WebSocket
+    this.eventStreams = new Map(); // URL -> conexão EventSource (Server-Sent Events)
+    this.pollTimes = new Map(); // host+caminho de terceiro -> instantes das requisições
+    this.listeners = new Map(); // script|evento -> listener de teclado/digitação
+    this.globals = null; // último retrato de globais adicionadas e funções substituídas
+    this.signatures = new Set(); // assinaturas conhecidas de hook (BeEF)
     this.interacted = false; // houve clique, toque ou tecla nesta página
     this.committedAt = null;
     this.previous = null; // resumo da página anterior na aba (bounce tracking)
@@ -128,8 +143,38 @@ class TabReport {
       if (!this.categoryExamples.has(category)) this.categoryExamples.set(category, details.url.slice(0, 300));
     }
     if (entry.thirdParty) this.checkSync(details.url, entry.site);
+    this.trackPersistence(details, entry);
     this.version++;
     return isNewSite && entry.thirdParty;
+  }
+
+  // Conexões persistentes e assinaturas de hook numa requisição.
+  trackPersistence(details, entry) {
+    let path = '';
+    try {
+      path = new URL(details.url).pathname;
+    } catch {
+      return;
+    }
+    if (details.type === 'websocket') {
+      const socket = this.websockets.get(details.url) || { url: details.url, site: entry.site, handshakes: 0, messagesSent: false, errors: [] };
+      socket.handshakes++;
+      this.websockets.set(details.url, socket);
+    }
+    if (entry.thirdParty && POLL_TYPES.has(details.type)) {
+      const key = entry.host + path;
+      const times = this.pollTimes.get(key) || [];
+      if (times.length < MAX_POLL_SAMPLES) times.push(this.elapsed());
+      this.pollTimes.set(key, times);
+    }
+    if (/\/hook\.js$/i.test(path)) this.signatures.add(`script hook.js (${entry.host})`);
+  }
+
+  // Requisição com Accept: text/event-stream (EventSource).
+  markEventStream(url) {
+    if (this.eventStreams.has(url)) return;
+    this.eventStreams.set(url, { url, site: Parties.siteOf(url) });
+    this.version++;
   }
 
   // Guarda os trechos com cara de identificador de um cookie ou chave de
@@ -187,6 +232,8 @@ class TabReport {
     const entry = this.hosts.get(Parties.hostOf(details.url));
     if (!entry || !details.error) return;
     entry.errors[details.error] = (entry.errors[details.error] || 0) + 1;
+    const socket = this.websockets.get(details.url);
+    if (socket && !socket.errors.includes(details.error)) socket.errors.push(details.error);
     this.version++;
   }
 
@@ -208,6 +255,7 @@ class TabReport {
       Object.assign(entry, cookie);
     }
     this.recordValue(cookie.site, cookie.name, cookie.value, source === 'http' ? 'Set-Cookie' : 'cookie');
+    if (cookie.name === 'BEEFHOOK') this.signatures.add(`cookie BEEFHOOK (${cookie.domain})`);
     this.version++;
   }
 
@@ -343,6 +391,17 @@ class TabReport {
     } else if (event.kind === 'interaction') {
       if (this.interacted) return;
       this.interacted = true;
+    } else if (event.kind === 'listener') {
+      const key = `${event.script}|${event.type}`;
+      if (this.listeners.has(key)) return;
+      this.listeners.set(key, { script: event.script, type: event.type, target: event.target, frameOrigin: event.frameOrigin });
+    } else if (event.kind === 'globals') {
+      this.globals = { addedCount: event.addedCount, added: event.added, overridden: event.overridden };
+      for (const name of event.signatures || []) this.signatures.add(`global ${name}`);
+    } else if (event.kind === 'wsSend') {
+      const socket = this.websockets.get(event.url);
+      if (!socket || socket.messagesSent) return;
+      socket.messagesSent = true;
     } else if (this.hookEvents.length < MAX_HOOK_EVENTS) {
       this.hookEvents.push({ ...event, receivedMs: this.elapsed() });
     } else {
@@ -532,6 +591,66 @@ class TabReport {
     return result.sort((a, b) => a.category.localeCompare(b.category));
   }
 
+  // Indícios de sequestro do navegador (hijacking/hook).
+  hijackJSON() {
+    const withParty = item => ({ ...item, thirdParty: Parties.isThirdParty(item.site, this.site) });
+    const websockets = [...this.websockets.values()].map(withParty);
+    const eventStreams = [...this.eventStreams.values()].map(withParty);
+
+    const polling = [];
+    for (const [endpoint, times] of this.pollTimes) {
+      if (times.length < POLL_MIN_REQUESTS) continue;
+      const intervals = times.slice(1).map((t, i) => t - times[i]);
+      const mean = intervals.reduce((a, b) => a + b, 0) / intervals.length;
+      const sd = Math.sqrt(intervals.reduce((a, b) => a + (b - mean) ** 2, 0) / intervals.length);
+      const span = times[times.length - 1] - times[0];
+      const cv = mean > 0 ? sd / mean : Infinity;
+      if (span >= POLL_MIN_SPAN_MS && mean >= 250 && mean <= 60000 && cv <= POLL_MAX_CV) {
+        polling.push({
+          endpoint,
+          site: Parties.siteOf(endpoint.split('/')[0]),
+          requests: times.length,
+          meanIntervalMs: Math.round(mean),
+          cv: Math.round(cv * 100) / 100,
+          spanMs: span,
+        });
+      }
+    }
+    polling.sort((a, b) => b.requests - a.requests);
+
+    // Listeners de teclado agrupados por script.
+    const byScript = new Map();
+    for (const l of this.listeners.values()) {
+      const key = l.script || '(desconhecido)';
+      const item = byScript.get(key) || { ...this.describeScript(l.script, null), types: new Set(), targets: new Set() };
+      item.types.add(l.type);
+      item.targets.add(l.target);
+      byScript.set(key, item);
+    }
+    const keyboard = [...byScript.values()]
+      .map(k => ({ ...k, types: [...k.types].sort(), targets: [...k.targets].sort() }))
+      .sort((a, b) => b.scriptThirdParty - a.scriptThirdParty || String(a.script).localeCompare(String(b.script)));
+
+    const overridden = this.globals ? this.globals.overridden : [];
+    const signatures = [...this.signatures].sort();
+    return {
+      summary: {
+        thirdPartySockets: websockets.filter(s => s.thirdParty).length + eventStreams.filter(s => s.thirdParty).length,
+        polling: polling.length,
+        overridden: overridden.length,
+        thirdPartyKeyboardScripts: keyboard.filter(k => k.scriptThirdParty).length,
+        signatures: signatures.length,
+        addedGlobals: this.globals ? this.globals.addedCount : null,
+      },
+      websockets,
+      eventStreams,
+      polling,
+      keyboard,
+      globals: this.globals,
+      signatures,
+    };
+  }
+
   trackingParamsJSON() {
     const found = new Map();
     for (const url of this.navigationChain) {
@@ -625,6 +744,7 @@ class TabReport {
       sync: this.syncJSON(),
       bounces: this.bouncesJSON(),
       trackingParams: this.trackingParamsJSON(),
+      hijack: this.hijackJSON(),
       interacted: this.interacted,
       transition: this.transition,
       previous: previous ? { url: previous.url, site: previous.site } : null,

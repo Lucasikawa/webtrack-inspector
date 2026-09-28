@@ -15,7 +15,9 @@
 //  - measureText, para enumeração de fontes;
 //  - getParameter(UNMASKED_VENDOR/RENDERER_WEBGL), consulta direta à GPU;
 //  - document.cookie e Storage.setItem, para saber qual script grava cada
-//    cookie e cada chave de armazenamento (o primeiro script de cada um).
+//    cookie e cada chave de armazenamento (o primeiro script de cada um);
+//  - indícios de sequestro do navegador: funções nativas substituídas, globais
+//    novas, listeners de teclado e mensagens por WebSocket.
 (() => {
   const page = window.wrappedJSObject;
   if (!page || typeof exportFunction !== 'function') return;
@@ -289,9 +291,116 @@
 
   // Interação do usuário (clique, toque, tecla). Uma página que manda a aba
   // para outro site sem nenhuma interação é candidata a bounce tracking.
+  // (Listeners registrados pelo content script passam pelo Xray e não
+  // disparam o hook de addEventListener abaixo.)
   for (const type of ['pointerdown', 'keydown']) {
     window.addEventListener(type, event => {
       if (event.isTrusted) emit({ kind: 'interaction' }, 'interaction');
     }, { capture: true, passive: true });
+  }
+
+  // Sequestro de navegador (hijacking/hook)
+
+  // Captura de teclado: script que escuta teclas, digitação ou colagem.
+  const KEY_EVENTS = new Set(['keydown', 'keyup', 'keypress', 'input', 'beforeinput', 'change', 'paste']);
+  const listenerCounts = new Map();
+  hookMethod(EventTargetProto, 'addEventListener', (target, [type]) => {
+    const kind = String(type);
+    if (!KEY_EVENTS.has(kind)) return;
+    const n = (listenerCounts.get(kind) || 0) + 1;
+    listenerCounts.set(kind, n);
+    if (n > 30) return; // limita o custo de capturar a pilha
+    let where = 'elemento';
+    try {
+      where = target === window ? 'window' : target === document ? 'document' : String(target.tagName || 'outro').toLowerCase();
+    } catch {
+      // alvo inacessível
+    }
+    const script = callerScript();
+    emit({ kind: 'listener', type: kind, target: where, script }, `listener|${kind}|${script}`);
+  });
+
+  // Mensagens enviadas por WebSocket: canal ativo, não só aberto.
+  hookMethod(page.WebSocket && page.WebSocket.prototype, 'send', socket => {
+    const url = String(socket.url);
+    emit({ kind: 'wsSend', url }, `wsSend|${url}`);
+  });
+
+  // Funções sensíveis que scripts de hook substituem para interceptar rede,
+  // DOM, execução de código e navegação. A referência é capturada aqui, em
+  // document_start, antes de qualquer script da página e já com a
+  // instrumentação do plugin instalada; depois do load, uma referência
+  // diferente indica substituição (inclusive por Proxy, que o toString disfarça).
+  const SENSITIVE = [
+    ['window', 'fetch'], ['window', 'XMLHttpRequest'], ['XMLHttpRequest.prototype', 'open'],
+    ['XMLHttpRequest.prototype', 'send'], ['XMLHttpRequest.prototype', 'setRequestHeader'],
+    ['window', 'WebSocket'], ['WebSocket.prototype', 'send'], ['window', 'EventSource'],
+    ['Navigator.prototype', 'sendBeacon'], ['EventTarget.prototype', 'addEventListener'],
+    ['Document.prototype', 'write'], ['Document.prototype', 'createElement'], ['Document.prototype', 'cookie'],
+    ['Node.prototype', 'appendChild'], ['Node.prototype', 'insertBefore'], ['Element.prototype', 'setAttribute'],
+    ['HTMLFormElement.prototype', 'submit'], ['HTMLInputElement.prototype', 'value'],
+    ['History.prototype', 'pushState'], ['History.prototype', 'replaceState'],
+    ['window', 'eval'], ['window', 'Function'], ['window', 'setTimeout'], ['window', 'setInterval'],
+    ['window', 'open'], ['window', 'postMessage'], ['JSON', 'parse'], ['JSON', 'stringify'],
+    ['Function.prototype', 'toString'], ['Object', 'defineProperty'], ['Storage.prototype', 'getItem'],
+  ];
+
+  function resolve(path) {
+    let obj = page;
+    if (path === 'window') return obj;
+    for (const part of path.split('.')) obj = obj ? obj[part] : undefined;
+    return obj;
+  }
+
+  function describeProp(path, name) {
+    try {
+      const obj = resolve(path);
+      const d = obj && Object.getOwnPropertyDescriptor(obj, name);
+      return d ? { value: d.value, get: d.get, set: d.set } : null;
+    } catch {
+      return null;
+    }
+  }
+
+  const nativeToString = page.Function.prototype.toString;
+  function sourceOf(fn) {
+    try {
+      return String(Reflect.apply(nativeToString, fn, [])).replace(/\s+/g, ' ').slice(0, 160);
+    } catch {
+      return '';
+    }
+  }
+
+  if (window === window.top) {
+    const baseline = SENSITIVE.map(([path, name]) => ({ path, name, desc: describeProp(path, name) }));
+    const baselineGlobals = new Set(Object.getOwnPropertyNames(page));
+
+    const checkGlobals = () => {
+      const overridden = [];
+      for (const { path, name, desc } of baseline) {
+        if (!desc) continue;
+        const label = path === 'window' ? name : `${path}.${name}`;
+        const now = describeProp(path, name);
+        if (!now) {
+          overridden.push({ name: label, source: '(removida)' });
+          continue;
+        }
+        for (const part of ['value', 'get', 'set']) {
+          if (desc[part] !== now[part]) {
+            overridden.push({ name: part === 'value' ? label : `${label} (${part})`, source: sourceOf(now[part]) });
+          }
+        }
+      }
+      const added = Object.getOwnPropertyNames(page).filter(n => !baselineGlobals.has(n) && !/^\d+$/.test(n));
+      const signatures = added.filter(n => /^(beef|beefjs|beef_init|__beef)/i.test(n));
+      emit({ kind: 'globals', addedCount: added.length, added: added.slice(0, 150), overridden, signatures },
+        JSON.stringify(['globals', added.length, overridden.map(o => o.name)]));
+    };
+    const schedule = () => {
+      setTimeout(checkGlobals, 5000);
+      setTimeout(checkGlobals, 15000);
+    };
+    if (document.readyState === 'complete') schedule();
+    else window.addEventListener('load', schedule, { once: true });
   }
 })();

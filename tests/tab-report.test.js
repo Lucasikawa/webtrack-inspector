@@ -359,3 +359,69 @@ test('categorias no formato do Blacklight, por site e para a página', () => {
   assert.deepEqual(json.categories.find(c => c.category === 'session-recording').sites, ['hotjar.com']);
   assert.deepEqual(json.thirdParty.find(s => s.site === 'hotjar.com').categories, ['session-recording']);
 });
+
+// Indícios de sequestro do navegador
+
+test('WebSocket e EventSource para terceiros contam como conexão persistente', () => {
+  const report = new TabReport(1, 'https://privacy-test-pages.site/privacy-protections/request-blocking/');
+  report.addRequest(req('wss://bad.third-party.site/block-me/web-socket', 'websocket'));
+  report.addError({ url: 'wss://bad.third-party.site/block-me/web-socket', error: 'NS_ERROR_WEBSOCKET_CONNECTION_REFUSED' });
+  report.markEventStream('https://bad.third-party.site/block-me/server-sent-events');
+  const { summary, websockets, eventStreams } = report.toJSON().hijack;
+  assert.equal(summary.thirdPartySockets, 2);
+  assert.equal(websockets[0].thirdParty, true);
+  assert.deepEqual(websockets[0].errors, ['NS_ERROR_WEBSOCKET_CONNECTION_REFUSED']);
+  assert.equal(eventStreams[0].site, 'third-party.site');
+});
+
+test('polling: mesmo endpoint de terceiro em intervalos regulares', () => {
+  const report = new TabReport(1, 'https://www.uol.com.br/');
+  for (let i = 0; i < 6; i++) {
+    report.addRequest(req(`https://ping.chartbeat.net/ping?h=uol.com.br&x=${i}`, 'image'));
+    report.startedAt -= 15000; // próxima requisição 15 s depois
+  }
+  const { polling } = report.toJSON().hijack;
+  assert.equal(polling.length, 1);
+  assert.equal(polling[0].endpoint, 'ping.chartbeat.net/ping');
+  assert.equal(polling[0].meanIntervalMs, 15000);
+  assert.equal(polling[0].requests, 6);
+});
+
+test('requisições irregulares ou poucas não contam como polling', () => {
+  const report = new TabReport(1, 'https://www.uol.com.br/');
+  for (const gap of [100, 9000, 200, 20000]) {
+    report.addRequest(req('https://api.permutive.com/v2.0/watson', 'xmlhttprequest'));
+    report.startedAt -= gap;
+  }
+  report.addRequest(req('https://api.permutive.com/v2.0/watson', 'xmlhttprequest'));
+  assert.equal(report.toJSON().hijack.polling.length, 0);
+});
+
+test('funções nativas substituídas, globais novas e listeners de teclado', () => {
+  const page = 'https://www.quintoandar.com.br/';
+  const report = new TabReport(1, page);
+  const frame = { frameOrigin: 'https://www.quintoandar.com.br', frameUrl: page };
+  report.addHookEvent({ kind: 'globals', addedCount: 3, added: ['dataLayer', 'Sentry', '__NEXT_DATA__'],
+    overridden: [{ name: 'window.fetch', source: 'function(){...}' }], signatures: [], ...frame });
+  report.addHookEvent({ kind: 'listener', type: 'keydown', target: 'document', script: 'https://static.hotjar.com/c/hotjar-1.js', ...frame });
+  report.addHookEvent({ kind: 'listener', type: 'input', target: 'input', script: 'https://static.hotjar.com/c/hotjar-1.js', ...frame });
+  report.addHookEvent({ kind: 'listener', type: 'keydown', target: 'window', script: `${page}_next/app.js`, ...frame });
+  const { summary, keyboard, globals } = report.toJSON().hijack;
+  assert.equal(summary.overridden, 1);
+  assert.equal(summary.addedGlobals, 3);
+  assert.equal(summary.thirdPartyKeyboardScripts, 1);
+  assert.deepEqual(keyboard[0].types, ['input', 'keydown']);
+  assert.equal(keyboard[0].scriptThirdParty, true);
+  assert.deepEqual(globals.added, ['dataLayer', 'Sentry', '__NEXT_DATA__']);
+});
+
+test('assinaturas conhecidas de hook (script hook.js, cookie e global)', () => {
+  const report = new TabReport(1, 'http://localhost:8000/');
+  report.addRequest(req('http://127.0.0.1:3000/hook.js', 'script'));
+  report.addCookie({ key: 'BEEFHOOK|localhost|/', name: 'BEEFHOOK', domain: 'localhost', path: '/',
+    site: 'localhost', session: true, expires: null }, 'store');
+  report.addHookEvent({ kind: 'globals', addedCount: 1, added: ['beef'], overridden: [], signatures: ['beef'],
+    frameOrigin: 'http://localhost:8000', frameUrl: 'http://localhost:8000/' });
+  assert.deepEqual(report.toJSON().hijack.signatures,
+    ['cookie BEEFHOOK (localhost)', 'global beef', 'script hook.js (127.0.0.1)']);
+});
