@@ -175,6 +175,7 @@ function renderThirdParty(report) {
   const summary = [
     plural(t.requests, 'requisição', 'requisições'),
     `${t.thirdPartyRequests} a terceiros`,
+    t.windowThirdPartySites !== t.thirdPartySites && `${t.windowThirdPartySites} sites de 3ª parte nos primeiros 30 s`,
     t.blockedByFirefoxSites && plural(t.blockedByFirefoxSites, 'site bloqueado pelo Firefox', 'sites bloqueados pelo Firefox'),
   ].filter(Boolean).join(' · ');
 
@@ -202,7 +203,7 @@ function renderCookie(cookie) {
     cookie.httpOnly && 'HttpOnly',
     cookie.sameSite && `SameSite=${cookie.sameSite}`,
     cookie.partitioned && 'particionado',
-    !cookie.duringLoad && 'após o load',
+    !cookie.inWindow && 'após 30 s',
   ].filter(Boolean).join(' · ');
   const byThirdPartyScript = !cookie.thirdParty && cookie.writersThirdParty;
   return h('li', { class: 'item' },
@@ -233,11 +234,11 @@ function renderCookies(report) {
         h('td', { class: 'total' }, String(tp.session + tp.persistent)))));
 
   const partyTotal = m => m.session + m.persistent;
-  const loadNote = report.loadedMs === null
-    ? 'Página ainda carregando.'
-    : `No carregamento (até 10 s após o load, ocorrido em ${(report.loadedMs / 1000).toLocaleString('pt-BR', { maximumFractionDigits: 1 })} s): `
-      + `${summary.duringLoad} (1ª parte ${partyTotal(summary.load.firstParty)}, 3ª parte ${partyTotal(summary.load.thirdParty)}).`
-      + (summary.afterLoad ? ` Depois disso: ${summary.afterLoad} (ex.: criados por interação com a página).` : '');
+  const loadNote = `No carregamento (primeiros ${summary.windowMs / 1000} s da navegação): `
+    + `${summary.inWindow} (1ª parte ${partyTotal(summary.window.firstParty)}, 3ª parte ${partyTotal(summary.window.thirdParty)}).`
+    + (summary.afterWindow
+      ? ` Depois: ${summary.afterWindow} (ex.: criados por interação ou por anúncios que se renovam).`
+      : '');
 
   const thirdParty = list.filter(c => c.thirdParty);
   const firstParty = list.filter(c => !c.thirdParty);

@@ -123,7 +123,10 @@ contra Rastreamento, baseadas no Disconnect).
 
 Primeira × terceira parte compara o eTLD+1 do domínio do cookie com o da página.
 Sessão × persistente segue a presença de `Expires`/`Max-Age`. Contam como
-"injetados no carregamento" os cookies vistos até 10 s após o evento `load`. Um
+"injetados no carregamento" os cookies vistos nos **primeiros 30 s** da navegação,
+a mesma janela usada para gravar o HAR no protocolo de evidências. O evento `load`
+não serve de limite: em portais com vídeo ao vivo e anúncios que se renovam ele
+pode não ocorrer em minutos (no UOL, não tinha ocorrido 2 min após a navegação). Um
 `Set-Cookie` sem gravação correspondente na API indica cookie bloqueado ou
 rejeitado pelo navegador.
 

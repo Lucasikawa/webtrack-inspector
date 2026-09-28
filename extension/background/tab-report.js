@@ -9,8 +9,12 @@ const TRACKER_FLAG = /tracking|fingerprinting|cryptomining/;
 // (ex.: NS_ERROR_TRACKING_URI, NS_ERROR_SOCIALTRACKING_URI).
 const FIREFOX_BLOCK_ERROR = /NS_ERROR_\w*(TRACKING|FINGERPRINTING|CRYPTOMINING)_URI/;
 
-// "Injetado no carregamento" = observado até 10 s depois do evento load.
-const LOAD_GRACE_MS = 10000;
+// Janela de coleta: primeiros 30 s após o início da navegação, a mesma usada
+// para o HAR no protocolo de evidências. Define os cookies "injetados no
+// carregamento" e o recorte de terceiros comparável ao HAR. (O evento load não
+// serve: em páginas que nunca param de fazer requisições, como portais com vídeo
+// ao vivo e anúncios que se renovam, ele pode não ocorrer em minutos.)
+const CAPTURE_WINDOW_MS = 30000;
 const DAY_MS = 24 * 60 * 60 * 1000;
 
 // Limite de eventos de fingerprinting guardados por página.
@@ -142,7 +146,6 @@ class TabReport {
   }
 
   cookiesJSON() {
-    const loadLimit = this.loadedMs === null ? Infinity : this.loadedMs + LOAD_GRACE_MS;
     const list = [...this.cookies.values()]
       .map(c => {
         const writers = this.writersOf(`cookie|${c.site}|${c.name}`);
@@ -151,7 +154,7 @@ class TabReport {
       .map(c => ({
         ...c,
         thirdParty: Parties.isThirdParty(c.site, this.site),
-        duringLoad: c.firstSeenMs <= loadLimit,
+        inWindow: c.firstSeenMs <= CAPTURE_WINDOW_MS,
         // Validade no momento em que o cookie foi definido, em dias (precisão de
         // ~1 min, para cookies de sessão do Hotjar e afins, que duram 30 min).
         lifetimeDays: c.expires === null
@@ -175,16 +178,17 @@ class TabReport {
       };
     };
     const count = predicate => list.filter(predicate).length;
-    const load = list.filter(c => c.duringLoad);
+    const inWindow = list.filter(c => c.inWindow);
     return {
-      // Todos os cookies da página; "load" restringe aos do carregamento
-      // (cookies criados depois, por interação, ficam de fora dele).
+      // Todos os cookies da página; "window" restringe aos da janela de coleta
+      // (cookies criados depois, por interação ou anúncios renovados, ficam fora).
       summary: {
         total: list.length,
-        duringLoad: load.length,
-        afterLoad: list.length - load.length,
+        windowMs: CAPTURE_WINDOW_MS,
+        inWindow: inWindow.length,
+        afterWindow: list.length - inWindow.length,
         ...matrix(list),
-        load: matrix(load),
+        window: matrix(inWindow),
         longLived: count(c => c.lifetimeDays !== null && c.lifetimeDays > 365),
         viaHttp: count(c => c.viaHttp),
         viaJs: count(c => !c.viaHttp && c.stored),
@@ -398,6 +402,9 @@ class TabReport {
         thirdPartySites: thirdParty.length,
         thirdPartyHosts: sum(thirdParty, s => s.hosts.length),
         trackerSites: thirdParty.filter(s => s.tracker).length,
+        // Recorte da janela de coleta, comparável ao HAR.
+        windowThirdPartySites: thirdParty.filter(s => s.firstSeenMs <= CAPTURE_WINDOW_MS).length,
+        windowTrackerSites: thirdParty.filter(s => s.tracker && s.firstSeenMs <= CAPTURE_WINDOW_MS).length,
         blockedByFirefoxSites: thirdParty.filter(s => s.blockedByFirefox).length,
         firstPartyHosts: sum(firstParty, s => s.hosts.length),
       },

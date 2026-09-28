@@ -102,19 +102,33 @@ test('classifica cookies em 1ª/3ª parte e sessão/persistente, mesclando HTTP 
   assert.equal(list.find(c => c.name === 'sid').sourceUrl, 'https://www.uol.com.br/');
 });
 
-test('cookies criados mais de 10 s após o load entram no total, mas não no carregamento', () => {
-  // Caso do Storage blocking do DDG: os cookies nascem ao clicar em "Store data".
+test('cookies surgidos depois da janela de 30 s entram no total, mas não no carregamento', () => {
+  // Caso do Storage blocking do DDG (cookies criados ao clicar em "Store data")
+  // e de portais que renovam anúncios.
   const report = new TabReport(1, 'https://example.com/');
-  report.markLoaded();
-  report.loadedMs -= 20000; // simula load ocorrido 20 s atrás
+  report.startedAt -= 40000; // navegação começou há 40 s
   report.addCookie({ key: 'late|example.com|/', name: 'late', domain: 'example.com', path: '/',
     site: 'example.com', session: true, expires: null }, 'store');
-  const { summary } = report.toJSON().cookies;
+  const { summary, list } = report.toJSON().cookies;
   assert.equal(summary.total, 1);
-  assert.equal(summary.duringLoad, 0);
-  assert.equal(summary.afterLoad, 1);
+  assert.equal(summary.inWindow, 0);
+  assert.equal(summary.afterWindow, 1);
+  assert.equal(list[0].inWindow, false);
   assert.deepEqual(summary.firstParty, { session: 1, persistent: 0 });
-  assert.deepEqual(summary.load.firstParty, { session: 0, persistent: 0 });
+  assert.deepEqual(summary.window.firstParty, { session: 0, persistent: 0 });
+});
+
+test('recorte de terceiros na janela de 30 s', () => {
+  const report = new TabReport(1, 'https://www.uol.com.br/');
+  report.addRequest(req('https://securepubads.g.doubleclick.net/x', 'script', {
+    urlClassification: { firstParty: [], thirdParty: ['tracking_ad'] } }));
+  report.startedAt -= 60000; // o próximo site aparece 60 s depois
+  report.addRequest(req('https://match.adsrvr.org/track', 'image', {
+    urlClassification: { firstParty: [], thirdParty: ['tracking_ad'] } }));
+  const { totals } = report.toJSON();
+  assert.equal(totals.thirdPartySites, 2);
+  assert.equal(totals.windowThirdPartySites, 1);
+  assert.equal(totals.windowTrackerSites, 1);
 });
 
 test('involvesSite atribui cookies ao próprio site e a sites contatados há pouco', () => {
