@@ -4,7 +4,8 @@
 // Reconciliação do que o plugin detectou com o Blacklight e o uBlock Origin,
 // a partir das evidências de um site (evidencias/sites/<site>/):
 //   plugin.json, <site>.har, ublock.txt, blacklight/raw/inspection.json e
-//   blacklight/raw/requests.har
+//   blacklight/raw/requests.har. O plugin.json e o HAR vêm da coleta final
+//   (final/), com o plugin completo e os dados limpos, quando ela existe.
 // Gera reconciliacao.md com uma linha por site rastreador: o que cada ferramenta
 // viu, quantas requisições cada HAR tem e a causa provável de cada divergência,
 // classificada a partir do tráfego. A causa é um ponto de partida para o
@@ -88,8 +89,10 @@ function readBlacklight(dir) {
   for (const t of reports.third_party_trackers) {
     const site = siteOf(t.url);
     if (!site) continue;
-    const s = entryFor(trackers, site, () => ({ requests: 0, lists: new Set(), rules: new Set(), example: t.url }));
+    const s = entryFor(trackers, site, () => ({ requests: 0, lists: new Set(), rules: new Set(), origins: new Set(), example: t.url }));
     s.requests++;
+    const origin = ((t.stack || [])[0] || {}).fileName;
+    if (origin) s.origins.add(origin.split('?')[0]);
     s.lists.add(t.data.listName);
     if (s.rules.size < 3) s.rules.add(t.data.filter);
   }
@@ -132,6 +135,14 @@ function explain(row, ctx) {
     } else {
       notes.push('ausente do nosso HAR: não carregado na visita a partir do Brasil (anúncio/segmentação por região ou momento)');
     }
+  } else if (!row.ours && !row.blHar && row.blacklight) {
+    // Visto pelo Blacklight fora do HAR dele: requisições de sincronização feitas
+    // em iframes de terceiros ou em cadeias de redirecionamento (URLs /sync,
+    // /pixel com redir=), que o requests.har do Blacklight não registra.
+    const origins = [...row.blacklight.origins].filter(o => siteOf(o) !== row.site);
+    if (secondPage && origins.length && origins.every(o => o === secondPage.split('?')[0])) {
+      notes.push(`só na 2ª página visitada pelo Blacklight (${secondPage}), registrado só no inspection.json dele`);
+    } else notes.push(`ausente dos dois HARs: sincronização registrada só no inspection.json do Blacklight${origins.length ? `, a partir de ${origins.slice(0, 2).join(', ')}` : ' (iframe ou redirecionamento de terceiros)'}; não ocorreu na nossa visita`);
   } else if (row.ours && !row.blHar && (row.plugin?.tracker || row.ublock?.blocked)) {
     notes.push('ausente do HAR do Blacklight: não carregado na visita dele (região ou momento)');
   } else if (row.ours && row.blHar) {
@@ -154,9 +165,14 @@ function yesNo(value) {
 
 function reconcile(dir) {
   const site = path.basename(dir);
-  const plugin = readJSON(path.join(dir, 'plugin.json'));
+  const base = fs.existsSync(path.join(dir, 'final', 'plugin.json')) ? path.join(dir, 'final') : dir;
+  const rel = file => path.relative(dir, path.join(base, file));
+  const plugin = readJSON(path.join(base, 'plugin.json'));
   const report = plugin.report;
-  const ours = readHar(path.join(dir, `${site}.har`));
+  const ours = readHar(path.join(base, `${site}.har`));
+  // Set-Cookie com Domain num sufixo público: nenhum navegador grava (RFC 6265,
+  // seção 5.3); JSONs até a v0.7.0 ainda os listavam.
+  const cookies = report.cookies.list.filter(c => c.hostOnly || c.stored || !Parties.isPublicSuffix(c.domain));
   const ublock = fs.existsSync(path.join(dir, 'ublock.txt')) ? readUblock(path.join(dir, 'ublock.txt')) : null;
   const blacklight = readBlacklight(path.join(dir, 'blacklight'));
   const ctx = { site: report.site, blacklight, ublock };
@@ -196,13 +212,13 @@ function reconcile(dir) {
 
   const bl = blacklight.inspection;
   const lines = [];
-  lines.push(`# Reconciliação — ${site}`, '');
+  lines.push(`# Reconciliação: ${site}`, '');
   lines.push('Gerado por `tools/reconcile.js` a partir das evidências desta pasta. A coluna');
   lines.push('**Causa provável** é classificada automaticamente pelo tráfego dos HARs e deve ser');
   lines.push('conferida; cada linha traz a evidência correspondente.', '');
   lines.push('## Fontes', '');
-  lines.push(`- **Plugin**: \`plugin.json\` (v${plugin.tool.version}, exportado ${plugin.exportedAt}); sites de 3ª parte vistos nos primeiros ${WINDOW_MS / 1000} s.`);
-  lines.push(`- **Nosso HAR**: \`${site}.har\`, ${ours.entries.length} requisições, ${ours.bySite.size} sites.`);
+  lines.push(`- **Plugin**: \`${rel('plugin.json')}\` (v${plugin.tool.version}, exportado ${plugin.exportedAt}); sites de 3ª parte vistos nos primeiros ${WINDOW_MS / 1000} s.`);
+  lines.push(`- **Nosso HAR**: \`${rel(`${site}.har`)}\`, ${ours.entries.length} requisições, ${ours.bySite.size} sites.`);
   if (ublock) lines.push(`- **uBlock Origin**: \`ublock.txt\`, ${ublock.total} requisições, ${[...ublock.bySite.values()].filter(s => s.blocked).length} sites com bloqueio.`);
   lines.push(`- **Blacklight**: \`blacklight/raw/inspection.json\` (${bl.start_time} a ${bl.end_time}, ${bl.browser.version}, a partir de \`${bl.location}\`; páginas: ${blacklight.pages.join(', ')}); \`blacklight/raw/requests.har\` com ${blacklight.har.entries.length} requisições.`);
   lines.push('');
@@ -211,7 +227,7 @@ function reconcile(dir) {
   lines.push('|---|---|---|---|');
   lines.push(`| Sites rastreadores | ${[...pluginSites.values()].filter(s => s.tracker).length} (listas do Firefox) | ${ublock ? [...ublock.bySite.values()].filter(s => s.blocked).length + ' com bloqueio' : '—'} | ${blacklight.trackers.size} (EasyList/EasyPrivacy) |`);
   lines.push(`| Sites de 3ª parte | ${pluginSites.size} | ${ublock ? [...ublock.bySite.keys()].filter(s => s !== report.site).length : '—'} | ${[...blacklight.har.bySite.keys()].filter(s => s !== report.site).length} (no HAR) |`);
-  lines.push(`| Cookies de 3ª parte | ${report.cookies.list.filter(c => c.thirdParty && (c.inWindow ?? c.duringLoad ?? true)).length} | — | ${[...blacklight.cookies.values()].reduce((a, b) => a + b, 0)} |`);
+  lines.push(`| Cookies de 3ª parte | ${cookies.filter(c => c.thirdParty && (c.inWindow ?? c.duringLoad ?? true)).length} | — | ${[...blacklight.cookies.values()].reduce((a, b) => a + b, 0)} |`);
   lines.push('');
   lines.push(`Rastreadores: **${agree}** em comum com o Blacklight; **${onlyBlacklight}** só no Blacklight (${blNotLoaded} deles ausentes do nosso HAR, ou seja, não carregados na nossa visita); **${onlyPlugin}** só no plugin.`, '');
 
