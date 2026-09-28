@@ -1,0 +1,598 @@
+{
+  "tool": {
+    "name": "Detector de Rastreadores",
+    "version": "0.3.0"
+  },
+  "exportedAt": "2026-09-28T00:27:19.409Z",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:156.0) Gecko/20100101 Firefox/156.0",
+  "collection": {
+    "automated": true,
+    "webdriver": true,
+    "waitSeconds": 30,
+    "script": "tools/smoke_test.py"
+  },
+  "report": {
+    "cookies": {
+      "list": [
+        {
+          "domain": "hcaptcha.com",
+          "duringLoad": true,
+          "expires": 1790557009921,
+          "firstSeenMs": 185,
+          "hostOnly": false,
+          "httpOnly": true,
+          "key": "__cf_bm|hcaptcha.com|/",
+          "lifetimeDays": 0.021,
+          "name": "__cf_bm",
+          "partitioned": true,
+          "path": "/",
+          "sameSite": "none",
+          "secure": true,
+          "session": false,
+          "site": "hcaptcha.com",
+          "sourceUrl": "https://js.hcaptcha.com/1/api.js",
+          "stored": true,
+          "thirdParty": true,
+          "valueLength": 199,
+          "viaHttp": true,
+          "writers": [],
+          "writersThirdParty": false
+        },
+        {
+          "domain": "w.hcaptcha.com",
+          "duringLoad": true,
+          "expires": 1790557010000,
+          "firstSeenMs": 295,
+          "hostOnly": false,
+          "httpOnly": true,
+          "key": "__cf_bm|w.hcaptcha.com|/",
+          "lifetimeDays": 0.021,
+          "name": "__cf_bm",
+          "partitioned": null,
+          "path": "/",
+          "sameSite": "none",
+          "secure": true,
+          "session": false,
+          "site": "hcaptcha.com",
+          "sourceUrl": "https://5fea25eb5543.w.hcaptcha.com/logo.png",
+          "stored": false,
+          "thirdParty": true,
+          "valueLength": 198,
+          "viaHttp": true,
+          "writers": [],
+          "writersThirdParty": false
+        },
+        {
+          "domain": "sp.gov.br",
+          "duringLoad": true,
+          "expires": null,
+          "firstSeenMs": 55,
+          "hostOnly": false,
+          "httpOnly": false,
+          "key": "incap_ses_987_3308181|sp.gov.br|/",
+          "lifetimeDays": null,
+          "name": "incap_ses_987_3308181",
+          "partitioned": null,
+          "path": "/",
+          "sameSite": null,
+          "secure": false,
+          "session": true,
+          "site": "sp.gov.br",
+          "sourceUrl": "https://www.sp.gov.br/",
+          "stored": false,
+          "thirdParty": true,
+          "valueLength": 56,
+          "viaHttp": true,
+          "writers": [],
+          "writersThirdParty": false
+        },
+        {
+          "domain": "sp.gov.br",
+          "duringLoad": true,
+          "expires": null,
+          "firstSeenMs": 178,
+          "hostOnly": false,
+          "httpOnly": true,
+          "key": "nlbi_3308181|sp.gov.br|/",
+          "lifetimeDays": null,
+          "name": "nlbi_3308181",
+          "partitioned": null,
+          "path": "/",
+          "sameSite": null,
+          "secure": false,
+          "session": true,
+          "site": "sp.gov.br",
+          "sourceUrl": "https://www.sp.gov.br/favicon.ico",
+          "stored": false,
+          "thirdParty": true,
+          "valueLength": 48,
+          "viaHttp": true,
+          "writers": [],
+          "writersThirdParty": false
+        },
+        {
+          "domain": "sp.gov.br",
+          "duringLoad": true,
+          "expires": null,
+          "firstSeenMs": 201,
+          "hostOnly": false,
+          "httpOnly": true,
+          "key": "nlbi_3308181_2147483392|sp.gov.br|/",
+          "lifetimeDays": null,
+          "name": "nlbi_3308181_2147483392",
+          "partitioned": null,
+          "path": "/",
+          "sameSite": null,
+          "secure": false,
+          "session": true,
+          "site": "sp.gov.br",
+          "sourceUrl": "https://www.sp.gov.br/oporth-beyon-a-dispot-sengerly-is-Macb-So-shou-f?d=www.sp.gov.br",
+          "stored": false,
+          "thirdParty": true,
+          "valueLength": 48,
+          "viaHttp": true,
+          "writers": [],
+          "writersThirdParty": false
+        },
+        {
+          "domain": "sp.gov.br",
+          "duringLoad": true,
+          "expires": 1822026318000,
+          "firstSeenMs": 55,
+          "hostOnly": false,
+          "httpOnly": true,
+          "key": "visid_incap_3308181|sp.gov.br|/",
+          "lifetimeDays": 364.249,
+          "name": "visid_incap_3308181",
+          "partitioned": null,
+          "path": "/",
+          "sameSite": null,
+          "secure": false,
+          "session": false,
+          "site": "sp.gov.br",
+          "sourceUrl": "https://www.sp.gov.br/",
+          "stored": false,
+          "thirdParty": true,
+          "valueLength": 64,
+          "viaHttp": true,
+          "writers": [],
+          "writersThirdParty": false
+        },
+        {
+          "domain": "www.sp.gov.br",
+          "duringLoad": true,
+          "expires": 1790558809959,
+          "firstSeenMs": 55,
+          "hostOnly": true,
+          "httpOnly": true,
+          "key": "incap_sh_3308181|www.sp.gov.br|/",
+          "lifetimeDays": 0.042,
+          "name": "incap_sh_3308181",
+          "partitioned": false,
+          "path": "/",
+          "sameSite": "none",
+          "secure": true,
+          "session": false,
+          "site": "www.sp.gov.br",
+          "sourceUrl": "https://www.sp.gov.br/",
+          "stored": true,
+          "thirdParty": false,
+          "valueLength": 48,
+          "viaHttp": true,
+          "writers": [],
+          "writersThirdParty": false
+        },
+        {
+          "domain": "www.sp.gov.br",
+          "duringLoad": true,
+          "expires": 1793147209934,
+          "firstSeenMs": 201,
+          "hostOnly": false,
+          "httpOnly": false,
+          "key": "reese84|www.sp.gov.br|/",
+          "lifetimeDays": 30,
+          "name": "reese84",
+          "partitioned": false,
+          "path": "/",
+          "sameSite": "lax",
+          "secure": false,
+          "session": false,
+          "site": "www.sp.gov.br",
+          "sourceUrl": null,
+          "stored": true,
+          "thirdParty": false,
+          "valueLength": 626,
+          "viaHttp": false,
+          "writers": [
+            "https://www.sp.gov.br/oporth-beyon-a-dispot-sengerly-is-Macb-So-shou-f"
+          ],
+          "writersThirdParty": false
+        }
+      ],
+      "summary": {
+        "afterLoad": 0,
+        "duringLoad": 8,
+        "firstParty": {
+          "persistent": 2,
+          "session": 0
+        },
+        "firstPartyByThirdPartyScript": 0,
+        "load": {
+          "firstParty": {
+            "persistent": 2,
+            "session": 0
+          },
+          "thirdParty": {
+            "persistent": 3,
+            "session": 3
+          }
+        },
+        "longLived": 0,
+        "notStored": 5,
+        "partitioned": 1,
+        "thirdParty": {
+          "persistent": 3,
+          "session": 3
+        },
+        "total": 8,
+        "viaHttp": 7,
+        "viaJs": 1
+      }
+    },
+    "fingerprinting": {
+      "detections": [
+        {
+          "area": null,
+          "chars": 0,
+          "colors": 0,
+          "contextType": "webgl",
+          "copiedFrom": null,
+          "criteria": {
+            "extraction": true,
+            "size": true
+          },
+          "format": "image/png",
+          "frameOrigin": "https://newassets.hcaptcha.com",
+          "height": 150,
+          "inline": false,
+          "method": "toDataURL",
+          "offscreen": false,
+          "receivedMs": 1528,
+          "script": "https://newassets.hcaptcha.com/c/34f102046110559ca0bcef97b204445862c4b4ce110256c818d699f481fbaab9/hsw.js",
+          "scriptSite": "hcaptcha.com",
+          "scriptThirdParty": true,
+          "technique": "webgl",
+          "textSample": "",
+          "width": 300
+        },
+        {
+          "area": null,
+          "chars": 39,
+          "colors": 5,
+          "contextType": "2d",
+          "copiedFrom": null,
+          "criteria": {
+            "extraction": true,
+            "noInteraction": true,
+            "size": true,
+            "text": true
+          },
+          "format": "image/png",
+          "frameOrigin": "https://newassets.hcaptcha.com",
+          "height": 48,
+          "inline": false,
+          "method": "toDataURL",
+          "offscreen": false,
+          "receivedMs": 1528,
+          "script": "https://newassets.hcaptcha.com/c/34f102046110559ca0bcef97b204445862c4b4ce110256c818d699f481fbaab9/hsw.js",
+          "scriptSite": "hcaptcha.com",
+          "scriptThirdParty": true,
+          "technique": "canvas",
+          "textSample": "く╻Ε丫οŖ÷Ď}",
+          "width": 96
+        }
+      ],
+      "discarded": [
+        {
+          "area": null,
+          "chars": 1,
+          "colors": 1,
+          "contextType": "2d",
+          "copiedFrom": null,
+          "criteria": {
+            "extraction": true,
+            "noInteraction": true,
+            "size": true,
+            "text": false
+          },
+          "format": "image/png",
+          "frameOrigin": "https://newassets.hcaptcha.com",
+          "height": 20,
+          "inline": false,
+          "method": "toDataURL",
+          "offscreen": false,
+          "receivedMs": 1528,
+          "script": "https://newassets.hcaptcha.com/c/34f102046110559ca0bcef97b204445862c4b4ce110256c818d699f481fbaab9/hsw.js",
+          "scriptSite": "hcaptcha.com",
+          "scriptThirdParty": true,
+          "technique": null,
+          "textSample": "😀",
+          "width": 20
+        },
+        {
+          "area": {
+            "h": 2,
+            "w": 2
+          },
+          "chars": 1,
+          "colors": 1,
+          "contextType": "2d",
+          "copiedFrom": null,
+          "criteria": {
+            "extraction": false,
+            "noInteraction": true,
+            "size": false,
+            "text": false
+          },
+          "format": null,
+          "frameOrigin": "https://newassets.hcaptcha.com",
+          "height": 2,
+          "inline": false,
+          "method": "getImageData",
+          "offscreen": false,
+          "receivedMs": 1528,
+          "script": "https://newassets.hcaptcha.com/c/34f102046110559ca0bcef97b204445862c4b4ce110256c818d699f481fbaab9/hsw.js",
+          "scriptSite": "hcaptcha.com",
+          "scriptThirdParty": true,
+          "technique": null,
+          "textSample": "😀",
+          "width": 2
+        },
+        {
+          "area": null,
+          "chars": 5,
+          "colors": 1,
+          "contextType": "2d",
+          "copiedFrom": null,
+          "criteria": {
+            "extraction": true,
+            "noInteraction": true,
+            "size": true,
+            "text": false
+          },
+          "format": "image/png",
+          "frameOrigin": "https://newassets.hcaptcha.com",
+          "height": 20,
+          "inline": false,
+          "method": "toDataURL",
+          "offscreen": false,
+          "receivedMs": 1528,
+          "script": "https://newassets.hcaptcha.com/c/34f102046110559ca0bcef97b204445862c4b4ce110256c818d699f481fbaab9/hsw.js",
+          "scriptSite": "hcaptcha.com",
+          "scriptThirdParty": true,
+          "technique": null,
+          "textSample": "xyz😃👾",
+          "width": 20
+        },
+        {
+          "area": null,
+          "chars": 5,
+          "colors": 1,
+          "contextType": "2d",
+          "copiedFrom": null,
+          "criteria": {
+            "extraction": true,
+            "noInteraction": true,
+            "size": true,
+            "text": false
+          },
+          "format": "image/png",
+          "frameOrigin": "https://newassets.hcaptcha.com",
+          "height": 150,
+          "inline": false,
+          "method": "toDataURL",
+          "offscreen": false,
+          "receivedMs": 1528,
+          "script": "https://newassets.hcaptcha.com/c/34f102046110559ca0bcef97b204445862c4b4ce110256c818d699f481fbaab9/hsw.js",
+          "scriptSite": "hcaptcha.com",
+          "scriptThirdParty": true,
+          "technique": null,
+          "textSample": "❤️🤪🎉👋",
+          "width": 300
+        }
+      ],
+      "summary": {
+        "byTechnique": {
+          "canvas": 1,
+          "webgl": 1
+        },
+        "detections": 2,
+        "discarded": 4,
+        "scripts": 1,
+        "thirdPartyScripts": 1
+      }
+    },
+    "firstParty": [
+      {
+        "blockedByFirefox": false,
+        "classifications": [],
+        "errors": {},
+        "firefoxThirdParty": false,
+        "firstSeenMs": 1,
+        "hosts": [
+          {
+            "host": "www.sp.gov.br",
+            "requests": 6
+          }
+        ],
+        "requests": 6,
+        "site": "www.sp.gov.br",
+        "thirdParty": false,
+        "tracker": false,
+        "types": [
+          "image",
+          "main_frame",
+          "script",
+          "sub_frame",
+          "xmlhttprequest"
+        ]
+      }
+    ],
+    "host": "www.sp.gov.br",
+    "loadedMs": 404,
+    "navigationChain": [
+      "https://www.sp.gov.br/"
+    ],
+    "site": "www.sp.gov.br",
+    "startedAt": 1790555209738,
+    "storage": {
+      "origins": [
+        {
+          "cacheStorage": {
+            "available": true,
+            "count": 0,
+            "names": []
+          },
+          "collectedAt": 1790555209916,
+          "indexedDB": {
+            "available": true,
+            "count": 0,
+            "databases": []
+          },
+          "isTop": true,
+          "items": 2,
+          "localStorage": {
+            "available": true,
+            "bytes": 1496,
+            "count": 1,
+            "keys": [
+              {
+                "key": "reese84",
+                "size": 741,
+                "writers": [
+                  "https://www.sp.gov.br/oporth-beyon-a-dispot-sengerly-is-Macb-So-shou-f"
+                ]
+              }
+            ]
+          },
+          "origin": "https://www.sp.gov.br",
+          "sessionStorage": {
+            "available": true,
+            "bytes": 30,
+            "count": 1,
+            "keys": [
+              {
+                "key": "distil_referrer",
+                "size": 0,
+                "writers": [
+                  "https://www.sp.gov.br/"
+                ]
+              }
+            ]
+          },
+          "site": "www.sp.gov.br",
+          "thirdParty": false,
+          "url": "https://www.sp.gov.br/"
+        },
+        {
+          "cacheStorage": {
+            "available": true,
+            "count": 0,
+            "names": []
+          },
+          "collectedAt": 1790555210149,
+          "indexedDB": {
+            "available": true,
+            "count": 0,
+            "databases": []
+          },
+          "isTop": false,
+          "items": 0,
+          "localStorage": {
+            "available": true,
+            "bytes": 0,
+            "count": 0,
+            "keys": []
+          },
+          "origin": "https://newassets.hcaptcha.com",
+          "sessionStorage": {
+            "available": true,
+            "bytes": 0,
+            "count": 0,
+            "keys": []
+          },
+          "site": "hcaptcha.com",
+          "thirdParty": true,
+          "url": "https://newassets.hcaptcha.com/captcha/v1/33e17445452ab4888e3f4665a714b729e48a7a2e/static/hcaptcha.html#frame=challenge&id=0t98c3qly0ag&host=www.sp.gov.br&sentry=true&reportapi=https%3A%2F%2Faccounts.hcaptcha.com&recaptchacompat=true&custom=false&hl=en&tplinks=on&andint=off&pstissuer=https%3A%2F%2Fpst-issuer.hcaptcha.com&sitekey=dd6e16a7-972e-47d2-93d0-96642fb6d8de&theme=light&origin=https%3A%2F%2Fwww.sp.gov.br&clientOptions=%7B%22sentry%22%3Atrue%2C%22reportapi%22%3A%22https%3A%2F%2Faccounts.hcaptcha.com%22%2C%22recaptchacompat%22%3A%22true%22%2C%22custom%22%3Afalse%2C%22hl%22%3A%22en-US%22%2C%22tplinks%22%3A%22on%22%2C%22andint%22%3A%22off%22%2C%22pat%22%3A%22on%22%2C%22pstissuer%22%3A%22https%3A%2F%2Fpst-issuer.hcaptcha.com%22%2C%22endpoint%22%3A%22https%3A%2F%2Fapi.hcaptcha.com%22%2C%22theme%22%3A%22light%22%2C%22size%22%3A%22normal%22%2C%22confirm-nav%22%3Afalse%7D"
+        }
+      ],
+      "summary": {
+        "blockedOrigins": 0,
+        "cacheStorageCaches": 0,
+        "indexedDBDatabases": 0,
+        "items": 2,
+        "localStorageBytes": 1496,
+        "localStorageKeys": 1,
+        "origins": 2,
+        "originsWithData": 1,
+        "sessionStorageBytes": 30,
+        "sessionStorageKeys": 1,
+        "thirdPartyOriginsWithData": 0
+      }
+    },
+    "tabId": 1,
+    "thirdParty": [
+      {
+        "blockedByFirefox": false,
+        "classifications": [
+          "antifraud"
+        ],
+        "errors": {},
+        "firefoxThirdParty": true,
+        "firstSeenMs": 111,
+        "hosts": [
+          {
+            "host": "newassets.hcaptcha.com",
+            "requests": 3
+          },
+          {
+            "host": "js.hcaptcha.com",
+            "requests": 1
+          },
+          {
+            "host": "5fea25eb5543.w.hcaptcha.com",
+            "requests": 1
+          },
+          {
+            "host": "32ddbf532c50.w.hcaptcha.com",
+            "requests": 1
+          },
+          {
+            "host": "api.hcaptcha.com",
+            "requests": 1
+          }
+        ],
+        "requests": 7,
+        "site": "hcaptcha.com",
+        "thirdParty": true,
+        "tracker": false,
+        "types": [
+          "script",
+          "sub_frame",
+          "xmlhttprequest"
+        ]
+      }
+    ],
+    "totals": {
+      "blockedByFirefoxSites": 0,
+      "firstPartyHosts": 1,
+      "requests": 13,
+      "thirdPartyHosts": 5,
+      "thirdPartyRequests": 7,
+      "thirdPartySites": 1,
+      "trackerSites": 0
+    },
+    "url": "https://www.sp.gov.br/",
+    "version": 50
+  }
+}

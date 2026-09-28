@@ -21,6 +21,7 @@ evidencias/
     blacklight/                       download da análise (report.html, raw/inspection.json…)
     ublock.png | ublock.txt           popup e logger do uBlock Origin
     notas.md                          horário da coleta e observações
+    automatizado/                     coleta por tools/smoke_test.py (navegador automatizado)
 ```
 
 Roteiro de cada página do DuckDuckGo em [`ddg/README.md`](ddg/README.md); coleta

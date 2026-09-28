@@ -52,6 +52,15 @@ Também não é evidência; orienta o que conferir na coleta.
   (`/oporth-beyon-…`, `/llne-But-Darkd-…`), além de fingerprinting de fontes.
   Conclusão: o fingerprinting é do desafio anti-bot, disparado para um navegador
   automatizado vindo de datacenter; não aparece para um visitante comum.
+- **Coleta automatizada** (`automatizado/`, 27/09/2026 21:27, `tools/smoke_test.py`,
+  Firefox 156 headless com `navigator.webdriver = true`, mesma máquina e mesmo IP da
+  coleta manual): o Imperva respondeu com a página "Additional security check is
+  required" e um hCaptcha (`automatizado/pagina.png`). O plugin detectou canvas
+  fingerprint (96×48, 39 caracteres, 5 cores, `toDataURL`) e WebGL fingerprint
+  (300×150) pelo script `newassets.hcaptcha.com/.../hsw.js`, no iframe do hCaptcha
+  (`automatizado/relatorio-alertas.png`), e descartou outras 4 leituras de canvas.
+  Como a coleta manual da mesma máquina e IP não recebeu desafio, o gatilho é o
+  sinal de automação, não o endereço de origem.
 - Blacklight: 2 ad trackers (5 requisições casando com a EasyPrivacy), 2 cookies
   de terceiros (de 6), Google Analytics com "remarketing audiences". Plugin: 4 sites de 3ª parte (2 rastreadores pelo
   Firefox: `jsdelivr.net` como `tracking_content`, `google.com`), 8 cookies,
@@ -66,4 +75,5 @@ Também não é evidência; orienta o que conferir na coleta.
 
 | Data e hora | Versão do plugin (commit) | HAR | Prints | Blacklight | uBO |
 |---|---|---|---|---|---|
+| 27/09/2026 21:27 (automatizada) | 0.3.0 (`6498d9e`) | — | `automatizado/` (página + 4 abas) | — | — |
 | 27/09/2026 19:53 | 0.3.0 (`82e536d`) | 19:53:20–19:53:28, 66 entradas | 19:55–19:58; JSON 19:55:43 | 20:36 (19:36 ET) | 20:15–20:24, uBO 1.75.0 |
