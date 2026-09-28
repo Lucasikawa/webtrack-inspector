@@ -22,6 +22,10 @@ evidencias/
     ublock.png | ublock.txt           popup e logger do uBlock Origin
     notas.md                          horário da coleta e observações
     automatizado/                     coleta por tools/smoke_test.py (navegador automatizado)
+    final/                            coleta final com o plugin completo (base do score)
+    reconciliacao.md                  gerado por npm run reconcile
+  score.md                            score dos 3 sites, sensibilidade e Blacklight (npm run score)
+  score-analise.md                    análise crítica do score e comparação com o Blacklight
 ```
 
 Roteiro de cada página do DuckDuckGo em [`ddg/README.md`](ddg/README.md); coleta
@@ -56,3 +60,7 @@ Nomes de `<teste>`: `tracker-reporting`, `request-blocking`, `storage-blocking`,
 | sp.gov.br: HAR + prints + Blacklight + uBO | ✔ | ✔ | ✔ | ☑ |
 | quintoandar.com.br: HAR + prints + Blacklight + uBO | ✔ | ✔ | ✔ | ☑ |
 | uol.com.br: HAR + prints + Blacklight + uBO | ✔ | ✔ | ✔ | ☑ |
+| Coleta final dos 3 sites (`final/`: HAR, prints de Score e Alertas, JSON) | | | ✔ | ☑ |
+| `score.md` gerado a partir da coleta final | | | ✔ | ☑ |
+| `score-analise.md`: comparação crítica com o Blacklight | | | ✔ | ☑ |
+| Relatório em PDF (`relatorio/relatorio.pdf`) com os entregáveis 2, 3 e 4 | ✔ | ✔ | ✔ | ☑ |

@@ -77,21 +77,31 @@ prints em `evidencias/`.
 
 ## 4. Pontuação de privacidade
 
-Começa em 100 e subtrai penalidades, com teto por categoria.
+Começa em 100 e subtrai penalidades, com teto por critério; os tetos somam 100.
+Metodologia implementada (`extension/background/score.js`, detalhada no README):
 
-| Critério | Penalidade máx. | Regra | Justificativa |
+| Critério | Teto | Regra | Blacklight |
 |---|---|---|---|
-| Domínios de terceira parte | 10 | 0,5 por domínio | Sinal fraco sozinho |
-| Rastreadores conhecidos | 20 | 2 por rastreador | Blacklight: ad trackers |
-| Cookies de terceira parte | 15 | 1,5 cada (2 se persistente > 1 ano) | Blacklight: third-party cookies |
-| Storage HTML5 de terceiros | 10 | 2 por origem | Persistência fora dos cookies |
-| Canvas fingerprint | 15 | 15 se 3ª parte, 8 se 1ª parte | Sem estado, contorna controles de cookies |
-| Cookie sync / bounce | 15 | 5 por evento | Liga identidades entre sites |
-| Hijacking, keylogging, gravação de sessão | 15 | 5 por indicador | Blacklight: key logging, session recording |
+| Rastreadores de terceira parte | 20 | 2 por site rastreador (listas do Firefox) | Ad trackers |
+| Cookies de terceira parte | 15 | 1 cada (2 se validade > 1 ano) | Third-party cookies |
+| Identificadores guardados por terceiros | 10 | 1 por cookie/chave de 1ª parte gravado por script de 3ª; 1 por origem de 3ª com storage | — |
+| Fingerprinting | 15 | 15 se 3ª parte, 8 se 1ª parte; só GPU: 4/2 | Canvas fingerprinting |
+| Sincronização de IDs e bounce | 15 | 3 por par entre terceiros; 1 por ID de 1ª parte repassado; 5 por bounce | — |
+| Vigilância comportamental | 15 | gravação de sessão 10; pixel 3; GA remarketing 3; teclado ouvido por 3ª parte 3 por site | Session recording, key logging, pixels, GA remarketing |
+| Sequestro do navegador | 10 | assinatura de hook 10; WebSocket/EventSource 4; polling 2; nativas substituídas 2 | — |
 
 Faixas: A ≥ 85, B 70–84, C 50–69, D 30–49, F < 30. Análise de sensibilidade:
 variar os pesos em ±30% e verificar se a ordem dos 3 sites muda. Comparação linha a
-linha com os 7 testes do Blacklight.
+linha com os testes do Blacklight e com a mesma régua aplicada às observações dele
+(`tools/score.js` → `evidencias/score.md`).
+
+Mudanças em relação ao plano inicial: "domínios de terceira parte" saiu (a
+presença de CDN ou fonte não indica rastreamento, e rastreadores já contam à
+parte); storage virou "identificadores guardados por terceiros", incluindo cookies
+de 1ª parte gravados por scripts de terceiros (`_ga`, `_fbp`), que o plano não
+enxergava; o critério único de hijacking/keylogging/gravação foi separado em
+vigilância (espelha os testes do Blacklight) e sequestro do navegador (indícios de
+hook), para que um não esconda o outro.
 
 ## 5. Protocolo de evidências
 
@@ -129,6 +139,8 @@ Commits pequenos por funcionalidade (`feat:`, `fix:`, `docs:`, `test:`,
 | 3 | 27/09 | Canvas/WebGL fingerprint, enumeração de fontes, autoria de cookies e storage (hooks em `document_start`), aba Alertas; evidências DDG Fingerprinting e primeira coleta dos 3 sites (HAR, plugin, uBO 1.75.0, Blacklight com dados brutos) → tag `v0.1-C` |
 | 4 | 27/09 | Teste de integração em Firefox real (`tools/smoke_test.py`, 17 verificações nas páginas do DDG) e coleta automatizada do sp.gov.br (desafio anti-bot); janela fixa de 30 s; cookie sync, bounce tracking, parâmetros de rastreamento; categorias do Blacklight; reconciliação automática (`tools/reconcile.js`); roteiro das páginas DDG do B. Evidências DDG de Tracker Blocking, Storage partitioning, Bounce e Query parameters → tag `v0.2-B` |
 | 5 | 27/09 | Indícios de hijacking/hook (WebSocket/EventSource para terceiros, polling, funções nativas substituídas, globais novas, captura de teclado, assinaturas do BeEF); lista de bloqueio personalizada; js-leaks com e sem o plugin (pegada zero); 25 verificações automatizadas no DDG; evidências de js-leaks e de Tracker Blocking com bloqueio |
+| 6 | 27–28/09 | Score de privacidade (aba Score, nota no cabeçalho, 7 critérios com teto), `tools/score.js` (score dos sites, sensibilidade ±30%, comparação com o Blacklight na mesma régua); coleta final dos 3 sites com o plugin completo; cookies com Domain em sufixo público descartados (RFC 6265); popup segue a aba do relatório; análise crítica do score (`evidencias/score-analise.md`) |
+| 7 | 28/09 | Reconciliação com a coleta final (visitas limpas) e causa para sincronizações vistas só no `inspection.json` do Blacklight; relatório em PDF dos entregáveis 2, 3 e 4 (`relatorio/`) |
 
 Achados da coleta que entram no relatório: fingerprinting anti-bot (Imperva/hCaptcha)
 no sp.gov.br visto só por navegadores automatizados; rastreamento servido por

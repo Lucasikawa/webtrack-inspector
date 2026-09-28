@@ -19,7 +19,7 @@ de privacidade no cliente web. Projeto da Avaliação Intermediária de Ciberseg
 | B | Parâmetros de rastreamento na URL (`utm_*`, `fbclid`, `gclid`…) | ✅ |
 | B | Categorias dos testes do Blacklight (gravação de sessão, pixels, GA com remarketing) | ✅ |
 | A | Indicadores de sequestro de navegador (hijacking/hook): conexões persistentes, polling, funções nativas substituídas, captura de teclado, assinaturas do BeEF | ✅ |
-| A | Pontuação de privacidade com metodologia explícita | ⏳ |
+| A | Pontuação de privacidade com metodologia explícita (aba Score e nota no cabeçalho do popup) | ✅ |
 | A | Lista de bloqueio personalizada (aba Bloqueio e botão Bloquear por site) | ✅ |
 | — | Exportação do relatório da página em JSON | ✅ |
 
@@ -39,10 +39,12 @@ Requer Firefox 140 ou superior.
    botão de extensões, ícone de peça de quebra-cabeça).
 6. Abra ou recarregue uma página e clique no ícone para ver o relatório.
    O número no ícone é a quantidade de sites de terceira parte contatados.
-7. O popup tem as abas **Terceiros**, **Cookies**, **Storage** e **Alertas**
-   (fingerprinting); o botão **Exportar JSON** salva o relatório da página (usado
-   nas evidências) e **Abrir em aba** mostra o mesmo relatório numa aba, em
-   tamanho de página.
+7. O popup tem as abas **Terceiros**, **Cookies**, **Storage**, **Alertas**
+   (fingerprinting, sincronização, bounce, categorias do Blacklight, sequestro do
+   navegador), **Bloqueio** (lista de bloqueio) e **Score**; a nota da página
+   aparece também no cabeçalho. O botão **Exportar JSON** salva o relatório da
+   página (usado nas evidências) e **Abrir em aba** mostra o mesmo relatório numa
+   aba, em tamanho de página.
 
 Extensões temporárias são removidas quando o Firefox é fechado; repita os passos 2–4
 a cada nova sessão. Para ver os erros do background, use o botão **Inspecionar**
@@ -87,6 +89,29 @@ e do fingerprinting.
 npm run reconcile
 ```
 
+### Score dos sites e comparação com o Blacklight
+
+`tools/score.js` aplica a metodologia do score (a mesma do popup) ao JSON de cada
+site (coleta final em `final/plugin.json`, se existir) e gera `evidencias/score.md`:
+nota e descontos por critério, análise de sensibilidade (cada peso a 0,7× e 1,3×,
+verificando se a ordem dos sites muda) e comparação com o Blacklight, teste a
+teste e com a mesma régua aplicada ao que o Blacklight observou.
+
+```bash
+npm run score
+```
+
+### Relatório em PDF
+
+`relatorio/relatorio.md` é o texto do relatório (entregáveis 2, 3 e 4).
+`relatorio/build.sh` reduz os prints de `evidencias/`, recorta o popup de cada
+print do DuckDuckGo, converte o texto com o pandoc e imprime o PDF no Chrome sem
+interface. Requer pandoc, Python com Pillow e Google Chrome.
+
+```bash
+relatorio/build.sh
+```
+
 A pasta `extension/` é carregada diretamente, sem build. As bibliotecas usadas em
 tempo de execução ficam versionadas em `extension/lib/`.
 
@@ -102,6 +127,7 @@ extension/
     tracking.js            identificadores, cookie sync, parâmetros de rastreamento
     categories.js          categorias dos testes do Blacklight
     blocklist.js           lista de bloqueio personalizada
+    score.js               pontuação de privacidade da página
     tab-report.js          relatório de uma página: hosts, cookies, storage, fingerprinting
     background.js          estado por aba e listeners (webRequest, webNavigation, cookies)
   content/
@@ -113,7 +139,9 @@ tests/                     testes unitários (node --test)
 tools/
   smoke_test.py            teste de integração em Firefox real e coleta automatizada
   reconcile.js             reconciliação com Blacklight e uBlock Origin
+  score.js                 score dos sites, sensibilidade e comparação com o Blacklight
 evidencias/                HARs e prints dos testes (ver evidencias/README.md)
+relatorio/                 relatório em PDF (texto, estilo e script de geração)
 ```
 
 **Por que Manifest V2.** O Firefox continua suportando o MV2, que oferece background
@@ -143,6 +171,9 @@ contra Rastreamento, baseadas no Disconnect).
   últimos 30 s.
 
 Primeira × terceira parte compara o eTLD+1 do domínio do cookie com o da página.
+Um `Set-Cookie` com `Domain` num sufixo público (ex.: `Domain=.sp.gov.br`) é
+descartado, como faz o navegador (RFC 6265, seção 5.3), salvo se o domínio for o
+próprio host.
 Sessão × persistente segue a presença de `Expires`/`Max-Age`. Contam como
 "injetados no carregamento" os cookies vistos nos **primeiros 30 s** da navegação,
 a mesma janela usada para gravar o HAR no protocolo de evidências. O evento `load`
@@ -248,6 +279,43 @@ parte são canceladas pelo `webRequest` bloqueante. A navegação principal e os
 recursos do próprio site nunca são bloqueados. Requisições sem aba (fetch de
 Service Worker) são bloqueadas quando quem as disparou é de outro site. A lista
 fica em `storage.local`.
+
+**Pontuação de privacidade.** De 0 a 100 (maior é melhor): parte de 100 e desconta
+pontos em 7 critérios. Cada critério tem teto, e os tetos somam 100, para que um
+critério sozinho não domine a nota (um portal com 80 rastreadores não zera a nota
+só por isso).
+
+| Critério | Teto | Pontos por ocorrência | Teste do Blacklight |
+|---|---|---|---|
+| Rastreadores de terceira parte | 20 | 2 por site classificado como rastreador pelas listas do Firefox | Ad trackers |
+| Cookies de terceira parte | 15 | 1 por cookie; 2 se a validade passa de 1 ano | Third-party cookies |
+| Identificadores guardados por terceiros | 10 | 1 por cookie ou chave de storage de 1ª parte gravado por script de 3ª parte; 1 por origem de 3ª parte com storage | — |
+| Fingerprinting | 15 | canvas, WebGL ou fontes: 15 por script de 3ª parte, 8 de 1ª; só consulta à GPU: 4 (3ª) ou 2 (1ª) | Canvas fingerprinting |
+| Sincronização de IDs e bounce tracking | 15 | 3 por par de sincronização entre terceiros; 1 por ID de 1ª parte enviado a terceiro; 5 por bounce | — |
+| Vigilância comportamental | 15 | gravação de sessão: 10; cada pixel (Facebook, TikTok, X, LinkedIn): 3; GA com remarketing: 3; cada site de 3ª parte com script ouvindo teclado: 3 | Session recording, key logging, pixels, GA remarketing |
+| Sequestro do navegador | 10 | assinatura de hook conhecida: 10; WebSocket/EventSource para terceiro: 4; polling de terceiro: 2; funções nativas substituídas: 2 | — |
+
+Faixas: A ≥ 85, B ≥ 70, C ≥ 50, D ≥ 30, F < 30.
+
+Critérios de pesos:
+- o que o usuário não consegue apagar nem bloquear com controles de cookies
+  (fingerprinting, sincronização de IDs, bounce, sequestro) desconta mais por
+  ocorrência do que cookies e storage, que ele apaga;
+- presença em listas de rastreamento desconta; a simples presença de terceiros
+  (CDN, fontes) não, porque sozinha não indica rastreamento;
+- indícios descontam menos que evidências: ouvir o teclado é condição para key
+  logging, não prova dele (o Blacklight só marca key logging quando o texto
+  digitado sai na rede), então vale 3 por site e não 10 como a gravação de sessão;
+- os critérios espelham os testes do Blacklight para permitir a comparação, e
+  acrescentam o que o plugin mede além dele (sincronização, bounce, storage
+  gravado por terceiros, sequestro).
+
+O score mede o **comportamento do site**, não a proteção do navegador: cookies de
+terceiros contam mesmo quando o Firefox os particiona, porque o mesmo site, num
+navegador sem essa proteção, rastrearia com eles. Só entra o que foi observado nos
+primeiros 30 s da navegação (a janela do HAR). A análise de sensibilidade
+(`tools/score.js`) multiplica o peso de cada critério por 0,7 e 1,3 e verifica se a
+ordem dos sites muda.
 
 **Autoria de cookies e storage.** O primeiro script que grava cada cookie via
 `document.cookie` e cada chave via `setItem` aparece no popup. Um cookie de
