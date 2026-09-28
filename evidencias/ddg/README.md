@@ -111,6 +111,104 @@ Resultado esperado: **6 detecções**, todas atribuídas a
 `canvas-2d-imagedata` lê o mesmo canvas duas vezes (`getImageData` e depois
 `toDataURL`), e cada leitura conta como uma detecção.
 
+## Tracker Blocking (conceito B; bloqueio é conceito A)
+
+URL: `https://privacy-test-pages.site/privacy-protections/request-blocking/`
+
+A página faz ~25 tipos de requisição a `bad.third-party.site` (script, CSS, imagem,
+`<picture>`, `<object>`, áudio, vídeo, iframe, fonte, background, WebSocket,
+EventSource, fetch, XHR, `sendBeacon`, favicon, fetch em iframe e em iframe
+aninhado, fetch em Web Worker e em Service Worker, relatório CSP, fetch
+redirecionado) e espera que o domínio esteja numa lista de bloqueio.
+
+Fluxo: **Start the test** → aguardar ~10 s → popup na aba **Terceiros** → print
+`terceiros.png`; **Exportar JSON** → `plugin.json`; **Download the results** →
+`resultados.json`.
+
+Esperado no plugin: `third-party.site` com ~22 requisições e os tipos script,
+stylesheet, font, image, imageset, media, object, sub_frame, websocket, beacon,
+xmlhttprequest e csp_report (validado em Firefox 156).
+
+Divergências a explicar:
+- Até o Dia 5 o plugin **detecta** mas não bloqueia: a página marca as requisições
+  como carregadas. Depois da lista de bloqueio (Dia 5), repetir com
+  `bad.third-party.site` bloqueado (`terceiros-bloqueio.png`).
+- `bad.third-party.site` não recebe a marca de rastreador: está só na lista de teste
+  do DuckDuckGo, não nas listas do Firefox.
+- Fetch feito pelo **Service Worker** não tem aba associada (`tabId = -1` no
+  `webRequest`) e não entra no relatório da página.
+- `NS_ERROR_WEBSOCKET_CONNECTION_REFUSED`: o servidor de teste recusa o WebSocket;
+  a tentativa de conexão foi detectada assim mesmo.
+
+## Storage partitioning (conceito B)
+
+URL: `https://privacy-test-pages.site/privacy-protections/storage-partitioning/`
+
+Não abra outra cópia da página nem use recarga forçada (a própria página avisa que
+isso invalida o teste).
+
+Fluxo: **Run Tests** → a página grava dados em vários mecanismos, **navega para
+`https://www.first-party.site/privacy-protections/storage-partitioning/`** e abre
+uma janela de teste; aguardar até aparecer *"Retrieved data from 21 storage
+mechanisms"* → **Show Detailed Results** → na aba da página final, popup nas abas
+**Storage** e **Cookies** → prints `storage.png` e `cookies.png`; **Exportar
+JSON** → `plugin.json`; **Download the result** → `resultados.json`.
+
+O que a página testa: `document.cookie`, cookie HTTP, Cookie Store API,
+localStorage, sessionStorage, IndexedDB, WebSQL, Cache API, Service Worker,
+BroadcastChannel, SharedWorker, Web Locks, caches HTTP (fetch, XHR, iframe,
+imagem, favicon, fonte, CSS, prefetch) e HSTS, em contexto de 1ª e de 3ª parte.
+
+Divergências a explicar:
+- O particionamento é feito pelo **Firefox** (Total Cookie Protection / dFPI), não
+  pelo plugin. O plugin mostra a evidência onde ela é observável: cookies com
+  `partitionKey` (marca **particionado**) e o armazenamento de cada origem, inclusive
+  iframes de terceiros.
+- Caches HTTP, favicon, HSTS, BroadcastChannel, SharedWorker e Web Locks não são
+  armazenamento que o plugin monitora; o resultado deles vem só da página.
+- WebSQL não existe no Firefox.
+
+## Bounce tracking (conceito B)
+
+URL: `https://privacy-test-pages.site/privacy-protections/bounce-tracking/`
+
+Cada link passa por `bad.third-party.site/.../bounce.html`, que gera ou lê um UID
+(cookie e localStorage) e redireciona **por script, sem interação**, para o
+destino com o UID na URL (`?bounceUIDlocalStorage=…&bounceUIDcookie=…&isNew=…`).
+
+Fluxo, para cada um dos 4 links: clicar → na página de destino, popup na aba
+**Alertas** → print `<destino>.png` (ex.: `first-party.png`) → **Exportar JSON**
+→ `<destino>.json` → voltar à página de teste.
+
+Esperado no plugin (validado em Firefox 156):
+- `www.first-party.site`, `privacy-test-pages.site` e `www.publisher-company.site`:
+  **Bounce via third-party.site**, redirecionamento por script, vindo de
+  `privacy-test-pages.site`, poucas centenas de ms sem interação, identificador
+  `bounceUID`, e **repassado na URL**: `isNew` na primeira passagem (UID recém-criado)
+  ou `bounceUIDcookie`/`bounceUIDlocalStorage` nas seguintes (UID já existente).
+- `good.third-party.site`: **nenhum bounce**. Pelo eTLD+1, `bad.third-party.site`
+  e `good.third-party.site` são o mesmo site (`third-party.site`): o UID fica dentro
+  do mesmo site e não liga identidades entre sites diferentes.
+
+## Query parameters (conceito B)
+
+URL: `https://privacy-test-pages.site/privacy-protections/query-parameters/`
+
+Fluxo, para cada um dos 4 links: clicar → popup na aba **Alertas**, seção
+**Parâmetros de rastreamento na URL** → print → voltar.
+
+| Link | Esperado (página) | Plugin |
+|---|---|---|
+| `utm_source` + `q` | "q=other" (parâmetro removido) | detecta `utm_source` |
+| `utm_source` + `utm_medium` | "" | detecta os dois |
+| `fbclid` + `fb_source` + `u` | "u=14" | detecta `fbclid` e `fb_source` |
+| sem rastreamento | "q=something&id=1234" | nenhum |
+
+Divergência a explicar: a página espera que os parâmetros sejam **removidos** da URL
+antes da navegação; o plugin os **detecta e mostra**, mas não reescreve a URL (o
+modo Padrão do Firefox também não; a remoção de parâmetros do Firefox só atua no
+modo Rigoroso e para uma lista própria).
+
 ## Tabela do relatório
 
 Modelo para `relatorio/`. Uma linha por subteste.

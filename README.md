@@ -15,7 +15,9 @@ de privacidade no cliente web. Projeto da Avaliação Intermediária de Ciberseg
 | B | Cookies de primeira × terceira parte, sessão × persistentes | ✅ |
 | B | Canvas fingerprint (heurística de Englehardt & Narayanan), WebGL, consulta à GPU e enumeração de fontes | ✅ |
 | B | Script responsável por cada cookie (`document.cookie`) e chave de storage (`setItem`) | ✅ |
-| B | Sincronismo de cookies e bounce tracking | ⏳ |
+| B | Sincronismo de cookies (IDs de um site na URL de outro) e bounce tracking (HTTP e por script) | ✅ |
+| B | Parâmetros de rastreamento na URL (`utm_*`, `fbclid`, `gclid`…) | ✅ |
+| B | Categorias dos testes do Blacklight (gravação de sessão, pixels, GA com remarketing) | ✅ |
 | A | Indicadores de sequestro de navegador (hijacking/hook) | ⏳ |
 | A | Pontuação de privacidade com metodologia explícita | ⏳ |
 | A | Lista de bloqueio personalizada | ⏳ |
@@ -97,6 +99,8 @@ extension/
     parties.js             eTLD+1 via Public Suffix List (tldts)
     cookies.js             interpretação de Set-Cookie e da API de cookies
     fingerprint.js         heurísticas de canvas/WebGL fingerprinting
+    tracking.js            identificadores, cookie sync, parâmetros de rastreamento
+    categories.js          categorias dos testes do Blacklight
     tab-report.js          relatório de uma página: hosts, cookies, storage, fingerprinting
     background.js          estado por aba e listeners (webRequest, webNavigation, cookies)
   content/
@@ -104,7 +108,10 @@ extension/
     storage.js             retrato do armazenamento HTML5 de cada frame
   popup/                   interface exibida ao clicar no ícone
   lib/                     bibliotecas de terceiros (tldts, MIT)
-tests/                     testes unitários da lógica de classificação
+tests/                     testes unitários (node --test)
+tools/
+  smoke_test.py            teste de integração em Firefox real e coleta automatizada
+  reconcile.js             reconciliação com Blacklight e uBlock Origin
 evidencias/                HARs e prints dos testes (ver evidencias/README.md)
 ```
 
@@ -179,6 +186,34 @@ complementares: leitura de um canvas WebGL de pelo menos 16 × 16 px; consulta a
 `UNMASKED_VENDOR_WEBGL`/`UNMASKED_RENDERER_WEBGL` (fabricante e modelo reais da
 GPU); enumeração de fontes, com o critério da seção 6.3 do mesmo artigo (o mesmo
 texto medido pelo menos 50 vezes em pelo menos 50 fontes).
+
+**Cookie sync.** Método de Acar et al., *The Web Never Forgets* (ACM CCS 2014), e
+de Englehardt & Narayanan (2016). Valores de cookies (`Set-Cookie`, cabeçalho
+`Cookie`, `document.cookie`) e de `localStorage`/`sessionStorage` (`setItem`) são
+divididos em trechos; um trecho com pelo menos 8 caracteres, com dígitos e que não
+seja um timestamp é candidato a identificador, guardado com o site dono. Se ele
+aparece na URL (caminho ou query, decodificados) de uma requisição a outro site, o
+receptor passou a conhecer o ID do dono: **sincronização entre terceiros** quando
+o dono é um terceiro, **ID de 1ª parte enviado a terceiro** quando é o próprio site
+(ex.: `_pubcid`, `cto_bundle`). Caminhos típicos de sincronização (`/getuid`,
+`/usersync`, `/match`, pixel `google_nid`…) ficam registrados como indício. Os
+valores ficam só na memória; o JSON exportado traz apenas o ID repassado.
+
+**Bounce tracking.** Duas formas: (1) redirecionamento HTTP por um site
+intermediário na cadeia do `main_frame`, diferente da origem e do destino; (2)
+página de outro site que ficou até 10 s **sem interação** do usuário (clique,
+toque ou tecla, observados pelos hooks) e mandou a aba para um terceiro site, numa
+navegação que não foi digitada, favorito, recarga nem voltar. O plugin mostra os
+identificadores do intermediário e quais aparecem na URL de destino.
+
+**Parâmetros de rastreamento.** `utm_*`, `fbclid`, `gclid`, `msclkid`, `mc_eid` e
+outros nas URLs de navegação (incluindo redirecionamentos).
+
+**Categorias do Blacklight.** Regras por URL para gravação de sessão (Hotjar,
+Clarity, FullStory…), pixels do Facebook, TikTok e X, Google Analytics com
+remarketing (hit espelhado para `stats.g.doubleclick.net` ou
+`google.*/ads/ga-audiences`) e LinkedIn Insight, para comparar com os testes do
+Blacklight categoria a categoria.
 
 **Autoria de cookies e storage.** O primeiro script que grava cada cookie via
 `document.cookie` e cada chave via `setItem` aparece no popup. Um cookie de
