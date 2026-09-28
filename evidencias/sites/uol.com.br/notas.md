@@ -1,4 +1,4 @@
-# uol.com.br — UOL
+# uol.com.br: UOL
 
 URL analisada: https://www.uol.com.br/
 
@@ -68,3 +68,6 @@ Também não é evidência; orienta o que conferir na coleta.
 | Data e hora | Versão do plugin (commit) | HAR | Prints | Blacklight | uBO |
 |---|---|---|---|---|---|
 | 27/09/2026 21:04 | 0.3.0 (`82e536d`) | 21:04:39–21:05:11 (gravação pausada aos 32 s), 224 entradas, 63 hosts | 21:07:20–21:07:40; JSON 21:06:43 | 20:43 (19:43 ET) | 20:28–20:32, uBO 1.75.0 |
+| 27/09/2026 23:38 (coleta final, `final/`) | 0.7.0 | 23:38:53–23:40:08 (75 s; o score usa só os primeiros 30 s), 372 entradas, primeira requisição sem cookies | Score 23:47–23:48, Alertas 23:49–23:56 (aba do relatório em tela cheia); JSON exportado em 28/09 00:12:32 pela aba do relatório, mesmo carregamento (início 23:38:53) | — | — |
+
+**Visita anterior na 1ª coleta.** A primeira requisição do HAR da 1ª coleta já levava cookies do site (`_ga` de uma sessão iniciada às 20:04:56), ou seja, houve uma visita antes da gravação sem limpar os dados: o HAR e o JSON v0.3.0 são de uma visita de retorno, enquanto o Blacklight faz sempre a primeira visita. Cookies já gravados e não regravados no carregamento não entram na contagem de injetados. A coleta final foi feita com os dados limpos (primeira requisição sem cookies).

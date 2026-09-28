@@ -81,3 +81,31 @@ página demorou, Blacklight falhou).
 - [ ] `ublock.png`, `ublock-logger.png` (e `ublock.txt`, se exportou)
 - [ ] `blacklight.png` e pasta `blacklight/` (download da análise)
 - [ ] linha preenchida em `notas.md`
+
+## 5. Coleta final com o plugin completo
+
+A primeira coleta (passos 1 a 4) foi feita com o plugin v0.3.0, que ainda não tinha
+sincronização de IDs, bounce tracking, categorias do Blacklight, indícios de
+sequestro do navegador nem o score. A coleta final repete só o passo 1 com a versão
+atual, numa pasta separada: a primeira coleta continua sendo a base da
+reconciliação com o uBO e o Blacklight (feitos na mesma sessão), e a final é a base
+do score (`evidencias/score.md`, gerado por `npm run score`).
+
+1. Em `about:debugging#/runtime/this-firefox`, clique em **Recarregar** no plugin e
+   confira a versão no rodapé do popup (0.7.0 ou superior).
+2. Repita os passos 1.1 a 1.4 (limpar dados, DevTools aberto antes da URL, 30 s sem
+   interagir). No UOL, pause a gravação da aba Rede aos 30 s, como na primeira coleta.
+3. Salve o HAR em `final/<site>.har`.
+4. Prints do popup, com a página ao fundo: aba **Score** → `final/plugin-score.png`;
+   aba **Alertas** → `final/plugin-alertas.png` (se a aba for maior que a tela, tire
+   mais de um print: `plugin-alertas-1.png`, `plugin-alertas-2.png`…).
+5. **Exportar JSON** → `final/plugin.json`, logo após os prints.
+6. No `notas.md`, acrescente uma linha na tabela **Coletas** (data e hora, versão
+   0.7.0, "coleta final").
+
+### Checklist da coleta final
+
+- [ ] `final/<site>.har`
+- [ ] `final/plugin-score.png`, `final/plugin-alertas*.png`
+- [ ] `final/plugin.json`
+- [ ] linha "coleta final" em `notas.md`

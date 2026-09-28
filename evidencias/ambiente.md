@@ -32,3 +32,4 @@ iframes de terceiros particionados).
 | 27/09/2026 21:04–21:07 | UOL: plugin + HAR refeitos (DevTools aberto antes da URL, gravação pausada aos 30 s) | 0.3.0 | substitui a coleta de 20:09 |
 | 27/09/2026 21:58–22:14 | DDG Tracker Blocking, Storage partitioning, Bounce tracking, Query parameters | 0.4.1 | `ddg/<teste>/` |
 | 27/09/2026 22:51–22:59 | DDG Tracker Blocking com lista de bloqueio; js-leaks | 0.6.0 | `ddg/request-blocking/*-bloqueio.*`, `ddg/js-leaks/` |
+| 27/09/2026 23:21 a 28/09/2026 00:25 | Sites reais, coleta final (plugin + HAR + prints de Score e Alertas); QuintoAndar refeito às 00:18 | 0.7.0 | `sites/<site>/final/` |

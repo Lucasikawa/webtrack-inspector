@@ -1,4 +1,4 @@
-# quintoandar.com.br — QuintoAndar
+# quintoandar.com.br: QuintoAndar
 
 URL analisada: https://www.quintoandar.com.br/
 
@@ -58,3 +58,8 @@ Também não é evidência; orienta o que conferir na coleta.
 | Data e hora | Versão do plugin (commit) | HAR | Prints | Blacklight | uBO |
 |---|---|---|---|---|---|
 | 27/09/2026 20:05 | 0.3.0 (`82e536d`) | 20:05:34–20:08:38, 171 entradas | 20:06:56–20:07:17; JSON 20:07:14 | 20:39 (19:39 ET) | 20:26–20:27, uBO 1.75.0 |
+| 28/09/2026 00:18 (coleta final, `final/`) | 0.7.0 | 00:18:26–00:18:39, 157 entradas; recarga da página, com cookies de visitas anteriores | Score 00:19–00:21, Alertas 00:21–00:24; JSON 00:25:18, mesmo carregamento (início 00:18:26) | — | — |
+
+**Visita anterior na 1ª coleta.** A primeira requisição do HAR da 1ª coleta já levava cookies do site (`5ANNEX` e outros), ou seja, houve uma visita antes da gravação sem limpar os dados: o HAR e o JSON v0.3.0 são de uma visita de retorno, enquanto o Blacklight faz sempre a primeira visita. Cookies já gravados e não regravados no carregamento não entram na contagem de injetados. O mesmo vale para a coleta final (ver abaixo).
+
+**Coleta final também é visita de retorno.** A coleta final é uma recarga (`transition: reload`) de uma página do QuintoAndar já aberta, e a primeira requisição do HAR leva cookies gravados às 23:30–23:31 de 27/09 (`amplitude_id_…`, `FPAU=1.3.1075676241.1790562662`, `FPGCLAW` com um `gclid`): a limpeza de dados não teve efeito. O `gclid` (identificador de clique em anúncio do Google Ads) indica que uma das visitas anteriores veio de um anúncio. Os 3 repasses de `5A_gclid` para `doubleclick.net`, `google.com` e `google.com.br` no critério de sincronização são, por isso, artefato da coleta e não comportamento de uma primeira visita: sem eles o score seria 66 (C) em vez de 63 (C). Tentativas descartadas: 27/09 23:31 (HAR e prints) e 23:41 (JSON), de visitas diferentes entre si.

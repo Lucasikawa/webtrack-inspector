@@ -1,0 +1,1377 @@
+{
+  "tool": {
+    "name": "Detector de Rastreadores",
+    "version": "0.7.0"
+  },
+  "exportedAt": "2026-09-28T03:25:18.625Z",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:156.0) Gecko/20100101 Firefox/156.0",
+  "report": {
+    "tabId": 114,
+    "url": "https://www.quintoandar.com.br/",
+    "host": "www.quintoandar.com.br",
+    "site": "quintoandar.com.br",
+    "startedAt": 1790565506855,
+    "loadedMs": 1415,
+    "version": 321,
+    "navigationChain": [
+      "https://www.quintoandar.com.br/"
+    ],
+    "totals": {
+      "requests": 188,
+      "thirdPartyRequests": 29,
+      "thirdPartySites": 9,
+      "thirdPartyHosts": 11,
+      "trackerSites": 8,
+      "windowThirdPartySites": 9,
+      "windowTrackerSites": 8,
+      "blockedByFirefoxSites": 0,
+      "blockedByPluginRequests": 0,
+      "firstPartyHosts": 9
+    },
+    "thirdParty": [
+      {
+        "site": "braze.com",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 6,
+        "firstSeenMs": 542,
+        "hosts": [
+          {
+            "host": "customer.iad-03.braze.com",
+            "requests": 6
+          }
+        ],
+        "types": [
+          "xmlhttprequest"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_ad"
+        ],
+        "errors": {},
+        "categories": [],
+        "blockedByPlugin": 0,
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "google.com",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 6,
+        "firstSeenMs": 1957,
+        "hosts": [
+          {
+            "host": "www.google.com",
+            "requests": 6
+          }
+        ],
+        "types": [
+          "image",
+          "xmlhttprequest"
+        ],
+        "classifications": [
+          "any_strict_tracking",
+          "tracking_content"
+        ],
+        "errors": {},
+        "categories": [],
+        "blockedByPlugin": 0,
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "amplitude.com",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 4,
+        "firstSeenMs": 651,
+        "hosts": [
+          {
+            "host": "api.amplitude.com",
+            "requests": 4
+          }
+        ],
+        "types": [
+          "xmlhttprequest"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_analytics"
+        ],
+        "errors": {},
+        "categories": [],
+        "blockedByPlugin": 0,
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "doubleclick.net",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 4,
+        "firstSeenMs": 1958,
+        "hosts": [
+          {
+            "host": "googleads.g.doubleclick.net",
+            "requests": 3
+          },
+          {
+            "host": "ad.doubleclick.net",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "image",
+          "xmlhttprequest"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_ad"
+        ],
+        "errors": {},
+        "categories": [],
+        "blockedByPlugin": 0,
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "google.com.br",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 3,
+        "firstSeenMs": 2154,
+        "hosts": [
+          {
+            "host": "www.google.com.br",
+            "requests": 3
+          }
+        ],
+        "types": [
+          "image",
+          "xmlhttprequest"
+        ],
+        "classifications": [
+          "any_strict_tracking",
+          "tracking_content"
+        ],
+        "errors": {},
+        "categories": [],
+        "blockedByPlugin": 0,
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "hotjar.com",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 2,
+        "firstSeenMs": 920,
+        "hosts": [
+          {
+            "host": "static.hotjar.com",
+            "requests": 1
+          },
+          {
+            "host": "script.hotjar.com",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "script"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_analytics"
+        ],
+        "errors": {},
+        "categories": [
+          "session-recording"
+        ],
+        "blockedByPlugin": 0,
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "google-analytics.com",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 1,
+        "firstSeenMs": 471,
+        "hosts": [
+          {
+            "host": "www.google-analytics.com",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "script"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_analytics"
+        ],
+        "errors": {},
+        "categories": [],
+        "blockedByPlugin": 0,
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "sentry.io",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 1,
+        "firstSeenMs": 527,
+        "hosts": [
+          {
+            "host": "o105464.ingest.sentry.io",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "xmlhttprequest"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_analytics"
+        ],
+        "errors": {},
+        "categories": [],
+        "blockedByPlugin": 0,
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "googletagmanager.com",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 2,
+        "firstSeenMs": 471,
+        "hosts": [
+          {
+            "host": "www.googletagmanager.com",
+            "requests": 2
+          }
+        ],
+        "types": [
+          "script"
+        ],
+        "classifications": [],
+        "errors": {},
+        "categories": [],
+        "blockedByPlugin": 0,
+        "tracker": false,
+        "blockedByFirefox": false
+      }
+    ],
+    "firstParty": [
+      {
+        "site": "quintoandar.com.br",
+        "thirdParty": false,
+        "firefoxThirdParty": false,
+        "requests": 159,
+        "firstSeenMs": 0,
+        "hosts": [
+          {
+            "host": "static.quintoandar.com.br",
+            "requests": 70
+          },
+          {
+            "host": "telemetry-web.shared.quintoandar.com.br",
+            "requests": 39
+          },
+          {
+            "host": "xp-spec.quintoandar.com.br",
+            "requests": 14
+          },
+          {
+            "host": "www.quintoandar.com.br",
+            "requests": 13
+          },
+          {
+            "host": "cdn-lib.quintoandar.com.br",
+            "requests": 8
+          },
+          {
+            "host": "cozy-assets.quintoandar.com.br",
+            "requests": 8
+          },
+          {
+            "host": "event-gateway.quintoandar.com.br",
+            "requests": 3
+          },
+          {
+            "host": "tracking.quintoandar.com.br",
+            "requests": 2
+          },
+          {
+            "host": "id.quintoandar.com.br",
+            "requests": 2
+          }
+        ],
+        "types": [
+          "font",
+          "image",
+          "imageset",
+          "main_frame",
+          "script",
+          "stylesheet",
+          "sub_frame",
+          "xmlhttprequest"
+        ],
+        "classifications": [],
+        "errors": {
+          "NS_ERROR_DOM_BAD_URI": 2
+        },
+        "categories": [],
+        "blockedByPlugin": 0,
+        "tracker": false,
+        "blockedByFirefox": false
+      }
+    ],
+    "cookies": {
+      "summary": {
+        "total": 16,
+        "windowMs": 30000,
+        "inWindow": 15,
+        "afterWindow": 1,
+        "firstParty": {
+          "session": 4,
+          "persistent": 12
+        },
+        "thirdParty": {
+          "session": 0,
+          "persistent": 0
+        },
+        "window": {
+          "firstParty": {
+            "session": 4,
+            "persistent": 11
+          },
+          "thirdParty": {
+            "session": 0,
+            "persistent": 0
+          }
+        },
+        "longLived": 6,
+        "viaHttp": 5,
+        "viaJs": 11,
+        "notStored": 0,
+        "partitioned": 0,
+        "firstPartyByThirdPartyScript": 4
+      },
+      "list": [
+        {
+          "key": "__tld_test__|quintoandar.com.br|/",
+          "name": "__tld_test__",
+          "domain": "quintoandar.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "quintoandar.com.br",
+          "session": true,
+          "expires": null,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "unspecified",
+          "partitioned": false,
+          "valueLength": 1,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 558,
+          "writers": [
+            "https://static.quintoandar.com.br/home-webapp/_next/static/chunks/eba8ba40-961a988a83cba06a.js"
+          ],
+          "writersThirdParty": false,
+          "thirdParty": false,
+          "inWindow": true,
+          "lifetimeDays": null
+        },
+        {
+          "key": "_fbp|quintoandar.com.br|/",
+          "name": "_fbp",
+          "domain": "quintoandar.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "quintoandar.com.br",
+          "session": false,
+          "expires": 1798341508785,
+          "secure": true,
+          "httpOnly": false,
+          "sameSite": "lax",
+          "partitioned": false,
+          "valueLength": 29,
+          "viaHttp": true,
+          "stored": true,
+          "sourceUrl": "https://tracking.quintoandar.com.br/g/collect?v=2&tid=G-E2JVTQ7D7Q&gtm=45je69n1h1v871821103z877843112za20gzb77843112zd77843112xf1&_p=1790565507301&gcd=13l3l3l3l1l1&npa=0&dma=0&ecid=1577614600&_eu=AAAAAAQ&cid=728361457.1790562662&ec_mode=c&frm=0&ngs=1&pscdl=noapi&rcb=12&sr=2560x1440&ul=en-us&ur=BR-SP&sst.etld=google.com.br&sst.tft=1790565507301&sst.lpc=156863035&sst.navt=r&sst.ude=0&sst.sw_exp=1&_s=1&tag_exp=115938465~115938469~118897920~118897930~120213116~120385422~120469145~120469153~121280971&sid=1790565500&sct=2&seg=0&dl=https%3A%2F%2Fwww.quintoandar.com.br%2F&dt=Abra%20as%20portas%20para%20um%20novo%20morar%20-%20QuintoAndar&_tu=BA&en=PageView&gap.sstd=6&ep.page%20path=%2F&ep.user_data._tag_mode=MANUAL&tfd=1706&richsstsse",
+          "firstSeenMs": 1932,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": false,
+          "inWindow": true,
+          "lifetimeDays": 90
+        },
+        {
+          "key": "_ga_E2JVTQ7D7Q|quintoandar.com.br|/",
+          "name": "_ga_E2JVTQ7D7Q",
+          "domain": "quintoandar.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "quintoandar.com.br",
+          "session": false,
+          "expires": 1825125508541,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "unspecified",
+          "partitioned": false,
+          "valueLength": 54,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 1690,
+          "writers": [
+            "https://www.googletagmanager.com/gtag/destination?id=G-E2JVTQ7D7Q&cx=c&gtm=4e69n1h1"
+          ],
+          "writersThirdParty": true,
+          "thirdParty": false,
+          "inWindow": true,
+          "lifetimeDays": 400
+        },
+        {
+          "key": "_hjSession_1203740|quintoandar.com.br|/",
+          "name": "_hjSession_1203740",
+          "domain": "quintoandar.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "quintoandar.com.br",
+          "session": false,
+          "expires": 1790567639000,
+          "secure": true,
+          "httpOnly": false,
+          "sameSite": "none",
+          "partitioned": false,
+          "valueLength": 148,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 95607,
+          "writers": [
+            "https://script.hotjar.com/modules.e762be2b6b709245aabb.js"
+          ],
+          "writersThirdParty": true,
+          "thirdParty": false,
+          "inWindow": false,
+          "lifetimeDays": 0.024
+        },
+        {
+          "key": "_hjSessionUser_1203740|quintoandar.com.br|/",
+          "name": "_hjSessionUser_1203740",
+          "domain": "quintoandar.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "quintoandar.com.br",
+          "session": false,
+          "expires": 1822101508000,
+          "secure": true,
+          "httpOnly": false,
+          "sameSite": "none",
+          "partitioned": false,
+          "valueLength": 116,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 1414,
+          "writers": [
+            "https://script.hotjar.com/modules.e762be2b6b709245aabb.js"
+          ],
+          "writersThirdParty": true,
+          "thirdParty": false,
+          "inWindow": true,
+          "lifetimeDays": 365
+        },
+        {
+          "key": "_hjTLDTest|quintoandar.com.br|/",
+          "name": "_hjTLDTest",
+          "domain": "quintoandar.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "quintoandar.com.br",
+          "session": true,
+          "expires": null,
+          "secure": true,
+          "httpOnly": false,
+          "sameSite": "none",
+          "partitioned": false,
+          "valueLength": 19,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 1412,
+          "writers": [
+            "https://script.hotjar.com/modules.e762be2b6b709245aabb.js"
+          ],
+          "writersThirdParty": true,
+          "thirdParty": false,
+          "inWindow": true,
+          "lifetimeDays": null
+        },
+        {
+          "key": "5A_SESSION_ID|quintoandar.com.br|/",
+          "name": "5A_SESSION_ID",
+          "domain": "quintoandar.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "quintoandar.com.br",
+          "session": false,
+          "expires": 1790567436000,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "unspecified",
+          "partitioned": false,
+          "valueLength": 13,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 655,
+          "writers": [
+            "https://static.quintoandar.com.br/home-webapp/_next/static/chunks/6040-3d1adfb428c34ec6.js"
+          ],
+          "writersThirdParty": false,
+          "thirdParty": false,
+          "inWindow": true,
+          "lifetimeDays": 0.022
+        },
+        {
+          "key": "5ANNEX|quintoandar.com.br|/",
+          "name": "5ANNEX",
+          "domain": "quintoandar.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "quintoandar.com.br",
+          "session": false,
+          "expires": 1822101636620,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "lax",
+          "partitioned": false,
+          "valueLength": 2038,
+          "viaHttp": true,
+          "stored": true,
+          "sourceUrl": "https://www.quintoandar.com.br/",
+          "firstSeenMs": 268,
+          "writers": [
+            "https://static.quintoandar.com.br/home-webapp/_next/static/chunks/6040-3d1adfb428c34ec6.js"
+          ],
+          "writersThirdParty": false,
+          "thirdParty": false,
+          "inWindow": true,
+          "lifetimeDays": 365.001
+        },
+        {
+          "key": "ab._gd1790565507387|quintoandar.com.br|/",
+          "name": "ab._gd1790565507387",
+          "domain": "quintoandar.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "quintoandar.com.br",
+          "session": true,
+          "expires": null,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "unspecified",
+          "partitioned": false,
+          "valueLength": 19,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 531,
+          "writers": [
+            "https://static.quintoandar.com.br/home-webapp/_next/static/chunks/a83d39da-00783a42eaa993c2.js"
+          ],
+          "writersThirdParty": false,
+          "thirdParty": false,
+          "inWindow": true,
+          "lifetimeDays": null
+        },
+        {
+          "key": "ab.storage.sessionId.cf9e8c77-7b32-4126-940b-b58658d0918e|quintoandar.com.br|/",
+          "name": "ab.storage.sessionId.cf9e8c77-7b32-4126-940b-b58658d0918e",
+          "domain": "quintoandar.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "quintoandar.com.br",
+          "session": false,
+          "expires": 1822122576000,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "unspecified",
+          "partitioned": false,
+          "valueLength": 136,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 534,
+          "writers": [
+            "https://static.quintoandar.com.br/home-webapp/_next/static/chunks/a83d39da-00783a42eaa993c2.js"
+          ],
+          "writersThirdParty": false,
+          "thirdParty": false,
+          "inWindow": true,
+          "lifetimeDays": 365.244
+        },
+        {
+          "key": "amplitude_cookie_test|www.quintoandar.com.br|/",
+          "name": "amplitude_cookie_test",
+          "domain": "www.quintoandar.com.br",
+          "hostOnly": true,
+          "path": "/",
+          "site": "quintoandar.com.br",
+          "session": true,
+          "expires": null,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "unspecified",
+          "partitioned": false,
+          "valueLength": 80,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 531,
+          "writers": [
+            "https://static.quintoandar.com.br/home-webapp/_next/static/chunks/eba8ba40-961a988a83cba06a.js"
+          ],
+          "writersThirdParty": false,
+          "thirdParty": false,
+          "inWindow": true,
+          "lifetimeDays": null
+        },
+        {
+          "key": "amplitude_id_3fbf25d58c3cce92f0e6609904a37cc9quintoandar.com.br|quintoandar.com.br|/",
+          "name": "amplitude_id_3fbf25d58c3cce92f0e6609904a37cc9quintoandar.com.br",
+          "domain": "quintoandar.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "quintoandar.com.br",
+          "session": false,
+          "expires": 1825125636281,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "unspecified",
+          "partitioned": false,
+          "valueLength": 252,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 559,
+          "writers": [
+            "https://static.quintoandar.com.br/home-webapp/_next/static/chunks/eba8ba40-961a988a83cba06a.js"
+          ],
+          "writersThirdParty": false,
+          "thirdParty": false,
+          "inWindow": true,
+          "lifetimeDays": 400.001
+        },
+        {
+          "key": "amplitude_testquintoandar.com.br|quintoandar.com.br|/",
+          "name": "amplitude_testquintoandar.com.br",
+          "domain": "quintoandar.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "quintoandar.com.br",
+          "session": false,
+          "expires": 1825125507418,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "unspecified",
+          "partitioned": false,
+          "valueLength": 24,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 559,
+          "writers": [
+            "https://static.quintoandar.com.br/home-webapp/_next/static/chunks/eba8ba40-961a988a83cba06a.js"
+          ],
+          "writersThirdParty": false,
+          "thirdParty": false,
+          "inWindow": true,
+          "lifetimeDays": 400
+        },
+        {
+          "key": "FPAU|quintoandar.com.br|/",
+          "name": "FPAU",
+          "domain": "quintoandar.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "quintoandar.com.br",
+          "session": false,
+          "expires": 1798338661785,
+          "secure": true,
+          "httpOnly": false,
+          "sameSite": "unspecified",
+          "partitioned": false,
+          "valueLength": 25,
+          "viaHttp": true,
+          "stored": true,
+          "sourceUrl": "https://tracking.quintoandar.com.br/g/collect?v=2&tid=G-E2JVTQ7D7Q&gtm=45je69n1h1v871821103z877843112za20gzb77843112zd77843112xf1&_p=1790565507301&gcd=13l3l3l3l1l1&npa=0&dma=0&ecid=1577614600&_eu=AAAAAAQ&cid=728361457.1790562662&ec_mode=c&frm=0&ngs=1&pscdl=noapi&rcb=12&sr=2560x1440&ul=en-us&ur=BR-SP&sst.etld=google.com.br&sst.tft=1790565507301&sst.lpc=156863035&sst.navt=r&sst.ude=0&sst.sw_exp=1&_s=1&tag_exp=115938465~115938469~118897920~118897930~120213116~120385422~120469145~120469153~121280971&sid=1790565500&sct=2&seg=0&dl=https%3A%2F%2Fwww.quintoandar.com.br%2F&dt=Abra%20as%20portas%20para%20um%20novo%20morar%20-%20QuintoAndar&_tu=BA&en=PageView&gap.sstd=6&ep.page%20path=%2F&ep.user_data._tag_mode=MANUAL&tfd=1706&richsstsse",
+          "firstSeenMs": 1932,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": false,
+          "inWindow": true,
+          "lifetimeDays": 89.967
+        },
+        {
+          "key": "FPGCLAW|quintoandar.com.br|/",
+          "name": "FPGCLAW",
+          "domain": "quintoandar.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "quintoandar.com.br",
+          "session": false,
+          "expires": 1798338668785,
+          "secure": true,
+          "httpOnly": false,
+          "sameSite": "unspecified",
+          "partitioned": false,
+          "valueLength": 72,
+          "viaHttp": true,
+          "stored": true,
+          "sourceUrl": "https://tracking.quintoandar.com.br/g/collect?v=2&tid=G-E2JVTQ7D7Q&gtm=45je69n1h1v871821103z877843112za20gzb77843112zd77843112xf1&_p=1790565507301&gcd=13l3l3l3l1l1&npa=0&dma=0&ecid=1577614600&_eu=AAAAAAQ&cid=728361457.1790562662&ec_mode=c&frm=0&ngs=1&pscdl=noapi&rcb=12&sr=2560x1440&ul=en-us&ur=BR-SP&sst.etld=google.com.br&sst.tft=1790565507301&sst.lpc=156863035&sst.navt=r&sst.ude=0&sst.sw_exp=1&_s=1&tag_exp=115938465~115938469~118897920~118897930~120213116~120385422~120469145~120469153~121280971&sid=1790565500&sct=2&seg=0&dl=https%3A%2F%2Fwww.quintoandar.com.br%2F&dt=Abra%20as%20portas%20para%20um%20novo%20morar%20-%20QuintoAndar&_tu=BA&en=PageView&gap.sstd=6&ep.page%20path=%2F&ep.user_data._tag_mode=MANUAL&tfd=1706&richsstsse",
+          "firstSeenMs": 1932,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": false,
+          "inWindow": true,
+          "lifetimeDays": 89.967
+        },
+        {
+          "key": "FPID|quintoandar.com.br|/",
+          "name": "FPID",
+          "domain": "quintoandar.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "quintoandar.com.br",
+          "session": false,
+          "expires": 1825125508785,
+          "secure": true,
+          "httpOnly": true,
+          "sameSite": "unspecified",
+          "partitioned": false,
+          "valueLength": 67,
+          "viaHttp": true,
+          "stored": true,
+          "sourceUrl": "https://tracking.quintoandar.com.br/g/collect?v=2&tid=G-E2JVTQ7D7Q&gtm=45je69n1h1v871821103z877843112za20gzb77843112zd77843112xf1&_p=1790565507301&gcd=13l3l3l3l1l1&npa=0&dma=0&ecid=1577614600&_eu=AAAAAAQ&cid=728361457.1790562662&ec_mode=c&frm=0&ngs=1&pscdl=noapi&rcb=12&sr=2560x1440&ul=en-us&ur=BR-SP&sst.etld=google.com.br&sst.tft=1790565507301&sst.lpc=156863035&sst.navt=r&sst.ude=0&sst.sw_exp=1&_s=1&tag_exp=115938465~115938469~118897920~118897930~120213116~120385422~120469145~120469153~121280971&sid=1790565500&sct=2&seg=0&dl=https%3A%2F%2Fwww.quintoandar.com.br%2F&dt=Abra%20as%20portas%20para%20um%20novo%20morar%20-%20QuintoAndar&_tu=BA&en=PageView&gap.sstd=6&ep.page%20path=%2F&ep.user_data._tag_mode=MANUAL&tfd=1706&richsstsse",
+          "firstSeenMs": 1932,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": false,
+          "inWindow": true,
+          "lifetimeDays": 400
+        }
+      ]
+    },
+    "storage": {
+      "summary": {
+        "origins": 2,
+        "originsWithData": 1,
+        "thirdPartyOriginsWithData": 0,
+        "items": 21,
+        "localStorageKeys": 16,
+        "localStorageBytes": 904984,
+        "sessionStorageKeys": 3,
+        "sessionStorageBytes": 686,
+        "indexedDBDatabases": 2,
+        "cacheStorageCaches": 0,
+        "blockedOrigins": 0
+      },
+      "origins": [
+        {
+          "origin": "https://www.quintoandar.com.br",
+          "url": "https://www.quintoandar.com.br/",
+          "isTop": true,
+          "localStorage": {
+            "available": true,
+            "count": 16,
+            "bytes": 904984,
+            "keys": [
+              {
+                "key": "hadAmplitudeSession",
+                "size": 4,
+                "writers": []
+              },
+              {
+                "key": "ab.storage.triggers.cf9e8c77-7b32-4126-940b-b58658d0918e",
+                "size": 8,
+                "writers": []
+              },
+              {
+                "key": "amplitude_unsent_3fbf25d58c3cce92f0e6609904a37cc9",
+                "size": 2,
+                "writers": [
+                  "https://static.quintoandar.com.br/home-webapp/_next/static/chunks/eba8ba40-961a988a83cba06a.js"
+                ]
+              },
+              {
+                "key": "ab.storage.sessionId.cf9e8c77-7b32-4126-940b-b58658d0918e",
+                "size": 104,
+                "writers": [
+                  "https://static.quintoandar.com.br/home-webapp/_next/static/chunks/a83d39da-00783a42eaa993c2.js"
+                ]
+              },
+              {
+                "key": "ab.storage.messagingSessionStart.cf9e8c77-7b32-4126-940b-b58658d0918e",
+                "size": 19,
+                "writers": []
+              },
+              {
+                "key": "USER_SESSION",
+                "size": 13,
+                "writers": []
+              },
+              {
+                "key": "amplitude_unsent_identify_3fbf25d58c3cce92f0e6609904a37cc9",
+                "size": 2,
+                "writers": [
+                  "https://static.quintoandar.com.br/home-webapp/_next/static/chunks/eba8ba40-961a988a83cba06a.js"
+                ]
+              },
+              {
+                "key": "ab.storage.serverConfig.cf9e8c77-7b32-4126-940b-b58658d0918e",
+                "size": 713,
+                "writers": []
+              },
+              {
+                "key": "ab.storage.triggers.ts.cf9e8c77-7b32-4126-940b-b58658d0918e",
+                "size": 19,
+                "writers": []
+              },
+              {
+                "key": "ab.storage.cc.cf9e8c77-7b32-4126-940b-b58658d0918e",
+                "size": 8,
+                "writers": []
+              },
+              {
+                "key": "ab.storage.deviceId.cf9e8c77-7b32-4126-940b-b58658d0918e",
+                "size": 86,
+                "writers": []
+              },
+              {
+                "key": "ab.storage.ccLastFullSync.cf9e8c77-7b32-4126-940b-b58658d0918e",
+                "size": 7,
+                "writers": []
+              },
+              {
+                "key": "ab.storage.device.cf9e8c77-7b32-4126-940b-b58658d0918e",
+                "size": 246,
+                "writers": [
+                  "https://static.quintoandar.com.br/home-webapp/_next/static/chunks/a83d39da-00783a42eaa993c2.js"
+                ]
+              },
+              {
+                "key": "b5b53140432dd89e68574ac701b06b09e59bf2d5",
+                "size": 285056,
+                "writers": [
+                  "https://static.quintoandar.com.br/home-webapp/_next/static/chunks/4100-f43047f85d976f1e.js"
+                ]
+              },
+              {
+                "key": "ab.storage.ccLastCardUpdated.cf9e8c77-7b32-4126-940b-b58658d0918e",
+                "size": 7,
+                "writers": []
+              },
+              {
+                "key": "5A.braze.blocklist",
+                "size": 165414,
+                "writers": [
+                  "https://static.quintoandar.com.br/home-webapp/_next/static/chunks/1776-23c2f4dc011e3552.js"
+                ]
+              }
+            ]
+          },
+          "sessionStorage": {
+            "available": true,
+            "count": 3,
+            "bytes": 686,
+            "keys": [
+              {
+                "key": "com.grafana.faro.session",
+                "size": 179,
+                "writers": [
+                  "https://static.quintoandar.com.br/home-webapp/_next/static/chunks/3075.62a39bb8ecf7550d.js"
+                ]
+              },
+              {
+                "key": "cf9e8c77-7b32-4126-940b-b58658d0918e",
+                "size": 61,
+                "writers": [
+                  "https://static.quintoandar.com.br/home-webapp/_next/static/chunks/1776-23c2f4dc011e3552.js"
+                ]
+              },
+              {
+                "key": "com.grafana.faro.lastNavigationId",
+                "size": 10,
+                "writers": [
+                  "https://static.quintoandar.com.br/home-webapp/_next/static/chunks/3075.62a39bb8ecf7550d.js"
+                ]
+              }
+            ]
+          },
+          "indexedDB": {
+            "available": true,
+            "count": 2,
+            "databases": [
+              {
+                "name": "AppboyServiceWorkerAsyncStorage",
+                "version": 5
+              },
+              {
+                "name": "Braze IndexedDB Support Test",
+                "version": 1
+              }
+            ]
+          },
+          "cacheStorage": {
+            "available": true,
+            "count": 0,
+            "names": []
+          },
+          "collectedAt": 1790565518274,
+          "site": "quintoandar.com.br",
+          "thirdParty": false,
+          "items": 21
+        },
+        {
+          "origin": "https://tracking.quintoandar.com.br",
+          "url": "https://tracking.quintoandar.com.br/_/service_worker/69f0/sw_iframe.html?origin=https%3A%2F%2Fwww.quintoandar.com.br&1p=1",
+          "isTop": false,
+          "localStorage": {
+            "available": true,
+            "count": 0,
+            "bytes": 0,
+            "keys": []
+          },
+          "sessionStorage": {
+            "available": true,
+            "count": 0,
+            "bytes": 0,
+            "keys": []
+          },
+          "indexedDB": {
+            "available": true,
+            "count": 0,
+            "databases": []
+          },
+          "cacheStorage": {
+            "available": true,
+            "count": 0,
+            "names": []
+          },
+          "collectedAt": 1790565508810,
+          "site": "quintoandar.com.br",
+          "thirdParty": false,
+          "items": 0
+        }
+      ]
+    },
+    "fingerprinting": {
+      "summary": {
+        "detections": 0,
+        "scripts": 0,
+        "thirdPartyScripts": 0,
+        "byTechnique": {},
+        "discarded": 0
+      },
+      "detections": [],
+      "discarded": []
+    },
+    "categories": [
+      {
+        "category": "session-recording",
+        "label": "gravação de sessão",
+        "sites": [
+          "hotjar.com"
+        ],
+        "requests": 2,
+        "firstSeenMs": 920,
+        "example": "https://static.hotjar.com/c/hotjar-1203740.js?sv=6"
+      }
+    ],
+    "sync": {
+      "summary": {
+        "events": 6,
+        "thirdPartyPairs": 0,
+        "firstPartyIdShares": 6,
+        "receivers": 3,
+        "endpointSites": 0
+      },
+      "events": [
+        {
+          "ownerSite": "quintoandar.com.br",
+          "idName": "FPAU",
+          "idSource": "cabeçalho Cookie",
+          "receiverSite": "doubleclick.net",
+          "token": "1075676241",
+          "url": "https://googleads.g.doubleclick.net/pagead/viewthroughconversion/928881125/?random=1191742211&fst=1790565508690&cv=10&fmt=3&bg=ffffff&guid=ON&u_w=2560&u_h=1440&gtm=45j91e69m1h1v871821103z877843112z99178667982za20gzb77843112zd77843112xf1&url=https%3A%2F%2Fwww.quintoandar.com.br%2F&tiba=Abra%20as%20portas%20para%20um%20novo%20morar%20-%20QuintoAndar&data=listing_pagetype%3Dhome%3Bevent%3Dhome_page_viewed&auid=1075676241.1790562662&rcb=12&dma=0&npa=0&gcd=13l3l3l3l1l1&pscdl=noapi&_is_sw=f15s0t2&tag_",
+          "firstSeenMs": 1958,
+          "requests": 4,
+          "kind": "first-party-id"
+        },
+        {
+          "ownerSite": "quintoandar.com.br",
+          "idName": "5A_gclid",
+          "idSource": "cabeçalho Cookie",
+          "receiverSite": "doubleclick.net",
+          "token": "EAIaIQobChMIu5v0z52QlwMVYlFIAB2DeiD-EAAYASAAEgItivD_BwE",
+          "url": "https://ad.doubleclick.net/activity;src=10844465;type=invmedia;cat=homep0;ord=1222233207;gtm=45j91e69m1h1v871821103z877843112z99178667982za20gzb77843112zd77843112xf1;dc_pre=1;rcb=12;dma=0;npa=0;gcd=13l3l3l3l1l1;pscdl=noapi;gclaw=EAIaIQobChMIu5v0z52QlwMVYlFIAB2DeiD-EAAYASAAEgItivD_BwE;auiddc=1075676241.1790562662;tag_exp=115938465~115938469~118897920~118897930~120213116~120385422~120469145~120469153~121280971;_tu=BA;gap.sstd=6;s3p=1;_is_sw=f15s0t2;~oref=https%3A%2F%2Fwww.quintoandar.com.br%2F?",
+          "firstSeenMs": 1958,
+          "requests": 2,
+          "kind": "first-party-id"
+        },
+        {
+          "ownerSite": "quintoandar.com.br",
+          "idName": "FPAU",
+          "idSource": "cabeçalho Cookie",
+          "receiverSite": "google.com",
+          "token": "1075676241",
+          "url": "https://www.google.com/rmkt/collect/928881125/?random=1191742211&fst=1790565508690&cv=10&fmt=8&bg=ffffff&guid=ON&u_w=2560&u_h=1440&gtm=45j91e69m1h1v871821103z877843112z99178667982za20gzb77843112zd77843112xf1&url=https%3A%2F%2Fwww.quintoandar.com.br%2F&tiba=Abra%20as%20portas%20para%20um%20novo%20morar%20-%20QuintoAndar&data=listing_pagetype%3Dhome%3Bevent%3Dhome_page_viewed&auid=1075676241.1790562662&rcb=12&dma=0&npa=0&gcd=13l3l3l3l1l1&pscdl=noapi&_is_sw=f15s0t2&tag_exp=115938465~115938469~11889",
+          "firstSeenMs": 1958,
+          "requests": 6,
+          "kind": "first-party-id"
+        },
+        {
+          "ownerSite": "quintoandar.com.br",
+          "idName": "5A_gclid",
+          "idSource": "cabeçalho Cookie",
+          "receiverSite": "google.com",
+          "token": "EAIaIQobChMIu5v0z52QlwMVYlFIAB2DeiD-EAAYASAAEgItivD_BwE",
+          "url": "https://www.google.com/rmkt/collect/928881125/?random=1191742211&fst=1790565508690&cv=10&fmt=8&bg=ffffff&guid=ON&u_w=2560&u_h=1440&gtm=45j91e69m1h1v871821103z877843112z99178667982za20gzb77843112zd77843112xf1&url=https%3A%2F%2Fwww.quintoandar.com.br%2F&tiba=Abra%20as%20portas%20para%20um%20novo%20morar%20-%20QuintoAndar&data=listing_pagetype%3Dhome%3Bevent%3Dhome_page_viewed&auid=1075676241.1790562662&rcb=12&dma=0&npa=0&gcd=13l3l3l3l1l1&pscdl=noapi&_is_sw=f15s0t2&tag_exp=115938465~115938469~11889",
+          "firstSeenMs": 1958,
+          "requests": 4,
+          "kind": "first-party-id"
+        },
+        {
+          "ownerSite": "quintoandar.com.br",
+          "idName": "FPAU",
+          "idSource": "cabeçalho Cookie",
+          "receiverSite": "google.com.br",
+          "token": "1075676241",
+          "url": "https://www.google.com.br/pagead/1p-user-list/928881125/?random=879145921&fst=1790564400000&cv=10&fmt=3&bg=ffffff&guid=ON&u_w=2560&u_h=1440&gtm=45j91e69m1h1v871821103z877843112z99178667982za20gzb77843112zd77843112xf1&url=https%3A%2F%2Fwww.quintoandar.com.br%2F&tiba=Abra%20as%20portas%20para%20um%20novo%20morar%20-%20QuintoAndar&data=listing_pagetype%3Dhome_sales%3Bevent%3Dhome_page_viewed&auid=1075676241.1790562662&rcb=12&dma=0&npa=0&gcd=13l3l3l3l1l1&pscdl=noapi&_is_sw=f15s0t2&tag_exp=115938465~",
+          "firstSeenMs": 2154,
+          "requests": 3,
+          "kind": "first-party-id"
+        },
+        {
+          "ownerSite": "quintoandar.com.br",
+          "idName": "5A_gclid",
+          "idSource": "cabeçalho Cookie",
+          "receiverSite": "google.com.br",
+          "token": "EAIaIQobChMIu5v0z52QlwMVYlFIAB2DeiD-EAAYASAAEgItivD_BwE",
+          "url": "https://www.google.com.br/pagead/1p-conversion/928881125/?random=100603031&fst=1790565508703&cv=10&fmt=8&label=dZOzCJzJo6oZEOWz9roD&bg=ffffff&guid=ON&u_w=2560&u_h=1440&gtm=45j91e69m1h1v871821103z877843112z99178667982za20gzb77843112zd77843112xf1&gclaw=EAIaIQobChMIu5v0z52QlwMVYlFIAB2DeiD-EAAYASAAEgItivD_BwE&auid=1075676241.1790562662&rcb=12&dma=0&npa=0&gcd=13l3l3l3l1l1&pscdl=noapi&url=https%3A%2F%2Fwww.quintoandar.com.br%2F&tiba=Abra%20as%20portas%20para%20um%20novo%20morar%20-%20QuintoAndar&data=",
+          "firstSeenMs": 2803,
+          "requests": 1,
+          "kind": "first-party-id"
+        }
+      ],
+      "endpoints": []
+    },
+    "bounces": [],
+    "trackingParams": [],
+    "hijack": {
+      "summary": {
+        "thirdPartySockets": 0,
+        "polling": 0,
+        "overridden": 7,
+        "thirdPartyKeyboardScripts": 0,
+        "signatures": 0,
+        "addedGlobals": 40
+      },
+      "websockets": [],
+      "eventStreams": [],
+      "polling": [],
+      "keyboard": [
+        {
+          "script": "https://static.quintoandar.com.br/home-webapp/_next/static/chunks/4563-8c8060d227f4013d.js",
+          "scriptSite": "quintoandar.com.br",
+          "scriptThirdParty": false,
+          "inline": false,
+          "types": [
+            "change",
+            "input",
+            "keydown",
+            "keypress",
+            "keyup",
+            "paste"
+          ],
+          "targets": [
+            "div",
+            "document",
+            "outro"
+          ]
+        },
+        {
+          "script": "https://static.quintoandar.com.br/home-webapp/_next/static/chunks/84cce2cd-57529c9ae278a8e3.js",
+          "scriptSite": "quintoandar.com.br",
+          "scriptThirdParty": false,
+          "inline": false,
+          "types": [
+            "change",
+            "input",
+            "keydown",
+            "keypress",
+            "keyup",
+            "paste"
+          ],
+          "targets": [
+            "document"
+          ]
+        }
+      ],
+      "globals": {
+        "addedCount": 40,
+        "added": [
+          "__next_s",
+          "__next_f",
+          "_sentryDebugIds",
+          "webpackChunk_N_E",
+          "_N_E",
+          "NEXT_DEPLOYMENT_ID",
+          "next",
+          "scriptsBlocker",
+          "dataLayer",
+          "GoogleAnalyticsObject",
+          "ga",
+          "_N_E_STYLE_LOAD",
+          "__SENTRY__",
+          "__REACT_INTL_CONTEXT__",
+          "regeneratorRuntime",
+          "google_tag_manager",
+          "google_tag_data",
+          "crto_callback",
+          "SCRIPTS_TABLE",
+          "SCRIPTS_BLOCKLIST",
+          "_faroInternal",
+          "faro",
+          "hj",
+          "_hjSettings",
+          "o",
+          "cookieConfigProperties",
+          "cookieCurrVersion",
+          "COOKIES_TABLE",
+          "e",
+          "n",
+          "initCookieConsent",
+          "consent_categories",
+          "CookieBanner",
+          "hjSiteSettings",
+          "hjLazyModules",
+          "hjBootstrap",
+          "hjBootstrapCalled",
+          "gaplugins",
+          "onYouTubeIframeAPIReady",
+          "gaGlobal"
+        ],
+        "overridden": [
+          {
+            "name": "fetch",
+            "source": "function(...r){let n=this,i=g.Dl(r[0]instanceof Request?r[0].url:String(r[0])).href,s=r[0]instanceof Request?r[0]:r[1]||{},u=e._createSpan(i,s);if(!u)return t.a"
+          },
+          {
+            "name": "XMLHttpRequest.prototype.open",
+            "source": "function(...n){try{let t=n[0],r=(0,L.iM)(n[1]);e.parentCreateSpan(this,r,t)}catch(t){O.P.internalLogger.error(t)}return t.apply(this,n)}"
+          },
+          {
+            "name": "XMLHttpRequest.prototype.send",
+            "source": "function(...a){let c=t._xhrMem.get(this);if(!c)return e.apply(this,a);let h=c.span,p=c.spanUrl;if(h&&p){if(t.getConfig().measureRequestSize&&a?.[0]){var _,f;let"
+          },
+          {
+            "name": "EventTarget.prototype.addEventListener",
+            "source": "function(r,n,i){if(\"click\"===r||\"keypress\"==r)try{let n=this.__sentry_instrumentation_handlers__=this.__sentry_instrumentation_handlers__||{},o=n[r]=n[r]||{refC"
+          },
+          {
+            "name": "setTimeout",
+            "source": "function(...t){let r=t[0];return t[0]=(0,a.LV)(r,{mechanism:{data:{function:(0,s.qQ)(e)},handled:!1,type:\"instrument\"}}),e.apply(this,t)}"
+          },
+          {
+            "name": "setInterval",
+            "source": "function(...t){let r=t[0];return t[0]=(0,a.LV)(r,{mechanism:{data:{function:(0,s.qQ)(e)},handled:!1,type:\"instrument\"}}),e.apply(this,t)}"
+          },
+          {
+            "name": "Function.prototype.toString",
+            "source": "function(...e){let t=(0,i.sp)(this),r=c.has((0,o.KU)())&&void 0!==t?t:this;return n.apply(r,e)}"
+          }
+        ]
+      },
+      "signatures": []
+    },
+    "blocked": {},
+    "interacted": false,
+    "transition": {
+      "type": "reload",
+      "qualifiers": []
+    },
+    "previous": {
+      "url": "https://www.quintoandar.com.br/",
+      "site": "quintoandar.com.br"
+    },
+    "score": {
+      "version": 1,
+      "windowMs": 30000,
+      "score": 63,
+      "grade": "C",
+      "criteria": [
+        {
+          "id": "trackers",
+          "label": "Rastreadores de terceira parte",
+          "rule": "2 por site classificado como rastreador pelas listas do Firefox",
+          "blacklight": "Ad trackers",
+          "max": 20,
+          "penalty": 16,
+          "items": [
+            {
+              "label": "braze.com",
+              "points": 2
+            },
+            {
+              "label": "google.com",
+              "points": 2
+            },
+            {
+              "label": "amplitude.com",
+              "points": 2
+            },
+            {
+              "label": "doubleclick.net",
+              "points": 2
+            },
+            {
+              "label": "google.com.br",
+              "points": 2
+            },
+            {
+              "label": "hotjar.com",
+              "points": 2
+            },
+            {
+              "label": "google-analytics.com",
+              "points": 2
+            },
+            {
+              "label": "sentry.io",
+              "points": 2
+            }
+          ]
+        },
+        {
+          "id": "cookies",
+          "label": "Cookies de terceira parte",
+          "rule": "1 por cookie; 2 se a validade passa de 1 ano",
+          "blacklight": "Third-party cookies",
+          "max": 15,
+          "penalty": 0,
+          "items": []
+        },
+        {
+          "id": "storage",
+          "label": "Identificadores guardados por terceiros",
+          "rule": "1 por cookie ou chave de storage de 1ª parte gravado por script de 3ª parte; 1 por origem de 3ª parte com storage",
+          "blacklight": null,
+          "max": 10,
+          "penalty": 3,
+          "items": [
+            {
+              "label": "cookie _ga_E2JVTQ7D7Q gravado por googletagmanager.com",
+              "points": 1
+            },
+            {
+              "label": "cookie _hjSessionUser_1203740 gravado por hotjar.com",
+              "points": 1
+            },
+            {
+              "label": "cookie _hjTLDTest gravado por hotjar.com",
+              "points": 1
+            }
+          ]
+        },
+        {
+          "id": "fingerprinting",
+          "label": "Fingerprinting",
+          "rule": "canvas, WebGL ou fontes: 15 se por script de 3ª parte, 8 se de 1ª; só consulta à GPU: 4 (3ª) ou 2 (1ª)",
+          "blacklight": "Tracking that evades cookie blockers",
+          "max": 15,
+          "penalty": 0,
+          "items": []
+        },
+        {
+          "id": "sync",
+          "label": "Sincronização de IDs e bounce tracking",
+          "rule": "3 por par de sincronização entre terceiros; 1 por ID de 1ª parte enviado a terceiro; 5 por bounce",
+          "blacklight": null,
+          "max": 15,
+          "penalty": 6,
+          "items": [
+            {
+              "label": "ID de 1ª parte FPAU → doubleclick.net",
+              "points": 1
+            },
+            {
+              "label": "ID de 1ª parte 5A_gclid → doubleclick.net",
+              "points": 1
+            },
+            {
+              "label": "ID de 1ª parte FPAU → google.com",
+              "points": 1
+            },
+            {
+              "label": "ID de 1ª parte 5A_gclid → google.com",
+              "points": 1
+            },
+            {
+              "label": "ID de 1ª parte FPAU → google.com.br",
+              "points": 1
+            },
+            {
+              "label": "ID de 1ª parte 5A_gclid → google.com.br",
+              "points": 1
+            }
+          ]
+        },
+        {
+          "id": "surveillance",
+          "label": "Vigilância comportamental",
+          "rule": "gravação de sessão: 10; cada pixel (Facebook, TikTok, X, LinkedIn): 3; GA com remarketing: 3; cada site de 3ª parte com script ouvindo teclado: 3",
+          "blacklight": "Session recording, key logging, Facebook/TikTok/X pixels, GA remarketing",
+          "max": 15,
+          "penalty": 10,
+          "items": [
+            {
+              "label": "gravação de sessão (hotjar.com)",
+              "points": 10
+            }
+          ]
+        },
+        {
+          "id": "hijack",
+          "label": "Sequestro do navegador",
+          "rule": "assinatura de hook conhecida: 10; WebSocket/EventSource para terceiro: 4; polling de terceiro: 2; funções nativas substituídas: 2",
+          "blacklight": null,
+          "max": 10,
+          "penalty": 2,
+          "items": [
+            {
+              "label": "7 funções nativas substituídas",
+              "points": 2
+            }
+          ]
+        }
+      ]
+    }
+  }
+}

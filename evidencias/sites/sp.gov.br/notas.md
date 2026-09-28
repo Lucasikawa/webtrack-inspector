@@ -1,4 +1,4 @@
-# sp.gov.br — Governo do Estado de São Paulo
+# sp.gov.br: Governo do Estado de São Paulo
 
 URL analisada: https://www.sp.gov.br/ (redireciona para https://www.sp.gov.br/sp)
 
@@ -77,3 +77,6 @@ Também não é evidência; orienta o que conferir na coleta.
 |---|---|---|---|---|---|
 | 27/09/2026 21:27 (automatizada) | 0.3.0 (`6498d9e`) | — | `automatizado/` (página + 4 abas) | — | — |
 | 27/09/2026 19:53 | 0.3.0 (`82e536d`) | 19:53:20–19:53:28, 66 entradas | 19:55–19:58; JSON 19:55:43 | 20:36 (19:36 ET) | 20:15–20:24, uBO 1.75.0 |
+| 27/09/2026 23:21 (coleta final, `final/`) | 0.7.0 | 23:21:47–23:21:50, 71 entradas, primeira requisição sem cookies | Score e Alertas 23:24–23:27; JSON 23:29:38, mesmo carregamento (início 23:21:49) | — | — |
+
+**Visita anterior na 1ª coleta.** A primeira requisição do HAR da 1ª coleta já levava cookies do site (`_ga` de uma sessão iniciada às 19:52:58), ou seja, houve uma visita antes da gravação sem limpar os dados: o HAR e o JSON v0.3.0 são de uma visita de retorno, enquanto o Blacklight faz sempre a primeira visita. Cookies já gravados e não regravados no carregamento não entram na contagem de injetados. A coleta final foi feita com os dados limpos (primeira requisição sem cookies).
