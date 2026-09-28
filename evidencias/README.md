@@ -47,10 +47,10 @@ Nomes de `<teste>`: `tracker-reporting`, `request-blocking`, `storage-blocking`,
 | DDG Tracker Reporting | ✔ | ✔ | ✔ | ☑ |
 | DDG Storage blocking | ✔ | ✔ | ✔ | ☑ |
 | DDG Fingerprinting / canvas | ✔ | ✔ | ✔ | ☑ |
-| DDG Tracker Blocking (request-blocking) | | ✔ | ✔ | ☐ |
-| DDG Storage partitioning | | ✔ | ✔ | ☐ |
-| DDG Bounce tracking | | ✔ | ✔ | ☐ |
-| DDG Query parameters | | ✔ | ✔ | ☐ |
+| DDG Tracker Blocking (request-blocking) | | ✔ | ✔ | ☑ |
+| DDG Storage partitioning | | ✔ | ✔ | ☑ |
+| DDG Bounce tracking | | ✔ | ✔ | ☑ |
+| DDG Query parameters | | ✔ | ✔ | ☑ |
 | DDG js-leaks | | | ✔ | ☐ |
 | sp.gov.br: HAR + prints + Blacklight + uBO | ✔ | ✔ | ✔ | ☑ |
 | quintoandar.com.br: HAR + prints + Blacklight + uBO | ✔ | ✔ | ✔ | ☑ |

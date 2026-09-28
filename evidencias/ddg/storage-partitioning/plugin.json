@@ -1,0 +1,299 @@
+{
+  "tool": {
+    "name": "Detector de Rastreadores",
+    "version": "0.4.1"
+  },
+  "exportedAt": "2026-09-28T01:03:15.013Z",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:156.0) Gecko/20100101 Firefox/156.0",
+  "report": {
+    "tabId": 54,
+    "url": "https://www.first-party.site/privacy-protections/storage-partitioning/",
+    "host": "www.first-party.site",
+    "site": "first-party.site",
+    "startedAt": 1790557259166,
+    "loadedMs": 844,
+    "version": 44,
+    "navigationChain": [
+      "https://www.first-party.site/privacy-protections/storage-partitioning/"
+    ],
+    "totals": {
+      "requests": 30,
+      "thirdPartyRequests": 3,
+      "thirdPartySites": 1,
+      "thirdPartyHosts": 1,
+      "trackerSites": 0,
+      "windowThirdPartySites": 1,
+      "windowTrackerSites": 0,
+      "blockedByFirefoxSites": 0,
+      "firstPartyHosts": 1
+    },
+    "thirdParty": [
+      {
+        "site": "privacy-test-pages.site",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 3,
+        "firstSeenMs": 13795,
+        "hosts": [
+          {
+            "host": "privacy-test-pages.site",
+            "requests": 3
+          }
+        ],
+        "types": [
+          "image"
+        ],
+        "classifications": [],
+        "errors": {},
+        "categories": [],
+        "tracker": false,
+        "blockedByFirefox": false
+      }
+    ],
+    "firstParty": [
+      {
+        "site": "first-party.site",
+        "thirdParty": false,
+        "firefoxThirdParty": false,
+        "requests": 27,
+        "firstSeenMs": 1,
+        "hosts": [
+          {
+            "host": "www.first-party.site",
+            "requests": 27
+          }
+        ],
+        "types": [
+          "font",
+          "image",
+          "main_frame",
+          "other",
+          "script",
+          "stylesheet",
+          "sub_frame",
+          "xmlhttprequest"
+        ],
+        "classifications": [],
+        "errors": {},
+        "categories": [],
+        "tracker": false,
+        "blockedByFirefox": false
+      }
+    ],
+    "cookies": {
+      "summary": {
+        "total": 3,
+        "windowMs": 30000,
+        "inWindow": 3,
+        "afterWindow": 0,
+        "firstParty": {
+          "session": 0,
+          "persistent": 3
+        },
+        "thirdParty": {
+          "session": 0,
+          "persistent": 0
+        },
+        "window": {
+          "firstParty": {
+            "session": 0,
+            "persistent": 3
+          },
+          "thirdParty": {
+            "session": 0,
+            "persistent": 0
+          }
+        },
+        "longLived": 3,
+        "viaHttp": 1,
+        "viaJs": 2,
+        "notStored": 0,
+        "partitioned": 0,
+        "firstPartyByThirdPartyScript": 0
+      },
+      "list": [
+        {
+          "key": "partition_test|www.first-party.site|/privacy-protections/storage-partitioning",
+          "name": "partition_test",
+          "domain": "www.first-party.site",
+          "hostOnly": true,
+          "path": "/privacy-protections/storage-partitioning",
+          "site": "first-party.site",
+          "session": false,
+          "expires": 1825117272935,
+          "secure": true,
+          "httpOnly": false,
+          "sameSite": "none",
+          "partitioned": false,
+          "valueLength": 36,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 13773,
+          "writers": [
+            "https://www.first-party.site/privacy-protections/storage-partitioning/helpers/tests.js"
+          ],
+          "writersThirdParty": false,
+          "thirdParty": false,
+          "inWindow": true,
+          "lifetimeDays": 400
+        },
+        {
+          "key": "partition_test|www.first-party.site|/",
+          "name": "partition_test",
+          "domain": "www.first-party.site",
+          "hostOnly": true,
+          "path": "/",
+          "site": "first-party.site",
+          "session": false,
+          "expires": 1825117272958,
+          "secure": true,
+          "httpOnly": false,
+          "sameSite": "none",
+          "partitioned": false,
+          "valueLength": 36,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 13795,
+          "writers": [
+            "https://www.first-party.site/privacy-protections/storage-partitioning/helpers/tests.js"
+          ],
+          "writersThirdParty": false,
+          "thirdParty": false,
+          "inWindow": true,
+          "lifetimeDays": 400
+        },
+        {
+          "key": "partition_test_http|www.first-party.site|/partitioning",
+          "name": "partition_test_http",
+          "domain": "www.first-party.site",
+          "hostOnly": true,
+          "path": "/partitioning",
+          "site": "first-party.site",
+          "session": false,
+          "expires": 1825117273063,
+          "secure": true,
+          "httpOnly": true,
+          "sameSite": "none",
+          "partitioned": false,
+          "valueLength": 36,
+          "viaHttp": true,
+          "stored": true,
+          "sourceUrl": "https://www.first-party.site/partitioning/set-cookie?cookieName=partition_test_http&cookieValue=394ec0ac-0418-4e2d-aa69-c0d143331ab3",
+          "firstSeenMs": 13900,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": false,
+          "inWindow": true,
+          "lifetimeDays": 400
+        }
+      ]
+    },
+    "storage": {
+      "summary": {
+        "origins": 1,
+        "originsWithData": 1,
+        "thirdPartyOriginsWithData": 0,
+        "items": 4,
+        "localStorageKeys": 1,
+        "localStorageBytes": 100,
+        "sessionStorageKeys": 1,
+        "sessionStorageBytes": 100,
+        "indexedDBDatabases": 1,
+        "cacheStorageCaches": 1,
+        "blockedOrigins": 0
+      },
+      "origins": [
+        {
+          "origin": "https://www.first-party.site",
+          "url": "https://www.first-party.site/partitioning/resource?fileType=page&key=394ec0ac-0418-4e2d-aa69-c0d143331ab3",
+          "isTop": true,
+          "localStorage": {
+            "available": true,
+            "count": 1,
+            "bytes": 100,
+            "keys": [
+              {
+                "key": "partition_test",
+                "size": 36,
+                "writers": [
+                  "https://www.first-party.site/privacy-protections/storage-partitioning/helpers/tests.js"
+                ]
+              }
+            ]
+          },
+          "sessionStorage": {
+            "available": true,
+            "count": 1,
+            "bytes": 100,
+            "keys": [
+              {
+                "key": "partition_test",
+                "size": 36,
+                "writers": [
+                  "https://www.first-party.site/privacy-protections/storage-partitioning/helpers/tests.js"
+                ]
+              }
+            ]
+          },
+          "indexedDB": {
+            "available": true,
+            "count": 1,
+            "databases": [
+              {
+                "name": "partition_test",
+                "version": 1
+              }
+            ]
+          },
+          "cacheStorage": {
+            "available": true,
+            "count": 1,
+            "names": [
+              "partition_test"
+            ]
+          },
+          "collectedAt": 1790557273115,
+          "site": "first-party.site",
+          "thirdParty": false,
+          "items": 4
+        }
+      ]
+    },
+    "fingerprinting": {
+      "summary": {
+        "detections": 0,
+        "scripts": 0,
+        "thirdPartyScripts": 0,
+        "byTechnique": {},
+        "discarded": 0
+      },
+      "detections": [],
+      "discarded": []
+    },
+    "categories": [],
+    "sync": {
+      "summary": {
+        "events": 0,
+        "thirdPartyPairs": 0,
+        "firstPartyIdShares": 0,
+        "receivers": 0,
+        "endpointSites": 0
+      },
+      "events": [],
+      "endpoints": []
+    },
+    "bounces": [],
+    "trackingParams": [],
+    "interacted": true,
+    "transition": {
+      "type": "link",
+      "qualifiers": []
+    },
+    "previous": {
+      "url": "https://privacy-test-pages.site/privacy-protections/storage-partitioning/",
+      "site": "privacy-test-pages.site"
+    }
+  }
+}
