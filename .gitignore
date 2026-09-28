@@ -7,3 +7,7 @@ web-ext-artifacts/
 .preview/
 .venv/
 __pycache__/
+
+# Relatório: imagens reduzidas e HTML intermediário (gerados por relatorio/build.sh)
+relatorio/img/
+relatorio/relatorio.html
