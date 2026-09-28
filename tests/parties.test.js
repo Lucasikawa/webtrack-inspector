@@ -5,6 +5,14 @@ const assert = require('node:assert/strict');
 
 const Parties = require('../extension/background/parties.js');
 
+test('reconhece sufixos públicos', () => {
+  assert.equal(Parties.isPublicSuffix('sp.gov.br'), true);
+  assert.equal(Parties.isPublicSuffix('.github.io'), true);
+  assert.equal(Parties.isPublicSuffix('www.sp.gov.br'), false);
+  assert.equal(Parties.isPublicSuffix('quintoandar.com.br'), false);
+  assert.equal(Parties.isPublicSuffix('127.0.0.1'), false);
+});
+
 test('siteOf usa o eTLD+1, inclusive sufixos compostos', () => {
   assert.equal(Parties.siteOf('https://www.google.com.br/search?q=x'), 'google.com.br');
   assert.equal(Parties.siteOf('stats.g.doubleclick.net'), 'doubleclick.net');

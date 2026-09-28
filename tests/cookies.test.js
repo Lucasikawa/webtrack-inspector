@@ -48,6 +48,16 @@ test('cookies de remoção não contam como injeção', () => {
   assert.equal(Cookies.parseSetCookie('a=; Expires=Thu, 01 Jan 1970 00:00:00 GMT', 'https://x.com/', NOW), null);
 });
 
+test('Domain num sufixo público: descartado, salvo se for o próprio host', () => {
+  // Imperva no www.sp.gov.br tenta gravar em .sp.gov.br, que é sufixo público.
+  assert.equal(Cookies.parseSetCookie('visid_incap_1=abc; Domain=.sp.gov.br; Path=/', 'https://www.sp.gov.br/', NOW), null);
+  const own = Cookies.parseSetCookie('a=1; Domain=sp.gov.br', 'https://sp.gov.br/', NOW);
+  assert.equal(own.domain, 'sp.gov.br');
+  assert.equal(own.hostOnly, true);
+  const normal = Cookies.parseSetCookie('b=2; Domain=.quintoandar.com.br', 'https://www.quintoandar.com.br/', NOW);
+  assert.equal(normal.hostOnly, false);
+});
+
 test('separa vários Set-Cookie que o Firefox junta com \\n', () => {
   const headers = [
     { name: 'Content-Type', value: 'text/html' },

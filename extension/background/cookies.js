@@ -42,7 +42,7 @@ const Cookies = (() => {
   }
 
   // Uma linha Set-Cookie. Devolve null para cookies de remoção (Max-Age <= 0 ou
-  // Expires no passado), que não são injeções.
+  // Expires no passado), que não são injeções, e para os que o navegador descarta.
   function parseSetCookie(line, url, now = Date.now()) {
     const [pair, ...attributes] = line.split(';');
     const eq = pair.indexOf('=');
@@ -78,6 +78,13 @@ const Cookies = (() => {
       } else if (key === 'samesite') {
         sameSite = val.toLowerCase();
       }
+    }
+    // RFC 6265, seção 5.3, passo 5: Domain num sufixo público (ex.: sp.gov.br) só
+    // vale se for o próprio host, e aí o cookie é host-only; senão o navegador
+    // descarta o cookie.
+    if (!hostOnly && Parties.isPublicSuffix(domain)) {
+      if (domain !== Parties.hostOf(url)) return null;
+      hostOnly = true;
     }
     if (maxAge !== null) expires = now + maxAge * 1000; // Max-Age tem precedência
     if (expires !== null && expires <= now) return null;

@@ -27,7 +27,13 @@ const Parties = (() => {
     return Boolean(site && topSite && site !== topSite);
   }
 
-  return { hostOf, siteOf, isThirdParty };
+  // Domínio que é ele mesmo um sufixo público (com, gov.br, sp.gov.br, github.io).
+  function isPublicSuffix(domain) {
+    const d = String(domain || '').replace(/^\./, '').toLowerCase();
+    return Boolean(d) && psl.getPublicSuffix(d, OPTIONS) === d;
+  }
+
+  return { hostOf, siteOf, isThirdParty, isPublicSuffix };
 })();
 
 if (typeof module !== 'undefined') module.exports = Parties;
