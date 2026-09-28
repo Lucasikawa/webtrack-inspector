@@ -190,10 +190,37 @@ def scenario_fingerprint(browser, checks):
                   'fingerprinting: cópia de OffscreenCanvas')
 
 
+def scenario_bounce(browser, checks):
+    # 1ª passagem: o intermediário gera o UID e o grava (document.cookie e
+    # localStorage) logo antes de redirecionar; 2ª: o UID já existe e vai no
+    # cabeçalho Cookie.
+    for link, destination_site in [('first-party.site', 'first-party.site'),
+                                   ('privacy-test-pages.site', 'privacy-test-pages.site')]:
+        browser.visit(f'{DDG}/privacy-protections/bounce-tracking/', wait=2)
+        browser.driver.find_element(By.PARTIAL_LINK_TEXT, f'Go to {link}').click()
+        time.sleep(4)
+        report = browser.report()['report']
+        bounce = next((b for b in report['bounces'] if b['site'] == 'third-party.site'), None)
+        checks.expect(report['site'] == destination_site and bounce is not None and bounce['type'] == 'script',
+                      f'bounce-tracking -> {link}: bounce por script via third-party.site')
+        matched = [p['param'] for p in (bounce or {}).get('passedParams', []) if p['matches']]
+        checks.expect(bool(matched), f'bounce-tracking -> {link}: UID repassado na URL ({", ".join(matched) or "nenhum"})')
+
+
+def scenario_query(browser, checks):
+    browser.visit(f'{DDG}/privacy-protections/query-parameters/', wait=2)
+    browser.driver.find_element(By.PARTIAL_LINK_TEXT, 'fbclid, fb_source').click()
+    time.sleep(2)
+    params = [p['param'] for p in browser.report()['report']['trackingParams']]
+    checks.expect(params == ['fbclid', 'fb_source'], f'query-parameters: fbclid e fb_source detectados ({params})')
+
+
 SCENARIOS = {
     'ddg-tracker': scenario_tracker,
     'ddg-storage': scenario_storage,
     'ddg-fingerprint': scenario_fingerprint,
+    'ddg-bounce': scenario_bounce,
+    'ddg-query': scenario_query,
 }
 
 
@@ -226,7 +253,7 @@ def collect_url(browser, url, wait, out):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('targets', nargs='+', help="'ddg', 'ddg-tracker', 'ddg-storage', 'ddg-fingerprint' ou URLs")
+    parser.add_argument('targets', nargs='+', help="'ddg' (todos), 'ddg-tracker', 'ddg-storage', 'ddg-fingerprint', 'ddg-bounce', 'ddg-query' ou URLs")
     parser.add_argument('--out', type=Path, help='pasta para salvar JSON e prints (só para URLs)')
     parser.add_argument('--wait', type=float, default=30, help='segundos de espera em cada URL (padrão 30)')
     parser.add_argument('--headful', action='store_true', help='mostra a janela do Firefox')

@@ -1,6 +1,6 @@
 {
   "name": "detector-rastreadores",
-  "version": "0.3.1",
+  "version": "0.4.0",
   "private": true,
   "description": "Extensão para Firefox que detecta rastreadores e violações de privacidade no cliente web",
   "scripts": {

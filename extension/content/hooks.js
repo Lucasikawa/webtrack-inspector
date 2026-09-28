@@ -26,20 +26,25 @@
   let flushTimer = null;
   const sent = new Set(); // evita repetir o mesmo evento
 
+  function flush() {
+    clearTimeout(flushTimer);
+    flushTimer = null;
+    const events = queue.splice(0);
+    if (events.length) browser.runtime.sendMessage({ type: 'hookEvents', events }).catch(() => {});
+  }
+
   function emit(event, dedupeKey) {
     if (dedupeKey) {
       if (sent.has(dedupeKey)) return;
       sent.add(dedupeKey);
     }
     queue.push({ ...event, frameOrigin: location.origin, frameUrl: location.href, t: Date.now() });
-    if (!flushTimer) {
-      flushTimer = setTimeout(() => {
-        flushTimer = null;
-        const events = queue.splice(0);
-        browser.runtime.sendMessage({ type: 'hookEvents', events }).catch(() => {});
-      }, 250);
-    }
+    if (!flushTimer) flushTimer = setTimeout(flush, 250);
   }
+
+  // Páginas que redirecionam logo após gravar um identificador (bounce
+  // tracking) saem antes do próximo lote: envia o que estiver pendente.
+  window.addEventListener('pagehide', flush, { capture: true });
 
   // Script que fez a chamada: primeiro frame da pilha que não é da extensão.
   // Formato do Firefox: "funcao@https://site/script.js:10:5"; em eval:
@@ -248,10 +253,16 @@
       set: exportFunction(function (value) {
         try {
           const str = String(value);
-          const name = str.slice(0, Math.max(0, str.indexOf('='))).trim();
+          const eq = str.indexOf('=');
+          const name = str.slice(0, Math.max(0, eq)).trim();
+          const semi = str.indexOf(';');
+          const cookieValue = str.slice(eq + 1, semi === -1 ? undefined : semi).trim().slice(0, 512);
           // Só o primeiro script que grava cada cookie: evita capturar a
-          // pilha em toda escrita.
-          if (!sent.has(`cookie|${name}`)) emit({ kind: 'cookieWrite', name, script: callerScript() }, `cookie|${name}`);
+          // pilha em toda escrita. O valor serve para detectar identificadores
+          // repassados a outros sites (cookie sync, bounce tracking).
+          if (!sent.has(`cookie|${name}`)) {
+            emit({ kind: 'cookieWrite', name, value: cookieValue, script: callerScript() }, `cookie|${name}`);
+          }
         } catch {
           // idem
         }
@@ -263,7 +274,7 @@
   // Quem grava chaves de localStorage/sessionStorage via setItem
 
   const StorageProto = page.Storage && page.Storage.prototype;
-  hookMethod(StorageProto, 'setItem', (storage, [key]) => {
+  hookMethod(StorageProto, 'setItem', (storage, [key, value]) => {
     let area = 'localStorage';
     try {
       if (storage === window.sessionStorage) area = 'sessionStorage';
@@ -271,6 +282,16 @@
       // acesso bloqueado: mantém localStorage
     }
     const dedupe = `storage|${area}|${key}`;
-    if (!sent.has(dedupe)) emit({ kind: 'storageWrite', area, key: String(key), script: callerScript() }, dedupe);
+    if (!sent.has(dedupe)) {
+      emit({ kind: 'storageWrite', area, key: String(key), value: String(value).slice(0, 512), script: callerScript() }, dedupe);
+    }
   });
+
+  // Interação do usuário (clique, toque, tecla). Uma página que manda a aba
+  // para outro site sem nenhuma interação é candidata a bounce tracking.
+  for (const type of ['pointerdown', 'keydown']) {
+    window.addEventListener(type, event => {
+      if (event.isTrusted) emit({ kind: 'interaction' }, 'interaction');
+    }, { capture: true, passive: true });
+  }
 })();

@@ -20,6 +20,15 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 // Limite de eventos de fingerprinting guardados por página.
 const MAX_HOOK_EVENTS = 200;
 
+// Bounce tracking por script: a página intermediária fica no máximo este tempo,
+// sem interação do usuário, antes de seguir para outro site.
+const BOUNCE_MAX_DWELL_MS = 10000;
+// Navegações iniciadas pelo próprio usuário na barra de endereço, favoritos ou
+// recarga não são bounces.
+const USER_TRANSITIONS = new Set(['typed', 'auto_bookmark', 'reload', 'generated', 'keyword', 'keyword_generated', 'start_page']);
+// Valores triviais demais para provar que um identificador foi repassado.
+const TRIVIAL_VALUES = new Set(['', '0', '1', 'true', 'false', 'null', 'undefined']);
+
 // Relatório de uma navegação de nível superior (uma página) em uma aba.
 class TabReport {
   static normalizeUrl(url) {
@@ -38,6 +47,16 @@ class TabReport {
     this.storage = new Map(); // origem -> último retrato do armazenamento HTML5
     this.hookEvents = []; // leituras de canvas, consultas à GPU, sondagem de fontes
     this.writers = new Map(); // cookie ou chave de storage -> scripts que gravaram
+    this.idSources = new Map(); // trecho com cara de ID -> { site, name, source }
+    this.ownValues = new Map(); // nome -> valor de cookies/storage do próprio site
+    this.syncEvents = new Map(); // dono|nome|receptor -> ID repassado a outro site
+    this.syncEndpoints = new Map(); // site -> requisições a caminhos típicos de sync
+    this.interacted = false; // houve clique, toque ou tecla nesta página
+    this.committedAt = null;
+    this.previous = null; // resumo da página anterior na aba (bounce tracking)
+    this.previousReport = null; // a própria página anterior, enquanto esta é a atual
+    this.previousLeftAt = null; // quando a aba saiu da página anterior
+    this.transition = null; // tipo da navegação (webNavigation.onCommitted)
     this.loadedMs = null; // tempo até o evento load do documento de topo
     this.setUrl(url);
   }
@@ -102,8 +121,59 @@ class TabReport {
         entry.classifications.add(flag);
       }
     }
+    if (entry.thirdParty) this.checkSync(details.url, entry.site);
     this.version++;
     return isNewSite && entry.thirdParty;
+  }
+
+  // Guarda os trechos com cara de identificador de um cookie ou chave de
+  // storage, com o site dono. O primeiro dono de cada valor prevalece.
+  recordValue(site, name, value, source) {
+    if (value === undefined || value === null) return;
+    const text = String(value);
+    if (site === this.site) this.ownValues.set(name, text);
+    for (const token of Tracking.idTokens(text)) {
+      if (!this.idSources.has(token)) this.idSources.set(token, { site, name, source });
+    }
+  }
+
+  // Cabeçalho Cookie de uma requisição: revela os IDs que o site já tinha.
+  addRequestCookies(url, header) {
+    const site = Parties.siteOf(url);
+    for (const pair of String(header).split(';')) {
+      const eq = pair.indexOf('=');
+      if (eq > 0) this.recordValue(site, pair.slice(0, eq).trim(), pair.slice(eq + 1).trim(), 'cabeçalho Cookie');
+    }
+  }
+
+  // Requisição a um terceiro que leva na URL um identificador de outro site:
+  // o receptor passa a conhecer o ID do dono (sincronização).
+  checkSync(url, receiverSite) {
+    for (const token of Tracking.urlTokens(url)) {
+      const owner = this.idSources.get(token);
+      if (!owner || owner.site === receiverSite) continue;
+      const key = `${owner.site}|${owner.name}|${receiverSite}`;
+      let event = this.syncEvents.get(key);
+      if (!event) {
+        event = {
+          ownerSite: owner.site,
+          idName: owner.name,
+          idSource: owner.source,
+          receiverSite,
+          token,
+          url: url.slice(0, 500),
+          firstSeenMs: this.elapsed(),
+          requests: 0,
+        };
+        this.syncEvents.set(key, event);
+      }
+      event.requests++;
+    }
+    if (Tracking.isSyncEndpoint(url)) {
+      const endpoint = this.syncEndpoints.get(receiverSite) || { site: receiverSite, requests: 0, example: url.slice(0, 300) };
+      endpoint.requests++;
+      this.syncEndpoints.set(receiverSite, endpoint);
+    }
   }
 
   // Registra uma requisição que falhou (webRequest.onErrorOccurred).
@@ -131,6 +201,7 @@ class TabReport {
       entry.stored = true;
       Object.assign(entry, cookie);
     }
+    this.recordValue(cookie.site, cookie.name, cookie.value, source === 'http' ? 'Set-Cookie' : 'cookie');
     this.version++;
   }
 
@@ -147,6 +218,7 @@ class TabReport {
 
   cookiesJSON() {
     const list = [...this.cookies.values()]
+      .map(({ value, ...c }) => c)
       .map(c => {
         const writers = this.writersOf(`cookie|${c.site}|${c.name}`);
         return { ...c, writers, writersThirdParty: writers.some(w => this.isThirdPartyUrl(w)) };
@@ -255,10 +327,16 @@ class TabReport {
 
   // Evento de content/hooks.js.
   addHookEvent(event) {
+    const frameSite = Parties.siteOf(event.frameOrigin);
     if (event.kind === 'cookieWrite') {
-      this.addWriter(`cookie|${Parties.siteOf(event.frameOrigin)}|${event.name}`, event.script);
+      this.addWriter(`cookie|${frameSite}|${event.name}`, event.script);
+      this.recordValue(frameSite, event.name, event.value, 'document.cookie');
     } else if (event.kind === 'storageWrite') {
       this.addWriter(`storage|${event.frameOrigin}|${event.area}|${event.key}`, event.script);
+      this.recordValue(frameSite, event.key, event.value, event.area);
+    } else if (event.kind === 'interaction') {
+      if (this.interacted) return;
+      this.interacted = true;
     } else if (this.hookEvents.length < MAX_HOOK_EVENTS) {
       this.hookEvents.push({ ...event, receivedMs: this.elapsed() });
     } else {
@@ -339,6 +417,109 @@ class TabReport {
     };
   }
 
+  // Resumo desta página no momento em que a aba navega para outra. A próxima
+  // página o usa para decidir se esta foi um bounce.
+  snapshotForNext(leftAt = Date.now()) {
+    const previous = this.previousSnapshot();
+    return {
+      url: this.url,
+      site: this.site,
+      previousSite: previous ? previous.site : null,
+      committedAt: this.committedAt || this.startedAt,
+      leftAt,
+      interacted: this.interacted,
+      ownValues: [...this.ownValues],
+    };
+  }
+
+  // Resumo da página anterior. Enquanto esta página é a atual, é calculado na
+  // hora a partir da própria página anterior, que ainda pode receber eventos
+  // atrasados (ex.: o identificador gravado logo antes de redirecionar).
+  previousSnapshot() {
+    if (this.previous) return this.previous;
+    return this.previousReport ? this.previousReport.snapshotForNext(this.previousLeftAt) : null;
+  }
+
+  // Congela o resumo da anterior quando esta deixa de ser a página atual.
+  freezePrevious() {
+    this.previous = this.previousSnapshot();
+    this.previousReport = null;
+  }
+
+  bouncesJSON() {
+    const bounces = [];
+    const chain = this.navigationChain;
+    const prev = this.previousSnapshot();
+    const origin = prev ? prev.site : null;
+
+    // Redirecionamento HTTP por um site intermediário (ex.: link de anúncio
+    // que passa pelo rastreador antes do destino).
+    for (let i = 0; i < chain.length - 1; i++) {
+      const site = Parties.siteOf(chain[i]);
+      if (!site || site === this.site || site === origin) continue;
+      const setByHop = [...this.cookies.values()].filter(c => c.sourceUrl && TabReport.normalizeUrl(c.sourceUrl) === chain[i]);
+      const values = new Map(setByHop.filter(c => !TRIVIAL_VALUES.has(c.value)).map(c => [c.value, c.name]));
+      bounces.push({
+        type: 'redirect',
+        site,
+        url: chain[i],
+        fromSite: origin,
+        storedIds: setByHop.map(c => c.name),
+        passedParams: Tracking.params(chain[i + 1]).map(([param, value]) => ({ param, value: value.slice(0, 100), matches: values.get(value) || null })),
+      });
+    }
+
+    // Redirecionamento por script: página de outro site que ficou pouco tempo,
+    // sem interação do usuário, e mandou a aba para um terceiro site.
+    const transition = this.transition || { type: null, qualifiers: [] };
+    const automatic = !USER_TRANSITIONS.has(transition.type) && !(transition.qualifiers || []).includes('forward_back');
+    if (prev && prev.site !== this.site && prev.previousSite && prev.previousSite !== prev.site && automatic) {
+      const dwellMs = prev.leftAt - prev.committedAt;
+      if (dwellMs <= BOUNCE_MAX_DWELL_MS && !prev.interacted) {
+        const values = new Map(prev.ownValues.filter(([, v]) => !TRIVIAL_VALUES.has(v)).map(([n, v]) => [v, n]));
+        bounces.push({
+          type: 'script',
+          site: prev.site,
+          url: prev.url,
+          fromSite: prev.previousSite,
+          dwellMs,
+          storedIds: prev.ownValues.map(([name]) => name),
+          passedParams: Tracking.params(chain[0]).map(([param, value]) => ({ param, value: value.slice(0, 100), matches: values.get(value) || null })),
+        });
+      }
+    }
+    return bounces;
+  }
+
+  syncJSON() {
+    const events = [...this.syncEvents.values()]
+      .map(e => ({ ...e, kind: e.ownerSite === this.site ? 'first-party-id' : 'third-party' }))
+      .sort((a, b) => a.kind.localeCompare(b.kind) || a.ownerSite.localeCompare(b.ownerSite) || a.receiverSite.localeCompare(b.receiverSite));
+    const endpoints = [...this.syncEndpoints.values()].sort((a, b) => b.requests - a.requests);
+    return {
+      summary: {
+        events: events.length,
+        thirdPartyPairs: events.filter(e => e.kind === 'third-party').length,
+        firstPartyIdShares: events.filter(e => e.kind === 'first-party-id').length,
+        receivers: new Set(events.map(e => e.receiverSite)).size,
+        endpointSites: endpoints.length,
+      },
+      events,
+      endpoints,
+    };
+  }
+
+  trackingParamsJSON() {
+    const found = new Map();
+    for (const url of this.navigationChain) {
+      for (const [param, value] of Tracking.trackingParams(url)) {
+        const key = `${param}=${value}`;
+        if (!found.has(key)) found.set(key, { param, value: value.slice(0, 100), url });
+      }
+    }
+    return [...found.values()];
+  }
+
   thirdPartySiteCount() {
     const sites = new Set();
     for (const entry of this.hosts.values()) if (entry.thirdParty) sites.add(entry.site);
@@ -387,6 +568,7 @@ class TabReport {
     const firstParty = sites.filter(s => !s.thirdParty).sort(byRelevance);
     const sum = (list, fn) => list.reduce((n, s) => n + fn(s), 0);
 
+    const previous = this.previousSnapshot();
     return {
       tabId: this.tabId,
       url: this.url,
@@ -413,6 +595,12 @@ class TabReport {
       cookies: this.cookiesJSON(),
       storage: this.storageJSON(),
       fingerprinting: this.fingerprintJSON(),
+      sync: this.syncJSON(),
+      bounces: this.bouncesJSON(),
+      trackingParams: this.trackingParamsJSON(),
+      interacted: this.interacted,
+      transition: this.transition,
+      previous: previous ? { url: previous.url, site: previous.site } : null,
     };
   }
 }

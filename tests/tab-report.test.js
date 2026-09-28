@@ -5,6 +5,7 @@ const assert = require('node:assert/strict');
 
 globalThis.Parties = require('../extension/background/parties.js');
 globalThis.Fingerprint = require('../extension/background/fingerprint.js');
+globalThis.Tracking = require('../extension/background/tracking.js');
 const TabReport = require('../extension/background/tab-report.js');
 
 const req = (url, type = 'script', extra = {}) => ({ url, type, ...extra });
@@ -230,4 +231,119 @@ test('classifica leituras de canvas e separa as descartadas pela heurística', (
   assert.equal(discarded.length, 1);
   assert.equal(discarded[0].inline, true);
   assert.equal(discarded[0].criteria.size, false);
+});
+
+// Cookie sync, bounce tracking e parâmetros de rastreamento
+
+const cookieOf = (name, domain, value, extra = {}) => ({
+  key: `${name}|${domain}|/`, name, domain, path: '/', site: Parties.siteOf(domain),
+  session: false, expires: Date.now() + 90 * 86400000, value, ...extra,
+});
+
+test('cookie sync entre terceiros: ID do AppNexus aparece na URL de outra plataforma', () => {
+  const report = new TabReport(1, 'https://www.uol.com.br/');
+  report.addCookie(cookieOf('uuid2', 'adnxs.com', '7243182715609810533'), 'http', 'https://ib.adnxs.com/getuidj');
+  report.addRequest(req('https://image6.pubmatic.com/AdServer/UCookieSetPug?rd=x&uid=7243182715609810533', 'image'));
+  const { summary, events } = report.toJSON().sync;
+  assert.equal(summary.thirdPartyPairs, 1);
+  assert.equal(events[0].ownerSite, 'adnxs.com');
+  assert.equal(events[0].idName, 'uuid2');
+  assert.equal(events[0].receiverSite, 'pubmatic.com');
+  assert.equal(events[0].kind, 'third-party');
+});
+
+test('ID de cookie de 1ª parte (gravado por script) enviado a um terceiro', () => {
+  const page = 'https://www.uol.com.br/';
+  const report = new TabReport(1, page);
+  report.addHookEvent({ kind: 'cookieWrite', name: '_pubcid', value: '0f3e9d6a-1c2b-4f5e-8a7d-6b5c4d3e2f10',
+    script: 'https://tags.crwdcntrl.net/lt/c/16589/sync.min.js', frameOrigin: 'https://www.uol.com.br', frameUrl: page });
+  report.addRequest(req('https://fastlane.rubiconproject.com/a/api/fastlane.json?eid_pubcid.org=0f3e9d6a-1c2b-4f5e-8a7d-6b5c4d3e2f10', 'xmlhttprequest'));
+  const { summary, events } = report.toJSON().sync;
+  assert.equal(summary.firstPartyIdShares, 1);
+  assert.equal(events[0].kind, 'first-party-id');
+  assert.equal(events[0].idSource, 'document.cookie');
+});
+
+test('ID do cabeçalho Cookie conta como conhecido; o próprio dono não é sync', () => {
+  const report = new TabReport(1, 'https://www.uol.com.br/');
+  report.addRequestCookies('https://ib.adnxs.com/getuid', 'uuid2=7243182715609810533; anj=abc');
+  report.addRequest(req('https://ib.adnxs.com/ut/v3?uid=7243182715609810533', 'xmlhttprequest'));
+  assert.equal(report.toJSON().sync.summary.events, 0);
+  report.addRequest(req('https://ads.pubmatic.com/x?adnxs_uid=7243182715609810533', 'image'));
+  assert.equal(report.toJSON().sync.summary.events, 1);
+});
+
+test('endpoints típicos de sync ficam registrados mesmo sem ID reconhecido', () => {
+  const report = new TabReport(1, 'https://www.uol.com.br/');
+  report.addRequest(req('https://match.adsrvr.org/track/cmf/generic?ttd_pid=rwuq9ny&ttd_tpi=1', 'image'));
+  const { summary, endpoints } = report.toJSON().sync;
+  assert.equal(summary.endpointSites, 1);
+  assert.equal(endpoints[0].site, 'adsrvr.org');
+});
+
+// Página intermediária de bounce, como a do DDG: grava um UID e redireciona.
+function bounceFixture(destination) {
+  const origin = new TabReport(1, 'https://privacy-test-pages.site/privacy-protections/bounce-tracking/');
+  const bounce = new TabReport(1, `https://bad.third-party.site/privacy-protections/bounce-tracking/bounce.html?destination=${destination}`);
+  bounce.previous = origin.snapshotForNext();
+  bounce.committedAt = Date.now() - 300;
+  bounce.addRequestCookies('https://bad.third-party.site/privacy-protections/bounce-tracking/bounce.html', 'bounceUID=42');
+  const final = new TabReport(1, `https://${destination}/privacy-protections/bounce-tracking/?bounceUIDlocalStorage=42&bounceUIDcookie=42&isNew=`);
+  final.previous = bounce.snapshotForNext();
+  final.transition = { type: 'link', qualifiers: [] };
+  return { bounce, final };
+}
+
+test('bounce por script: página de outro site, 300 ms, sem interação, passa o UID na URL', () => {
+  const { final } = bounceFixture('www.first-party.site');
+  const [b] = final.toJSON().bounces;
+  assert.equal(b.type, 'script');
+  assert.equal(b.site, 'third-party.site');
+  assert.equal(b.fromSite, 'privacy-test-pages.site');
+  assert.ok(b.dwellMs < 1000);
+  assert.deepEqual(b.storedIds, ['bounceUID']);
+  assert.deepEqual(b.passedParams.filter(p => p.matches).map(p => p.param), ['bounceUIDlocalStorage', 'bounceUIDcookie']);
+});
+
+test('bounce que volta ao site de origem também conta (A -> rastreador -> A)', () => {
+  const { final } = bounceFixture('privacy-test-pages.site');
+  assert.equal(final.toJSON().bounces.length, 1);
+});
+
+test('não é bounce: interação do usuário, permanência longa ou URL digitada', () => {
+  const interacted = bounceFixture('www.first-party.site');
+  interacted.bounce.addHookEvent({ kind: 'interaction', frameOrigin: 'https://bad.third-party.site' });
+  interacted.final.previous = interacted.bounce.snapshotForNext();
+  assert.equal(interacted.final.toJSON().bounces.length, 0);
+
+  const slow = bounceFixture('www.first-party.site');
+  slow.final.previous.committedAt -= 60000;
+  assert.equal(slow.final.toJSON().bounces.length, 0);
+
+  const typed = bounceFixture('www.first-party.site');
+  typed.final.transition = { type: 'typed', qualifiers: ['from_address_bar'] };
+  assert.equal(typed.final.toJSON().bounces.length, 0);
+});
+
+test('bounce por redirecionamento HTTP: site intermediário que grava cookie', () => {
+  const report = new TabReport(1, 'https://ad.tracker-net.com/click?id=9');
+  report.previous = new TabReport(1, 'https://www.uol.com.br/').snapshotForNext();
+  report.addCookie(cookieOf('clk', 'tracker-net.com', 'c9f1e2d3a4b5'), 'http', 'https://ad.tracker-net.com/click?id=9');
+  report.setUrl('https://www.loja.com.br/produto?ref=c9f1e2d3a4b5');
+  const [b] = report.toJSON().bounces;
+  assert.equal(b.type, 'redirect');
+  assert.equal(b.site, 'tracker-net.com');
+  assert.deepEqual(b.storedIds, ['clk']);
+  assert.equal(b.passedParams[0].matches, 'clk');
+});
+
+test('parâmetros de rastreamento na navegação', () => {
+  const report = new TabReport(1, 'https://privacy-test-pages.site/privacy-protections/query-parameters/query.html?utm_source=something&q=other');
+  assert.deepEqual(report.toJSON().trackingParams.map(p => p.param), ['utm_source']);
+});
+
+test('valor do cookie não vai para o JSON exportado', () => {
+  const report = new TabReport(1, 'https://www.uol.com.br/');
+  report.addCookie(cookieOf('_ga', 'uol.com.br', 'GA1.1.1567894321.1790000000'), 'store');
+  assert.equal('value' in report.toJSON().cookies.list[0], false);
 });

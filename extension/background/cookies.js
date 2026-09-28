@@ -22,7 +22,7 @@ const Cookies = (() => {
     return last <= 0 ? '/' : path.slice(0, last);
   }
 
-  function describe({ name, domain, hostOnly, path, session, expires, secure, httpOnly, sameSite, partitioned, valueLength }) {
+  function describe({ name, value, domain, hostOnly, path, session, expires, secure, httpOnly, sameSite, partitioned }) {
     return {
       key: keyOf(name, domain, path),
       name,
@@ -36,7 +36,8 @@ const Cookies = (() => {
       httpOnly,
       sameSite,
       partitioned, // null quando desconhecido (só a API de cookies informa)
-      valueLength,
+      value, // uso interno (cookie sync/bounce); não vai para o JSON exportado
+      valueLength: value.length,
     };
   }
 
@@ -83,6 +84,7 @@ const Cookies = (() => {
 
     return describe({
       name,
+      value,
       domain,
       hostOnly,
       path: path || defaultPath(url),
@@ -92,7 +94,6 @@ const Cookies = (() => {
       httpOnly,
       sameSite,
       partitioned: null,
-      valueLength: value.length,
     });
   }
 
@@ -114,6 +115,7 @@ const Cookies = (() => {
   function fromBrowserCookie(c) {
     return describe({
       name: c.name,
+      value: c.value || '',
       domain: c.domain.replace(/^\./, '').toLowerCase(),
       hostOnly: c.hostOnly,
       path: c.path,
@@ -123,7 +125,6 @@ const Cookies = (() => {
       httpOnly: c.httpOnly,
       sameSite: c.sameSite === 'no_restriction' ? 'none' : c.sameSite,
       partitioned: Boolean(c.partitionKey && c.partitionKey.topLevelSite),
-      valueLength: (c.value || '').length,
     });
   }
 

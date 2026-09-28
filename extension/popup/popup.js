@@ -144,7 +144,7 @@ function renderTabs(report) {
       'third-party': report.totals.thirdPartySites,
       cookies: report.cookies.list.length,
       storage: report.storage.summary.originsWithData,
-      alerts: report.fingerprinting.summary.detections,
+      alerts: alertCount(report),
     }
     : {};
   for (const button of document.querySelectorAll('.tab')) {
@@ -357,6 +357,84 @@ function otherFrameOrigin(frameOrigin) {
   }
 }
 
+function alertCount(report) {
+  return report.fingerprinting.summary.detections + report.bounces.length
+    + report.sync.summary.events + report.trackingParams.length;
+}
+
+// ID longo abreviado para exibição (o JSON exportado tem o valor completo).
+function shortId(token) {
+  return token.length > 14 ? `${token.slice(0, 12)}…` : token;
+}
+
+function renderBounce(b) {
+  const via = b.type === 'redirect' ? 'redirecionamento HTTP' : 'redirecionamento por script';
+  const passed = b.passedParams.filter(p => p.matches);
+  return h('li', { class: 'item' },
+    h('div', { class: 'row' },
+      h('span', { class: 'name' }, `Bounce via ${b.site}`),
+      h('span', { class: 'tags' }, h('span', { class: 'pill tracker' }, via))),
+    h('div', { class: 'meta', title: b.url }, b.url.length > 90 ? `${b.url.slice(0, 89)}…` : b.url),
+    h('div', { class: 'meta' }, [
+      b.fromSite && `vindo de ${b.fromSite}`,
+      b.dwellMs !== undefined && `ficou ${b.dwellMs} ms, sem interação`,
+    ].filter(Boolean).join(' · ')),
+    b.storedIds.length > 0 && h('div', { class: 'meta' }, `identificadores do intermediário: ${b.storedIds.join(', ')}`),
+    passed.length > 0 && h('div', { class: 'meta mono' },
+      `repassado na URL: ${passed.map(p => `${p.param}=${shortId(p.value)} (= ${p.matches})`).join(', ')}`));
+}
+
+function renderSync(e) {
+  const kind = e.kind === 'first-party-id' ? 'ID de 1ª parte' : 'entre terceiros';
+  return h('li', { class: 'item' },
+    h('div', { class: 'row' },
+      h('span', { class: 'name' }, `${e.ownerSite} → ${e.receiverSite}`),
+      h('span', { class: 'tags' },
+        h('span', { class: e.kind === 'third-party' ? 'pill tracker' : 'pill warn' }, kind),
+        h('span', { class: 'count' }, `${e.requests} req.`))),
+    h('div', { class: 'meta' }, `${e.idName} (${e.idSource}) = ${shortId(e.token)}`),
+    h('div', { class: 'meta', title: e.url }, `em ${shortScript(e.url)}`));
+}
+
+function renderTracking(report) {
+  const { summary, events, endpoints } = report.sync;
+  const bounces = report.bounces;
+  const params = report.trackingParams;
+  return [
+    h('h2', {}, 'Bounce tracking'),
+    bounces.length
+      ? h('ul', { class: 'list' }, bounces.map(renderBounce))
+      : h('p', { class: 'empty' }, 'Nenhum redirecionamento por site intermediário antes desta página.'),
+
+    h('h2', {}, 'Sincronização de identificadores (cookie sync)'),
+    events.length
+      ? [
+        h('div', { class: 'chips' },
+          chip(summary.thirdPartyPairs, 'par entre terceiros', 'pares entre terceiros'),
+          chip(summary.firstPartyIdShares, 'ID de 1ª parte enviado a terceiro', 'IDs de 1ª parte enviados a terceiros'),
+          chip(summary.receivers, 'receptor', 'receptores')),
+        h('ul', { class: 'list' }, events.map(renderSync)),
+      ]
+      : h('p', { class: 'empty' }, 'Nenhum identificador de um site visto na URL de outro.'),
+    endpoints.length > 0 && detailsBlock('endpoints', 'section',
+      `Endpoints típicos de sincronização (${endpoints.length} ${endpoints.length === 1 ? 'site' : 'sites'})`,
+      h('ul', { class: 'list' }, endpoints.map(ep => h('li', { class: 'item' },
+        h('div', { class: 'row' }, h('span', { class: 'name' }, ep.site), h('span', { class: 'count' }, `${ep.requests} req.`)),
+        h('div', { class: 'meta', title: ep.example }, shortScript(ep.example)))))),
+
+    h('h2', {}, 'Parâmetros de rastreamento na URL'),
+    params.length
+      ? h('ul', { class: 'list' }, params.map(p => h('li', { class: 'item' },
+        h('div', { class: 'row' }, h('span', { class: 'name mono' }, `${p.param}=${shortId(p.value)}`)),
+        h('div', { class: 'meta', title: p.url }, shortScript(p.url)))))
+      : h('p', { class: 'empty' }, 'Nenhum parâmetro de rastreamento conhecido na URL desta página.'),
+    h('p', { class: 'note' },
+      'Cookie sync: trecho de cookie ou storage com cara de identificador (≥ 8 caracteres, com dígitos, não timestamp) '
+      + 'que aparece na URL de uma requisição a outro site (Acar et al., 2014; Englehardt & Narayanan, 2016). '
+      + 'Bounce: página de outro site que ficou até 10 s sem interação, ou redirecionamento HTTP por site intermediário.'),
+  ];
+}
+
 function renderAlerts(report) {
   const { summary, detections, discarded } = report.fingerprinting;
   const discardedBlock = discarded.length > 0 && detailsBlock('discarded', 'section',
@@ -378,6 +456,7 @@ function renderAlerts(report) {
     h('p', { class: 'note' },
       'Canvas: heurística de Englehardt & Narayanan (ACM CCS 2016) — canvas ≥ 16×16, texto com ≥ 10 caracteres ou ≥ 2 cores, '
       + 'sem uso interativo e imagem extraída. WebGL: leitura de canvas WebGL ≥ 16×16. Fontes: ≥ 50 fontes para o mesmo texto.'),
+    ...renderTracking(report),
   ];
 }
 
@@ -404,7 +483,7 @@ function render(report) {
   renderStats(report);
 
   const renderers = { 'third-party': renderThirdParty, cookies: renderCookies, storage: renderStorage, alerts: renderAlerts };
-  content.replaceChildren(...renderers[ui.tab](report).filter(Boolean));
+  content.replaceChildren(...renderers[ui.tab](report).flat().filter(Boolean));
 }
 
 for (const button of document.querySelectorAll('.tab')) {

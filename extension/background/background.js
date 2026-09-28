@@ -18,8 +18,22 @@ function commit(tabId) {
   const report = pending.get(tabId);
   if (!report) return;
   pending.delete(tabId);
+  report.committedAt = Date.now();
   reports.set(tabId, report);
   updateBadge(tabId);
+}
+
+// Nova página na aba, ligada à anterior (para detectar bounce tracking). A
+// anterior congela o resumo da dela, para não formar uma cadeia em memória.
+function newReport(tabId, url, requestId = null) {
+  const report = new TabReport(tabId, url, requestId);
+  const current = reports.get(tabId);
+  if (current) {
+    current.freezePrevious();
+    report.previousReport = current;
+    report.previousLeftAt = Date.now();
+  }
+  return report;
 }
 
 function onBeforeRequest(details) {
@@ -31,7 +45,7 @@ function onBeforeRequest(details) {
     if (next && next.requestId === details.requestId) {
       next.setUrl(details.url); // redirecionamento: mesmo requestId, nova URL
     } else {
-      pending.set(tabId, new TabReport(tabId, details.url, details.requestId));
+      pending.set(tabId, newReport(tabId, details.url, details.requestId));
     }
     pending.get(tabId).addRequest(details);
     return;
@@ -63,6 +77,14 @@ function reportForEvent(details) {
 function onErrorOccurred(details) {
   const report = reportForEvent(details);
   if (report) report.addError(details);
+}
+
+// Cabeçalho Cookie enviado: identificadores que cada site já tinha no navegador.
+function onBeforeSendHeaders(details) {
+  const report = reportForEvent(details);
+  if (!report) return;
+  const header = (details.requestHeaders || []).find(h => h.name.toLowerCase() === 'cookie');
+  if (header && header.value) report.addRequestCookies(details.url, header.value);
 }
 
 function onHeadersReceived(details) {
@@ -98,8 +120,13 @@ function onStorageSnapshot(snapshot, sender) {
 
 function onHookEvents(events, sender) {
   if (!sender.tab || !Array.isArray(events)) return;
-  const report = reports.get(sender.tab.id);
-  if (!report || (sender.frameId === 0 && Parties.siteOf(sender.url) !== report.site)) return;
+  let report = reports.get(sender.tab.id);
+  if (report && sender.frameId === 0 && Parties.siteOf(sender.url) !== report.site) {
+    // Lote enviado pela página anterior ao sair dela (pagehide).
+    const previous = report.previousReport;
+    report = previous && TabReport.normalizeUrl(sender.url) === previous.url ? previous : null;
+  }
+  if (!report) return;
   for (const event of events) report.addHookEvent(event);
 }
 
@@ -154,7 +181,15 @@ function onCommitted(details) {
     // Navegação sem requisição de rede (ex.: back/forward cache) ou a navegação
     // pendente foi abandonada: começa um relatório novo.
     pending.delete(tabId);
-    reports.set(tabId, new TabReport(tabId, url));
+    const report = newReport(tabId, url);
+    report.committedAt = Date.now();
+    reports.set(tabId, report);
+  }
+  // Tipo da navegação: distingue as iniciadas pelo usuário (barra de endereço,
+  // favoritos, recarga) dos redirecionamentos automáticos.
+  const current = reports.get(tabId);
+  if (current) {
+    current.transition = { type: details.transitionType, qualifiers: details.transitionQualifiers || [] };
   }
   // O Firefox limpa o badge específico da aba ao trocar de página.
   updateBadge(tabId);
@@ -173,6 +208,7 @@ browser.browserAction.setBadgeTextColor({ color: '#ffffff' });
 
 browser.webRequest.onBeforeRequest.addListener(onBeforeRequest, { urls: ['<all_urls>'] });
 browser.webRequest.onErrorOccurred.addListener(onErrorOccurred, { urls: ['<all_urls>'] });
+browser.webRequest.onBeforeSendHeaders.addListener(onBeforeSendHeaders, { urls: ['<all_urls>'] }, ['requestHeaders']);
 browser.webRequest.onHeadersReceived.addListener(onHeadersReceived, { urls: ['<all_urls>'] }, ['responseHeaders']);
 browser.cookies.onChanged.addListener(onCookieChanged);
 browser.webNavigation.onCommitted.addListener(onCommitted);
