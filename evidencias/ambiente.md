@@ -31,3 +31,4 @@ iframes de terceiros particionados).
 | 27/09/2026 19:53–20:45 | Sites reais: plugin + HAR, depois uBO, depois Blacklight | 0.3.0 | ver `sites/<site>/notas.md`; HAR do UOL refeito |
 | 27/09/2026 21:04–21:07 | UOL: plugin + HAR refeitos (DevTools aberto antes da URL, gravação pausada aos 30 s) | 0.3.0 | substitui a coleta de 20:09 |
 | 27/09/2026 21:58–22:14 | DDG Tracker Blocking, Storage partitioning, Bounce tracking, Query parameters | 0.4.1 | `ddg/<teste>/` |
+| 27/09/2026 22:51–22:59 | DDG Tracker Blocking com lista de bloqueio; js-leaks | 0.6.0 | `ddg/request-blocking/*-bloqueio.*`, `ddg/js-leaks/` |

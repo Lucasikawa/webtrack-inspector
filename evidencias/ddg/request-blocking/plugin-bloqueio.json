@@ -1,0 +1,250 @@
+{
+  "tool": {
+    "name": "Detector de Rastreadores",
+    "version": "0.6.0"
+  },
+  "exportedAt": "2026-09-28T01:52:34.114Z",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:156.0) Gecko/20100101 Firefox/156.0",
+  "report": {
+    "tabId": 60,
+    "url": "https://privacy-test-pages.site/privacy-protections/request-blocking/",
+    "host": "privacy-test-pages.site",
+    "site": "privacy-test-pages.site",
+    "startedAt": 1790560260930,
+    "loadedMs": 655,
+    "version": 81,
+    "navigationChain": [
+      "https://privacy-test-pages.site/privacy-protections/request-blocking/"
+    ],
+    "totals": {
+      "requests": 31,
+      "thirdPartyRequests": 22,
+      "thirdPartySites": 1,
+      "thirdPartyHosts": 1,
+      "trackerSites": 0,
+      "windowThirdPartySites": 1,
+      "windowTrackerSites": 0,
+      "blockedByFirefoxSites": 0,
+      "blockedByPluginRequests": 22,
+      "firstPartyHosts": 1
+    },
+    "thirdParty": [
+      {
+        "site": "third-party.site",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 22,
+        "firstSeenMs": 5742,
+        "hosts": [
+          {
+            "host": "bad.third-party.site",
+            "requests": 22
+          }
+        ],
+        "types": [
+          "beacon",
+          "csp_report",
+          "font",
+          "image",
+          "imageset",
+          "media",
+          "object",
+          "script",
+          "stylesheet",
+          "sub_frame",
+          "websocket",
+          "xmlhttprequest"
+        ],
+        "classifications": [],
+        "errors": {
+          "NS_ERROR_ABORT": 22
+        },
+        "categories": [],
+        "blockedByPlugin": 22,
+        "tracker": false,
+        "blockedByFirefox": false
+      }
+    ],
+    "firstParty": [
+      {
+        "site": "privacy-test-pages.site",
+        "thirdParty": false,
+        "firefoxThirdParty": false,
+        "requests": 9,
+        "firstSeenMs": 2,
+        "hosts": [
+          {
+            "host": "privacy-test-pages.site",
+            "requests": 9
+          }
+        ],
+        "types": [
+          "image",
+          "main_frame",
+          "script",
+          "stylesheet",
+          "sub_frame",
+          "xmlhttprequest"
+        ],
+        "classifications": [],
+        "errors": {},
+        "categories": [],
+        "blockedByPlugin": 0,
+        "tracker": false,
+        "blockedByFirefox": false
+      }
+    ],
+    "cookies": {
+      "summary": {
+        "total": 0,
+        "windowMs": 30000,
+        "inWindow": 0,
+        "afterWindow": 0,
+        "firstParty": {
+          "session": 0,
+          "persistent": 0
+        },
+        "thirdParty": {
+          "session": 0,
+          "persistent": 0
+        },
+        "window": {
+          "firstParty": {
+            "session": 0,
+            "persistent": 0
+          },
+          "thirdParty": {
+            "session": 0,
+            "persistent": 0
+          }
+        },
+        "longLived": 0,
+        "viaHttp": 0,
+        "viaJs": 0,
+        "notStored": 0,
+        "partitioned": 0,
+        "firstPartyByThirdPartyScript": 0
+      },
+      "list": []
+    },
+    "storage": {
+      "summary": {
+        "origins": 1,
+        "originsWithData": 0,
+        "thirdPartyOriginsWithData": 0,
+        "items": 0,
+        "localStorageKeys": 0,
+        "localStorageBytes": 0,
+        "sessionStorageKeys": 0,
+        "sessionStorageBytes": 0,
+        "indexedDBDatabases": 0,
+        "cacheStorageCaches": 0,
+        "blockedOrigins": 0
+      },
+      "origins": [
+        {
+          "origin": "https://privacy-test-pages.site",
+          "url": "https://privacy-test-pages.site/privacy-protections/request-blocking/",
+          "isTop": true,
+          "localStorage": {
+            "available": true,
+            "count": 0,
+            "bytes": 0,
+            "keys": []
+          },
+          "sessionStorage": {
+            "available": true,
+            "count": 0,
+            "bytes": 0,
+            "keys": []
+          },
+          "indexedDB": {
+            "available": true,
+            "count": 0,
+            "databases": []
+          },
+          "cacheStorage": {
+            "available": true,
+            "count": 0,
+            "names": []
+          },
+          "collectedAt": 1790560261630,
+          "site": "privacy-test-pages.site",
+          "thirdParty": false,
+          "items": 0
+        }
+      ]
+    },
+    "fingerprinting": {
+      "summary": {
+        "detections": 0,
+        "scripts": 0,
+        "thirdPartyScripts": 0,
+        "byTechnique": {},
+        "discarded": 0
+      },
+      "detections": [],
+      "discarded": []
+    },
+    "categories": [],
+    "sync": {
+      "summary": {
+        "events": 0,
+        "thirdPartyPairs": 0,
+        "firstPartyIdShares": 0,
+        "receivers": 0,
+        "endpointSites": 0
+      },
+      "events": [],
+      "endpoints": []
+    },
+    "bounces": [],
+    "trackingParams": [],
+    "hijack": {
+      "summary": {
+        "thirdPartySockets": 1,
+        "polling": 0,
+        "overridden": 0,
+        "thirdPartyKeyboardScripts": 0,
+        "signatures": 0,
+        "addedGlobals": 3
+      },
+      "websockets": [
+        {
+          "url": "wss://bad.third-party.site/block-me/web-socket",
+          "site": "third-party.site",
+          "handshakes": 1,
+          "messagesSent": false,
+          "errors": [
+            "NS_ERROR_ABORT"
+          ],
+          "thirdParty": true
+        }
+      ],
+      "eventStreams": [],
+      "polling": [],
+      "keyboard": [],
+      "globals": {
+        "addedCount": 3,
+        "added": [
+          "runTests",
+          "downloadTheResults",
+          "scriptLoadedCallback"
+        ],
+        "overridden": []
+      },
+      "signatures": []
+    },
+    "blocked": {
+      "bad.third-party.site": 22
+    },
+    "interacted": true,
+    "transition": {
+      "type": "typed",
+      "qualifiers": [
+        "from_address_bar"
+      ]
+    },
+    "previous": null
+  }
+}

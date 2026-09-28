@@ -1,0 +1,200 @@
+{
+  "tool": {
+    "name": "Detector de Rastreadores",
+    "version": "0.6.0"
+  },
+  "exportedAt": "2026-09-28T01:58:42.000Z",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:156.0) Gecko/20100101 Firefox/156.0",
+  "report": {
+    "tabId": 61,
+    "url": "https://privacy-test-pages.site/security/js-leaks.html",
+    "host": "privacy-test-pages.site",
+    "site": "privacy-test-pages.site",
+    "startedAt": 1790560522695,
+    "loadedMs": 725,
+    "version": 11,
+    "navigationChain": [
+      "https://privacy-test-pages.site/security/js-leaks.html"
+    ],
+    "totals": {
+      "requests": 5,
+      "thirdPartyRequests": 0,
+      "thirdPartySites": 0,
+      "thirdPartyHosts": 0,
+      "trackerSites": 0,
+      "windowThirdPartySites": 0,
+      "windowTrackerSites": 0,
+      "blockedByFirefoxSites": 0,
+      "blockedByPluginRequests": 0,
+      "firstPartyHosts": 1
+    },
+    "thirdParty": [],
+    "firstParty": [
+      {
+        "site": "privacy-test-pages.site",
+        "thirdParty": false,
+        "firefoxThirdParty": false,
+        "requests": 5,
+        "firstSeenMs": 1,
+        "hosts": [
+          {
+            "host": "privacy-test-pages.site",
+            "requests": 5
+          }
+        ],
+        "types": [
+          "image",
+          "main_frame",
+          "script",
+          "stylesheet",
+          "xmlhttprequest"
+        ],
+        "classifications": [],
+        "errors": {},
+        "categories": [],
+        "blockedByPlugin": 0,
+        "tracker": false,
+        "blockedByFirefox": false
+      }
+    ],
+    "cookies": {
+      "summary": {
+        "total": 0,
+        "windowMs": 30000,
+        "inWindow": 0,
+        "afterWindow": 0,
+        "firstParty": {
+          "session": 0,
+          "persistent": 0
+        },
+        "thirdParty": {
+          "session": 0,
+          "persistent": 0
+        },
+        "window": {
+          "firstParty": {
+            "session": 0,
+            "persistent": 0
+          },
+          "thirdParty": {
+            "session": 0,
+            "persistent": 0
+          }
+        },
+        "longLived": 0,
+        "viaHttp": 0,
+        "viaJs": 0,
+        "notStored": 0,
+        "partitioned": 0,
+        "firstPartyByThirdPartyScript": 0
+      },
+      "list": []
+    },
+    "storage": {
+      "summary": {
+        "origins": 1,
+        "originsWithData": 0,
+        "thirdPartyOriginsWithData": 0,
+        "items": 0,
+        "localStorageKeys": 0,
+        "localStorageBytes": 0,
+        "sessionStorageKeys": 0,
+        "sessionStorageBytes": 0,
+        "indexedDBDatabases": 0,
+        "cacheStorageCaches": 0,
+        "blockedOrigins": 0
+      },
+      "origins": [
+        {
+          "origin": "https://privacy-test-pages.site",
+          "url": "https://privacy-test-pages.site/security/js-leaks.html",
+          "isTop": true,
+          "localStorage": {
+            "available": true,
+            "count": 0,
+            "bytes": 0,
+            "keys": []
+          },
+          "sessionStorage": {
+            "available": true,
+            "count": 0,
+            "bytes": 0,
+            "keys": []
+          },
+          "indexedDB": {
+            "available": true,
+            "count": 0,
+            "databases": []
+          },
+          "cacheStorage": {
+            "available": true,
+            "count": 0,
+            "names": []
+          },
+          "collectedAt": 1790560523421,
+          "site": "privacy-test-pages.site",
+          "thirdParty": false,
+          "items": 0
+        }
+      ]
+    },
+    "fingerprinting": {
+      "summary": {
+        "detections": 0,
+        "scripts": 0,
+        "thirdPartyScripts": 0,
+        "byTechnique": {},
+        "discarded": 0
+      },
+      "detections": [],
+      "discarded": []
+    },
+    "categories": [],
+    "sync": {
+      "summary": {
+        "events": 0,
+        "thirdPartyPairs": 0,
+        "firstPartyIdShares": 0,
+        "receivers": 0,
+        "endpointSites": 0
+      },
+      "events": [],
+      "endpoints": []
+    },
+    "bounces": [],
+    "trackingParams": [],
+    "hijack": {
+      "summary": {
+        "thirdPartySockets": 0,
+        "polling": 0,
+        "overridden": 0,
+        "thirdPartyKeyboardScripts": 0,
+        "signatures": 0,
+        "addedGlobals": 2
+      },
+      "websockets": [],
+      "eventStreams": [],
+      "polling": [],
+      "keyboard": [],
+      "globals": {
+        "addedCount": 2,
+        "added": [
+          "collectedProps",
+          "results"
+        ],
+        "overridden": []
+      },
+      "signatures": []
+    },
+    "blocked": {},
+    "interacted": true,
+    "transition": {
+      "type": "reload",
+      "qualifiers": []
+    },
+    "previous": {
+      "url": "https://privacy-test-pages.site/security/js-leaks.html",
+      "site": "privacy-test-pages.site"
+    }
+  }
+}
