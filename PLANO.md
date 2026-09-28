@@ -120,6 +120,19 @@ Ver [`evidencias/README.md`](evidencias/README.md). Pontos principais:
 Commits pequenos por funcionalidade (`feat:`, `fix:`, `docs:`, `test:`,
 `evidence:`), push diário, evidências versionadas conforme coletadas.
 
+### Progresso
+
+| Dia | Realizado em | Entregue |
+|---|---|---|
+| 1 | 26/09 | Repositório público, manifest MV2, estado por aba, domínios de terceira parte, popup |
+| 2 | 26/09 | Cookies (HTTP/JS, 1ª/3ª parte, sessão/persistente, particionados), storage HTML5, bloqueios do Firefox, abas, exportação JSON; evidências DDG Tracker Reporting e Storage blocking |
+| 3 | 27/09 | Canvas/WebGL fingerprint, enumeração de fontes, autoria de cookies e storage (hooks em `document_start`), aba Alertas; evidências DDG Fingerprinting e primeira coleta dos 3 sites (HAR, plugin, uBO 1.75.0, Blacklight com dados brutos) → tag `v0.1-C` |
+
+Achados da coleta que entram no relatório: fingerprinting anti-bot (Imperva/hCaptcha)
+no sp.gov.br visto só por navegadores automatizados; rastreamento servido por
+subdomínio próprio no QuintoAndar; no UOL, leilão de anúncios diferente por região
+(Blacklight na Califórnia) explica a maior parte das divergências.
+
 ## 7. Pontos de atenção
 
 | Risco | Mitigação |
