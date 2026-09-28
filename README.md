@@ -18,9 +18,9 @@ de privacidade no cliente web. Projeto da Avaliação Intermediária de Ciberseg
 | B | Sincronismo de cookies (IDs de um site na URL de outro) e bounce tracking (HTTP e por script) | ✅ |
 | B | Parâmetros de rastreamento na URL (`utm_*`, `fbclid`, `gclid`…) | ✅ |
 | B | Categorias dos testes do Blacklight (gravação de sessão, pixels, GA com remarketing) | ✅ |
-| A | Indicadores de sequestro de navegador (hijacking/hook) | ⏳ |
+| A | Indicadores de sequestro de navegador (hijacking/hook): conexões persistentes, polling, funções nativas substituídas, captura de teclado, assinaturas do BeEF | ✅ |
 | A | Pontuação de privacidade com metodologia explícita | ⏳ |
-| A | Lista de bloqueio personalizada | ⏳ |
+| A | Lista de bloqueio personalizada (aba Bloqueio e botão Bloquear por site) | ✅ |
 | — | Exportação do relatório da página em JSON | ✅ |
 
 ## Instalação no Firefox (via about:debugging)
@@ -101,6 +101,7 @@ extension/
     fingerprint.js         heurísticas de canvas/WebGL fingerprinting
     tracking.js            identificadores, cookie sync, parâmetros de rastreamento
     categories.js          categorias dos testes do Blacklight
+    blocklist.js           lista de bloqueio personalizada
     tab-report.js          relatório de uma página: hosts, cookies, storage, fingerprinting
     background.js          estado por aba e listeners (webRequest, webNavigation, cookies)
   content/
@@ -215,6 +216,39 @@ remarketing (hit espelhado para `stats.g.doubleclick.net` ou
 `google.*/ads/ga-audiences`) e LinkedIn Insight, para comparar com os testes do
 Blacklight categoria a categoria.
 
+**Sequestro de navegador (hijacking/hook).** Indícios, não prova:
+- **conexão persistente com terceiro**: WebSocket (`webRequest` tipo `websocket`,
+  mais o hook de `WebSocket.send` para saber se a página enviou mensagens) ou
+  EventSource (cabeçalho `Accept: text/event-stream`);
+- **polling**: o mesmo endpoint de terceiro (host + caminho) chamado pelo menos 5
+  vezes, ao longo de 10 s ou mais, em intervalos regulares (coeficiente de
+  variação até 0,35) entre 250 ms e 60 s, que é como um hook busca comandos;
+- **funções nativas substituídas**: `fetch`, `XMLHttpRequest` (`open`, `send`,
+  `setRequestHeader`), `WebSocket`, `EventSource`, `sendBeacon`,
+  `addEventListener`, `document.write`, `createElement`, `document.cookie`,
+  `appendChild`, `insertBefore`, `setAttribute`, `form.submit`, `input.value`,
+  `history.pushState/replaceState`, `eval`, `Function`, `setTimeout`,
+  `setInterval`, `open`, `postMessage`, `JSON.parse/stringify`,
+  `Function.prototype.toString`, `Object.defineProperty`, `Storage.getItem`. A
+  referência de cada uma é capturada em `document_start`, antes de qualquer script
+  da página; 5 e 15 s após o `load`, uma referência diferente indica substituição
+  (a comparação por identidade pega também `Proxy` e `toString` falsificado);
+- **globais novas** no `window`, comparadas com o retrato de `document_start`;
+- **captura de teclado**: listeners de `keydown`, `keyup`, `keypress`, `input`,
+  `beforeinput`, `change` ou `paste` registrados por scripts de terceiros;
+- **assinaturas conhecidas do BeEF**: script `hook.js`, global `beef`/`BeefJS` e
+  cookie `BEEFHOOK`.
+
+A instrumentação do plugin fica nos protótipos (via `exportFunction`) e não
+aparece para uma verificação do escopo global: a página js-leaks do DDG dá o mesmo
+resultado com e sem o plugin (`evidencias/ddg/js-leaks/automatizado/`).
+
+**Lista de bloqueio.** Domínios (e subdomínios) cujas requisições de terceira
+parte são canceladas pelo `webRequest` bloqueante. A navegação principal e os
+recursos do próprio site nunca são bloqueados. Requisições sem aba (fetch de
+Service Worker) são bloqueadas quando quem as disparou é de outro site. A lista
+fica em `storage.local`.
+
 **Autoria de cookies e storage.** O primeiro script que grava cada cookie via
 `document.cookie` e cada chave via `setItem` aparece no popup. Um cookie de
 primeira parte gravado por script de terceiro (ex.: `_ga`, gravado por
@@ -241,7 +275,9 @@ contaminam o relatório da nova.
 
 | Permissão | Uso |
 |---|---|
-| `webRequest`, `<all_urls>` | observar requisições, cabeçalhos `Set-Cookie` e erros de rede |
+| `webRequest`, `<all_urls>` | observar requisições, cabeçalhos `Cookie`/`Set-Cookie` e erros de rede |
+| `webRequestBlocking` | cancelar requisições da lista de bloqueio |
+| `storage` | guardar a lista de bloqueio |
 | `webNavigation` | início, confirmação e `load` de cada navegação |
 | `tabs` | aba ativa no popup e mensagens aos content scripts |
 | `cookies` | cookies gravados de fato, inclusive particionados e de JavaScript |

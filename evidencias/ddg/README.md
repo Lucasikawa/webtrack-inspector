@@ -209,6 +209,45 @@ antes da navegação; o plugin os **detecta e mostra**, mas não reescreve a URL
 modo Padrão do Firefox também não; a remoção de parâmetros do Firefox só atua no
 modo Rigoroso e para uma lista própria).
 
+## Tracker Blocking com a lista de bloqueio (conceito A)
+
+Mesma página do Tracker Blocking, agora com `bad.third-party.site` na lista de
+bloqueio do plugin. Pasta: `evidencias/ddg/request-blocking/`.
+
+Fluxo: popup → aba **Bloqueio** → digitar `bad.third-party.site` → **Adicionar**
+→ abrir a página → **Start the test** → aguardar ~10 s → prints com a página e o
+popup nas abas **Terceiros** (`terceiros-bloqueio.png`) e **Bloqueio**
+(`bloqueio.png`) → **Exportar JSON** (`plugin-bloqueio.json`) → **Download the
+results** (`resultados-bloqueio.json`) → na aba Bloqueio, **Remover** o domínio.
+
+Esperado (validado em Firefox 156): 22 requisições bloqueadas; nenhum dos 23
+testes da página carregado. Os testes de elementos HTML/CSS aparecem como
+"hasn't loaded" (cinza) e os de JavaScript/rede como "failed" (vermelho): ambos
+são bloqueio. O fetch do Service Worker também é bloqueado.
+
+## js-leaks (conceito A)
+
+URL: `https://privacy-test-pages.site/security/js-leaks.html`
+
+A página percorre as propriedades do `window` (e do `navigator`) e compara com o
+perfil de um navegador de referência, listando propriedades adicionadas,
+removidas e alteradas: é um detector de alterações no escopo global, como as que
+um script de hook faz. Pasta: `evidencias/ddg/js-leaks/`.
+
+Fluxo: abrir a página → **Check** (referência Firefox 92) → aguardar ~15 s →
+popup na aba **Alertas**, seção **Sequestro de navegador**, expandir **Globais
+adicionadas** → print `alertas.png` → **Exportar JSON** (`plugin.json`) →
+**Download the results** (`resultados.json`).
+
+Esperado:
+- O plugin aponta as globais que o script da própria página cria ao rodar a
+  verificação: `collectedProps` e `results`.
+- A página lista ~889 propriedades adicionadas, 17 removidas e 2 alteradas em
+  relação ao Firefox 92: diferenças de versão do navegador, não do plugin. Com e
+  sem o plugin o resultado é idêntico (`automatizado/comparacao.json`, gerado pelo
+  `tools/smoke_test.py`): a instrumentação do plugin fica nos protótipos e não é
+  visível para essa verificação.
+
 ## Tabela do relatório
 
 Modelo para `relatorio/`. Uma linha por subteste.

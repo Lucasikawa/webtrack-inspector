@@ -52,6 +52,7 @@ Nomes de `<teste>`: `tracker-reporting`, `request-blocking`, `storage-blocking`,
 | DDG Bounce tracking | | ✔ | ✔ | ☑ |
 | DDG Query parameters | | ✔ | ✔ | ☑ |
 | DDG js-leaks | | | ✔ | ☐ |
+| DDG Tracker Blocking com lista de bloqueio | | | ✔ | ☐ |
 | sp.gov.br: HAR + prints + Blacklight + uBO | ✔ | ✔ | ✔ | ☑ |
 | quintoandar.com.br: HAR + prints + Blacklight + uBO | ✔ | ✔ | ✔ | ☑ |
 | uol.com.br: HAR + prints + Blacklight + uBO | ✔ | ✔ | ✔ | ☑ |

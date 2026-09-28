@@ -61,6 +61,7 @@ class Browser:
     """Firefox com a extensão carregada e uma aba da extensão para consultas."""
 
     def __init__(self, firefox, headful=False):
+        self.firefox = firefox
         opts = Options()
         opts.binary_location = firefox
         if not headful:
@@ -243,6 +244,40 @@ def scenario_blocking(browser, checks):
     browser.driver.switch_to.window(browser.page)
 
 
+def run_jsleaks(driver):
+    driver.get(f'{DDG}/security/js-leaks.html')
+    time.sleep(3)
+    driver.find_element(By.ID, 'run').click()
+    time.sleep(15)
+    results = driver.execute_script('return window.results')
+    return {k: sorted(x['name'] for x in results[k]) for k in ('added', 'removed', 'changed')}
+
+
+def scenario_jsleaks(browser, checks):
+    browser.driver.switch_to.window(browser.page)
+    with_plugin = run_jsleaks(browser.driver)
+    report = browser.report()['report']
+    added = (report['hijack']['globals'] or {}).get('added', [])
+    checks.expect({'collectedProps', 'results'} <= set(added),
+                  f'js-leaks: plugin aponta as globais criadas pela página ({", ".join(added)})')
+    # A mesma página num Firefox sem a extensão: a pegada do plugin no escopo global.
+    opts = Options()
+    opts.binary_location = browser.firefox
+    opts.add_argument('-headless')
+    clean = webdriver.Firefox(options=opts)
+    try:
+        without = run_jsleaks(clean)
+    finally:
+        clean.quit()
+    # Chaves gravadas no storage por cenários anteriores (mesmo perfil) são dados
+    # do site, não propriedades do navegador: ficam fora da comparação.
+    site_data = ('window.localStorage.', 'window.sessionStorage.')
+    diff = {k: sorted(n for n in set(with_plugin[k]) ^ set(without[k]) if not n.startswith(site_data)) for k in with_plugin}
+    counts = '/'.join(str(len(with_plugin[k])) for k in ('added', 'removed', 'changed'))
+    checks.expect(not any(diff.values()),
+                  f'js-leaks: resultado igual com e sem o plugin (adicionadas/removidas/alteradas {counts}; diferenças {diff})')
+
+
 SCENARIOS = {
     'ddg-tracker': scenario_tracker,
     'ddg-storage': scenario_storage,
@@ -250,6 +285,7 @@ SCENARIOS = {
     'ddg-bounce': scenario_bounce,
     'ddg-query': scenario_query,
     'ddg-blocking': scenario_blocking,
+    'ddg-jsleaks': scenario_jsleaks,
 }
 
 
@@ -282,7 +318,7 @@ def collect_url(browser, url, wait, out):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    parser.add_argument('targets', nargs='+', help="'ddg' (todos), 'ddg-tracker', 'ddg-storage', 'ddg-fingerprint', 'ddg-bounce', 'ddg-query', 'ddg-blocking' ou URLs")
+    parser.add_argument('targets', nargs='+', help="'ddg' (todos), 'ddg-tracker', 'ddg-storage', 'ddg-fingerprint', 'ddg-bounce', 'ddg-query', 'ddg-blocking', 'ddg-jsleaks' ou URLs")
     parser.add_argument('--out', type=Path, help='pasta para salvar JSON e prints (só para URLs)')
     parser.add_argument('--wait', type=float, default=30, help='segundos de espera em cada URL (padrão 30)')
     parser.add_argument('--headful', action='store_true', help='mostra a janela do Firefox')

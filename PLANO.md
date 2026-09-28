@@ -128,6 +128,7 @@ Commits pequenos por funcionalidade (`feat:`, `fix:`, `docs:`, `test:`,
 | 2 | 26/09 | Cookies (HTTP/JS, 1ª/3ª parte, sessão/persistente, particionados), storage HTML5, bloqueios do Firefox, abas, exportação JSON; evidências DDG Tracker Reporting e Storage blocking |
 | 3 | 27/09 | Canvas/WebGL fingerprint, enumeração de fontes, autoria de cookies e storage (hooks em `document_start`), aba Alertas; evidências DDG Fingerprinting e primeira coleta dos 3 sites (HAR, plugin, uBO 1.75.0, Blacklight com dados brutos) → tag `v0.1-C` |
 | 4 | 27/09 | Teste de integração em Firefox real (`tools/smoke_test.py`, 17 verificações nas páginas do DDG) e coleta automatizada do sp.gov.br (desafio anti-bot); janela fixa de 30 s; cookie sync, bounce tracking, parâmetros de rastreamento; categorias do Blacklight; reconciliação automática (`tools/reconcile.js`); roteiro das páginas DDG do B. Evidências DDG de Tracker Blocking, Storage partitioning, Bounce e Query parameters → tag `v0.2-B` |
+| 5 | 27/09 | Indícios de hijacking/hook (WebSocket/EventSource para terceiros, polling, funções nativas substituídas, globais novas, captura de teclado, assinaturas do BeEF); lista de bloqueio personalizada; js-leaks com e sem o plugin (pegada zero); 25 verificações automatizadas no DDG. Pendente: prints de js-leaks e Tracker Blocking com bloqueio |
 
 Achados da coleta que entram no relatório: fingerprinting anti-bot (Imperva/hCaptcha)
 no sp.gov.br visto só por navegadores automatizados; rastreamento servido por

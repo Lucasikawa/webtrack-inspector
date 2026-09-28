@@ -1,0 +1,26 @@
+{
+  "geradoEm": "2026-09-28T01:45:11+00:00",
+  "script": "tools/smoke_test.py (run_jsleaks), Firefox headless, perfil temporário",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:156.0) Gecko/20100101 Firefox/156.0",
+  "pluginVersion": "0.6.0",
+  "referencia": "firefox_92 (perfil padrão da página)",
+  "comPlugin": {
+    "added": 889,
+    "removed": 17,
+    "changed": 2
+  },
+  "semPlugin": {
+    "added": 889,
+    "removed": 17,
+    "changed": 2
+  },
+  "diferencas": {
+    "added": [],
+    "removed": [],
+    "changed": []
+  },
+  "globaisApontadasPeloPlugin": [
+    "collectedProps",
+    "results"
+  ]
+}
