@@ -72,6 +72,19 @@ python3 -m venv .venv && .venv/bin/pip install -r tools/requirements.txt
 O Firefox automatizado tem `navigator.webdriver = true`: sites com proteção
 anti-bot o tratam como robô (como fazem com o Blacklight).
 
+### Reconciliação com o Blacklight e o uBlock Origin
+
+`tools/reconcile.js` cruza, para cada site, o JSON do plugin, o nosso HAR, o log do
+uBlock Origin e os dados brutos do Blacklight (relatório e HAR da visita dele), e
+gera `evidencias/sites/<site>/reconciliacao.md`: uma linha por site rastreador com
+o que cada ferramenta viu, as requisições em cada HAR e a causa provável de cada
+divergência, além das categorias do Blacklight, dos CNAMEs desmascarados pelo uBO
+e do fingerprinting.
+
+```bash
+npm run reconcile
+```
+
 A pasta `extension/` é carregada diretamente, sem build. As bibliotecas usadas em
 tempo de execução ficam versionadas em `extension/lib/`.
 

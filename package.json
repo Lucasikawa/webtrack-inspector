@@ -8,7 +8,8 @@
     "lint": "web-ext lint --source-dir extension",
     "start": "web-ext run --source-dir extension --url https://privacy-test-pages.site/",
     "build": "web-ext build --source-dir extension --artifacts-dir dist --overwrite-dest",
-    "test": "node --test tests/"
+    "test": "node --test tests/",
+    "reconcile": "node tools/reconcile.js evidencias/sites/sp.gov.br evidencias/sites/quintoandar.com.br evidencias/sites/uol.com.br"
   },
   "devDependencies": {
     "tldts": "^7.4.15",
