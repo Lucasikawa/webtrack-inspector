@@ -396,11 +396,18 @@
       emit({ kind: 'globals', addedCount: added.length, added: added.slice(0, 150), overridden, signatures },
         JSON.stringify(['globals', added.length, overridden.map(o => o.name)]));
     };
+    let loaded = false;
     const schedule = () => {
+      loaded = true;
       setTimeout(checkGlobals, 5000);
       setTimeout(checkGlobals, 15000);
     };
     if (document.readyState === 'complete') schedule();
     else window.addEventListener('load', schedule, { once: true });
+    // Com o popup aberto, o background pede retratos novos a cada 3 s: pega
+    // alterações feitas depois (ex.: por um clique do usuário na página).
+    browser.runtime.onMessage.addListener(message => {
+      if (loaded && message && message.type === 'collectStorage') checkGlobals();
+    });
   }
 })();
