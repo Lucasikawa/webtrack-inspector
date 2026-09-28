@@ -39,9 +39,19 @@ Também não é evidência; orienta o que conferir na coleta.
 
 - Blacklight: **82 ad trackers e 206 cookies de terceiros**, "When you visit this
   site, it tells X", Google Analytics com remarketing; 20 empresas de ad-tech.
-  Plugin: 50–55 sites de 3ª parte, 59–67 cookies (26 particionados), 44–49
-  rastreadores. A diferença de escala é o principal ponto de reconciliação
-  (Chrome headless nos EUA, sem Total Cookie Protection, leilão diferente).
+  Plugin (coleta de 21:04): 34 sites de 3ª parte (26 rastreadores), 42 cookies:
+  27 de 1ª parte (21 gravados por scripts de 3ª parte, ex.: `_ga` por
+  `googletagmanager.com`, `cto_bundle` por `static.criteo.net`, `_pubcid` e
+  `panoramaId` por `tags.crwdcntrl.net`) e 15 de 3ª parte, todos particionados.
+  A diferença de escala é o principal ponto de reconciliação (Chrome headless nos
+  EUA, sem Total Cookie Protection, leilão diferente).
+- A página não para de fazer requisições (player ao vivo do Canal UOL, novos
+  leilões de anúncios, sinais periódicos de medição): o evento `load` ainda não
+  tinha ocorrido 2 min após a navegação (`loadedMs: null` no JSON). Por isso a
+  comparação usa a janela fixa de 30 s do HAR; 39 dos 42 cookies surgiram nela
+  (`__eoi`, `__gads`, `__gpi` só aos 123 s).
+- Coleta anterior (20:09) descartada: o DevTools foi aberto depois da navegação e
+  o HAR começou 8 s atrasado, sem o documento principal.
 - uBO: 24 bloqueios, 14 de 21 domínios conectados; desmascara vários CNAMEs de
   CDN (`conteudo.imguol.com.br`, `h.jsuol.com.br`, `player.fantascope.uol.com.br`
   → `*.cloudfront.net`).
@@ -50,4 +60,4 @@ Também não é evidência; orienta o que conferir na coleta.
 
 | Data e hora | Versão do plugin (commit) | HAR | Prints | Blacklight | uBO |
 |---|---|---|---|---|---|
-| 27/09/2026 20:09 | 0.3.0 (`82e536d`) | **refazer**: HAR de 20:09:31 incompleto (começou 8 s após a navegação) | 20:12; JSON 20:11:28 | 20:43 (19:43 ET) | 20:28–20:32, uBO 1.75.0 |
+| 27/09/2026 21:04 | 0.3.0 (`82e536d`) | 21:04:39–21:05:11 (gravação pausada aos 32 s), 224 entradas, 63 hosts | 21:07:20–21:07:40; JSON 21:06:43 | 20:43 (19:43 ET) | 20:28–20:32, uBO 1.75.0 |

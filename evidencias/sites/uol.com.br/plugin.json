@@ -1,0 +1,2581 @@
+{
+  "tool": {
+    "name": "Detector de Rastreadores",
+    "version": "0.3.0"
+  },
+  "exportedAt": "2026-09-28T00:06:43.874Z",
+  "userAgent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:156.0) Gecko/20100101 Firefox/156.0",
+  "report": {
+    "tabId": 47,
+    "url": "https://www.uol.com.br/",
+    "host": "www.uol.com.br",
+    "site": "uol.com.br",
+    "startedAt": 1790553879371,
+    "loadedMs": null,
+    "version": 694,
+    "navigationChain": [
+      "http://uol.com.br/",
+      "https://uol.com.br/",
+      "https://www.uol.com.br/"
+    ],
+    "totals": {
+      "requests": 314,
+      "thirdPartyRequests": 307,
+      "thirdPartySites": 34,
+      "thirdPartyHosts": 58,
+      "trackerSites": 26,
+      "blockedByFirefoxSites": 0,
+      "firstPartyHosts": 5
+    },
+    "thirdParty": [
+      {
+        "site": "googlesyndication.com",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 40,
+        "firstSeenMs": 1556,
+        "hosts": [
+          {
+            "host": "pagead2.googlesyndication.com",
+            "requests": 26
+          },
+          {
+            "host": "tpc.googlesyndication.com",
+            "requests": 11
+          },
+          {
+            "host": "9fcd40dbcd5629e7510839ba8a77b1ec.safeframe.googlesyndication.com",
+            "requests": 3
+          }
+        ],
+        "types": [
+          "image",
+          "script",
+          "sub_frame",
+          "xmlhttprequest"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_ad"
+        ],
+        "errors": {},
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "scorecardresearch.com",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 28,
+        "firstSeenMs": 497,
+        "hosts": [
+          {
+            "host": "sb.scorecardresearch.com",
+            "requests": 28
+          }
+        ],
+        "types": [
+          "image",
+          "script"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_analytics"
+        ],
+        "errors": {},
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "adnxs.com",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 26,
+        "firstSeenMs": 498,
+        "hosts": [
+          {
+            "host": "ib.adnxs.com",
+            "requests": 14
+          },
+          {
+            "host": "secure.adnxs.com",
+            "requests": 12
+          }
+        ],
+        "types": [
+          "image",
+          "xmlhttprequest"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_ad"
+        ],
+        "errors": {},
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "google.com",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 23,
+        "firstSeenMs": 498,
+        "hosts": [
+          {
+            "host": "fundingchoicesmessages.google.com",
+            "requests": 20
+          },
+          {
+            "host": "www.google.com",
+            "requests": 2
+          },
+          {
+            "host": "analytics.google.com",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "image",
+          "script",
+          "xmlhttprequest"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_analytics",
+          "tracking_content"
+        ],
+        "errors": {
+          "NS_ERROR_DOM_NETWORK_ERR": 2
+        },
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "permutive.com",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 21,
+        "firstSeenMs": 589,
+        "hosts": [
+          {
+            "host": "api.permutive.com",
+            "requests": 20
+          },
+          {
+            "host": "cdn.permutive.com",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "xmlhttprequest"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_ad"
+        ],
+        "errors": {},
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "newsroom.bi",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 19,
+        "firstSeenMs": 1408,
+        "hosts": [
+          {
+            "host": "events.newsroom.bi",
+            "requests": 16
+          },
+          {
+            "host": "experiences.newsroom.bi",
+            "requests": 2
+          },
+          {
+            "host": "icu.newsroom.bi",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "xmlhttprequest"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_ad"
+        ],
+        "errors": {},
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "doubleclick.net",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 18,
+        "firstSeenMs": 216,
+        "hosts": [
+          {
+            "host": "securepubads.g.doubleclick.net",
+            "requests": 17
+          },
+          {
+            "host": "cm.g.doubleclick.net",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "image",
+          "script",
+          "xmlhttprequest"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_ad"
+        ],
+        "errors": {
+          "NS_ERROR_DOM_NETWORK_ERR": 8
+        },
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "rubiconproject.com",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 12,
+        "firstSeenMs": 1407,
+        "hosts": [
+          {
+            "host": "fastlane.rubiconproject.com",
+            "requests": 12
+          }
+        ],
+        "types": [
+          "xmlhttprequest"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_ad"
+        ],
+        "errors": {},
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "seedtag.com",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 12,
+        "firstSeenMs": 1374,
+        "hosts": [
+          {
+            "host": "s.seedtag.com",
+            "requests": 12
+          }
+        ],
+        "types": [
+          "xmlhttprequest"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_ad"
+        ],
+        "errors": {},
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "smartadserver.com",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 10,
+        "firstSeenMs": 1407,
+        "hosts": [
+          {
+            "host": "prg.smartadserver.com",
+            "requests": 10
+          }
+        ],
+        "types": [
+          "xmlhttprequest"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_ad"
+        ],
+        "errors": {
+          "NS_ERROR_UNKNOWN_HOST": 2
+        },
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "privacymanager.io",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 6,
+        "firstSeenMs": 497,
+        "hosts": [
+          {
+            "host": "geo.privacymanager.io",
+            "requests": 3
+          },
+          {
+            "host": "launchpad-wrapper.privacymanager.io",
+            "requests": 1
+          },
+          {
+            "host": "launchpad.privacymanager.io",
+            "requests": 1
+          },
+          {
+            "host": "ats-wrapper.privacymanager.io",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "script",
+          "xmlhttprequest"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_ad"
+        ],
+        "errors": {},
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "amazon-adsystem.com",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 4,
+        "firstSeenMs": 497,
+        "hosts": [
+          {
+            "host": "c.amazon-adsystem.com",
+            "requests": 2
+          },
+          {
+            "host": "config.aps.amazon-adsystem.com",
+            "requests": 1
+          },
+          {
+            "host": "web-banner.ads.aps.amazon-adsystem.com",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "script",
+          "xmlhttprequest"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_ad"
+        ],
+        "errors": {},
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "criteo.com",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 4,
+        "firstSeenMs": 3405,
+        "hosts": [
+          {
+            "host": "gum.criteo.com",
+            "requests": 2
+          },
+          {
+            "host": "ag.gbc.criteo.com",
+            "requests": 1
+          },
+          {
+            "host": "gem.gbc.criteo.com",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "sub_frame",
+          "xmlhttprequest"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_ad"
+        ],
+        "errors": {},
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "mrf.io",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 3,
+        "firstSeenMs": 497,
+        "hosts": [
+          {
+            "host": "sdk.mrf.io",
+            "requests": 2
+          },
+          {
+            "host": "marfeelexperimentsexperienceengine.mrf.io",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "script"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_ad"
+        ],
+        "errors": {},
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "crwdcntrl.net",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 2,
+        "firstSeenMs": 1624,
+        "hosts": [
+          {
+            "host": "tags.crwdcntrl.net",
+            "requests": 1
+          },
+          {
+            "host": "bcp.crwdcntrl.net",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "script",
+          "xmlhttprequest"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_ad"
+        ],
+        "errors": {},
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "id5-sync.com",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 2,
+        "firstSeenMs": 1624,
+        "hosts": [
+          {
+            "host": "cdn.id5-sync.com",
+            "requests": 1
+          },
+          {
+            "host": "id5-sync.com",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "script",
+          "xmlhttprequest"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_ad"
+        ],
+        "errors": {},
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "im-apps.net",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 2,
+        "firstSeenMs": 1624,
+        "hosts": [
+          {
+            "host": "dmp.im-apps.net",
+            "requests": 1
+          },
+          {
+            "host": "sync6.im-apps.net",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "script",
+          "xmlhttprequest"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_ad"
+        ],
+        "errors": {},
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "pubmatic.com",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 2,
+        "firstSeenMs": 1624,
+        "hosts": [
+          {
+            "host": "ads.pubmatic.com",
+            "requests": 1
+          },
+          {
+            "host": "image6.pubmatic.com",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "script",
+          "xmlhttprequest"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_ad"
+        ],
+        "errors": {},
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "creativecdn.com",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 1,
+        "firstSeenMs": 1624,
+        "hosts": [
+          {
+            "host": "invstatic101.creativecdn.com",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "script"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_ad"
+        ],
+        "errors": {
+          "NS_ERROR_UNKNOWN_HOST": 1
+        },
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "criteo.net",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 1,
+        "firstSeenMs": 1624,
+        "hosts": [
+          {
+            "host": "static.criteo.net",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "script"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_ad"
+        ],
+        "errors": {},
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "google.com.br",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 1,
+        "firstSeenMs": 2358,
+        "hosts": [
+          {
+            "host": "www.google.com.br",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "image"
+        ],
+        "classifications": [
+          "any_strict_tracking",
+          "tracking_content"
+        ],
+        "errors": {},
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "openxcdn.net",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 1,
+        "firstSeenMs": 1624,
+        "hosts": [
+          {
+            "host": "oa.openxcdn.net",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "script"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_ad"
+        ],
+        "errors": {},
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "permutive.app",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 1,
+        "firstSeenMs": 216,
+        "hosts": [
+          {
+            "host": "4b91477e-f67b-4d81-86db-a9742bd41e9c.edge.permutive.app",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "script"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_ad"
+        ],
+        "errors": {},
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "prmutv.co",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 1,
+        "firstSeenMs": 547,
+        "hosts": [
+          {
+            "host": "4b91477e-f67b-4d81-86db-a9742bd41e9c.prmutv.co",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "xmlhttprequest"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_ad"
+        ],
+        "errors": {},
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "yahoo.com",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 1,
+        "firstSeenMs": 1624,
+        "hosts": [
+          {
+            "host": "connectid.analytics.yahoo.com",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "script"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_analytics"
+        ],
+        "errors": {},
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "youtube.com",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 1,
+        "firstSeenMs": 497,
+        "hosts": [
+          {
+            "host": "img.youtube.com",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "image"
+        ],
+        "classifications": [
+          "any_strict_tracking",
+          "tracking_content"
+        ],
+        "errors": {},
+        "tracker": true,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "jsuol.com.br",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 28,
+        "firstSeenMs": 216,
+        "hosts": [
+          {
+            "host": "h.jsuol.com.br",
+            "requests": 16
+          },
+          {
+            "host": "tm.jsuol.com.br",
+            "requests": 10
+          },
+          {
+            "host": "conteudo.jsuol.com.br",
+            "requests": 1
+          },
+          {
+            "host": "me.jsuol.com.br",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "script",
+          "stylesheet",
+          "sub_frame"
+        ],
+        "classifications": [],
+        "errors": {},
+        "tracker": false,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "imguol.com.br",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 26,
+        "firstSeenMs": 216,
+        "hosts": [
+          {
+            "host": "conteudo.imguol.com.br",
+            "requests": 26
+          }
+        ],
+        "types": [
+          "image",
+          "imageset"
+        ],
+        "classifications": [],
+        "errors": {},
+        "tracker": false,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "uol.com",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 5,
+        "firstSeenMs": 497,
+        "hosts": [
+          {
+            "host": "stc.uol.com",
+            "requests": 5
+          }
+        ],
+        "types": [
+          "font"
+        ],
+        "classifications": [],
+        "errors": {},
+        "tracker": false,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "dnacdn.net",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 2,
+        "firstSeenMs": 4005,
+        "hosts": [
+          {
+            "host": "dnacdn.net",
+            "requests": 2
+          }
+        ],
+        "types": [
+          "xmlhttprequest"
+        ],
+        "classifications": [],
+        "errors": {},
+        "tracker": false,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "googletagmanager.com",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 1,
+        "firstSeenMs": 497,
+        "hosts": [
+          {
+            "host": "www.googletagmanager.com",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "script"
+        ],
+        "classifications": [],
+        "errors": {},
+        "tracker": false,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "jsuol.com",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 1,
+        "firstSeenMs": 216,
+        "hosts": [
+          {
+            "host": "me.jsuol.com",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "image"
+        ],
+        "classifications": [],
+        "errors": {},
+        "tracker": false,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "mgaru.dev",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 1,
+        "firstSeenMs": 1624,
+        "hosts": [
+          {
+            "host": "cdn.mgaru.dev",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "script"
+        ],
+        "classifications": [],
+        "errors": {},
+        "tracker": false,
+        "blockedByFirefox": false
+      },
+      {
+        "site": "mygaru.com",
+        "thirdParty": true,
+        "firefoxThirdParty": true,
+        "requests": 1,
+        "firstSeenMs": 1990,
+        "hosts": [
+          {
+            "host": "ident.mygaru.com",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "xmlhttprequest"
+        ],
+        "classifications": [],
+        "errors": {},
+        "tracker": false,
+        "blockedByFirefox": false
+      }
+    ],
+    "firstParty": [
+      {
+        "site": "uol.com.br",
+        "thirdParty": false,
+        "firefoxThirdParty": false,
+        "requests": 7,
+        "firstSeenMs": 0,
+        "hosts": [
+          {
+            "host": "uol.com.br",
+            "requests": 2
+          },
+          {
+            "host": "udr.uol.com.br",
+            "requests": 2
+          },
+          {
+            "host": "www.uol.com.br",
+            "requests": 1
+          },
+          {
+            "host": "tm.uol.com.br",
+            "requests": 1
+          },
+          {
+            "host": "bs.uol.com.br",
+            "requests": 1
+          }
+        ],
+        "types": [
+          "image",
+          "main_frame",
+          "sub_frame",
+          "xmlhttprequest"
+        ],
+        "classifications": [
+          "any_basic_tracking",
+          "any_strict_tracking",
+          "tracking_ad"
+        ],
+        "errors": {},
+        "tracker": true,
+        "blockedByFirefox": false
+      }
+    ],
+    "cookies": {
+      "summary": {
+        "total": 42,
+        "duringLoad": 42,
+        "afterLoad": 0,
+        "firstParty": {
+          "session": 1,
+          "persistent": 26
+        },
+        "thirdParty": {
+          "session": 2,
+          "persistent": 13
+        },
+        "load": {
+          "firstParty": {
+            "session": 1,
+            "persistent": 26
+          },
+          "thirdParty": {
+            "session": 2,
+            "persistent": 13
+          }
+        },
+        "longLived": 11,
+        "viaHttp": 15,
+        "viaJs": 27,
+        "notStored": 0,
+        "partitioned": 15,
+        "firstPartyByThirdPartyScript": 21
+      },
+      "list": [
+        {
+          "key": "anj|adnxs.com|/",
+          "name": "anj",
+          "domain": "adnxs.com",
+          "hostOnly": false,
+          "path": "/",
+          "site": "adnxs.com",
+          "session": false,
+          "expires": 1798329914015,
+          "secure": true,
+          "httpOnly": true,
+          "sameSite": "none",
+          "partitioned": true,
+          "valueLength": 60,
+          "viaHttp": true,
+          "stored": true,
+          "sourceUrl": "https://secure.adnxs.com/seg?add=40132436&t=1",
+          "firstSeenMs": 1387,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": true,
+          "duringLoad": true,
+          "lifetimeDays": 90
+        },
+        {
+          "key": "uuid2|adnxs.com|/",
+          "name": "uuid2",
+          "domain": "adnxs.com",
+          "hostOnly": false,
+          "path": "/",
+          "site": "adnxs.com",
+          "session": false,
+          "expires": 1798330001062,
+          "secure": true,
+          "httpOnly": true,
+          "sameSite": "none",
+          "partitioned": true,
+          "valueLength": 19,
+          "viaHttp": true,
+          "stored": true,
+          "sourceUrl": "https://ib.adnxs.com/getuidj?gdpr=0",
+          "firstSeenMs": 688,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": true,
+          "duringLoad": true,
+          "lifetimeDays": 90.001
+        },
+        {
+          "key": "uid|criteo.com|/",
+          "name": "uid",
+          "domain": "criteo.com",
+          "hostOnly": false,
+          "path": "/",
+          "site": "criteo.com",
+          "session": false,
+          "expires": 1824249882258,
+          "secure": true,
+          "httpOnly": false,
+          "sameSite": "none",
+          "partitioned": true,
+          "valueLength": 36,
+          "viaHttp": true,
+          "stored": true,
+          "sourceUrl": "https://gum.criteo.com/syncframe?origin=publishertagids&topUrl=www.uol.com.br&gdpr=0&gdpr_consent=#{%22bundle%22:{%22origin%22:0},%22optout%22:{%22value%22:false,%22origin%22:0},%22tld%22:%22uol.com.br%22,%22topUrl%22:%22www.uol.com.br%22,%22version%22:109327,%22origin%22:%22publishertagids%22,%22requestId%22:%220.7762692633440818%22}",
+          "firstSeenMs": 3898,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": true,
+          "duringLoad": true,
+          "lifetimeDays": 390
+        },
+        {
+          "key": "_cc_dc|crwdcntrl.net|/",
+          "name": "_cc_dc",
+          "domain": "crwdcntrl.net",
+          "hostOnly": false,
+          "path": "/",
+          "site": "crwdcntrl.net",
+          "session": false,
+          "expires": 1813881961726,
+          "secure": true,
+          "httpOnly": false,
+          "sameSite": "none",
+          "partitioned": true,
+          "valueLength": 1,
+          "viaHttp": true,
+          "stored": true,
+          "sourceUrl": "https://bcp.crwdcntrl.net/6/map?xcid=16589",
+          "firstSeenMs": 3366,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": true,
+          "duringLoad": true,
+          "lifetimeDays": 270.001
+        },
+        {
+          "key": "_cc_id|crwdcntrl.net|/",
+          "name": "_cc_id",
+          "domain": "crwdcntrl.net",
+          "hostOnly": false,
+          "path": "/",
+          "site": "crwdcntrl.net",
+          "session": false,
+          "expires": 1813881961726,
+          "secure": true,
+          "httpOnly": false,
+          "sameSite": "none",
+          "partitioned": true,
+          "valueLength": 32,
+          "viaHttp": true,
+          "stored": true,
+          "sourceUrl": "https://bcp.crwdcntrl.net/6/map?xcid=16589",
+          "firstSeenMs": 3366,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": true,
+          "duringLoad": true,
+          "lifetimeDays": 270.001
+        },
+        {
+          "key": "browser_data|dnacdn.net|/",
+          "name": "browser_data",
+          "domain": "dnacdn.net",
+          "hostOnly": false,
+          "path": "/",
+          "site": "dnacdn.net",
+          "session": false,
+          "expires": 1824249886205,
+          "secure": true,
+          "httpOnly": false,
+          "sameSite": "none",
+          "partitioned": true,
+          "valueLength": 140,
+          "viaHttp": true,
+          "stored": true,
+          "sourceUrl": "https://dnacdn.net/dna",
+          "firstSeenMs": 4656,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": true,
+          "duringLoad": true,
+          "lifetimeDays": 390
+        },
+        {
+          "key": "tp_cookie_test|tm.jsuol.com.br|/modules/external/admanager",
+          "name": "tp_cookie_test",
+          "domain": "tm.jsuol.com.br",
+          "hostOnly": true,
+          "path": "/modules/external/admanager",
+          "site": "jsuol.com.br",
+          "session": true,
+          "expires": null,
+          "secure": true,
+          "httpOnly": false,
+          "sameSite": "none",
+          "partitioned": true,
+          "valueLength": 1,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 593,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": true,
+          "duringLoad": true,
+          "lifetimeDays": null
+        },
+        {
+          "key": "4196_lv|newsroom.bi|/",
+          "name": "4196_lv",
+          "domain": "newsroom.bi",
+          "hostOnly": false,
+          "path": "/",
+          "site": "newsroom.bi",
+          "session": false,
+          "expires": 1793146003208,
+          "secure": true,
+          "httpOnly": true,
+          "sameSite": "none",
+          "partitioned": true,
+          "valueLength": 4,
+          "viaHttp": true,
+          "stored": true,
+          "sourceUrl": "https://events.newsroom.bi/ingest.php",
+          "firstSeenMs": 3364,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": true,
+          "duringLoad": true,
+          "lifetimeDays": 30.001
+        },
+        {
+          "key": "4196_s|newsroom.bi|/",
+          "name": "4196_s",
+          "domain": "newsroom.bi",
+          "hostOnly": false,
+          "path": "/",
+          "site": "newsroom.bi",
+          "session": true,
+          "expires": null,
+          "secure": true,
+          "httpOnly": true,
+          "sameSite": "none",
+          "partitioned": true,
+          "valueLength": 36,
+          "viaHttp": true,
+          "stored": true,
+          "sourceUrl": "https://events.newsroom.bi/ingest.php",
+          "firstSeenMs": 3364,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": true,
+          "duringLoad": true,
+          "lifetimeDays": null
+        },
+        {
+          "key": "4196_u|newsroom.bi|/",
+          "name": "4196_u",
+          "domain": "newsroom.bi",
+          "hostOnly": false,
+          "path": "/",
+          "site": "newsroom.bi",
+          "session": false,
+          "expires": 1806106003208,
+          "secure": true,
+          "httpOnly": true,
+          "sameSite": "none",
+          "partitioned": true,
+          "valueLength": 36,
+          "viaHttp": true,
+          "stored": true,
+          "sourceUrl": "https://events.newsroom.bi/ingest.php",
+          "firstSeenMs": 3364,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": true,
+          "duringLoad": true,
+          "lifetimeDays": 180.001
+        },
+        {
+          "key": "4196_ut|newsroom.bi|/",
+          "name": "4196_ut",
+          "domain": "newsroom.bi",
+          "hostOnly": false,
+          "path": "/",
+          "site": "newsroom.bi",
+          "session": false,
+          "expires": 1793146003208,
+          "secure": true,
+          "httpOnly": true,
+          "sameSite": "none",
+          "partitioned": true,
+          "valueLength": 1,
+          "viaHttp": true,
+          "stored": true,
+          "sourceUrl": "https://events.newsroom.bi/ingest.php",
+          "firstSeenMs": 3364,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": true,
+          "duringLoad": true,
+          "lifetimeDays": 30.001
+        },
+        {
+          "key": "pxid|4b91477e-f67b-4d81-86db-a9742bd41e9c.prmutv.co|/",
+          "name": "pxid",
+          "domain": "4b91477e-f67b-4d81-86db-a9742bd41e9c.prmutv.co",
+          "hostOnly": false,
+          "path": "/",
+          "site": "prmutv.co",
+          "session": false,
+          "expires": 1798416280190,
+          "secure": true,
+          "httpOnly": true,
+          "sameSite": "none",
+          "partitioned": true,
+          "valueLength": 36,
+          "viaHttp": true,
+          "stored": true,
+          "sourceUrl": "https://4b91477e-f67b-4d81-86db-a9742bd41e9c.prmutv.co/v2.0/pxid?k=d2934e09-3372-4691-ade8-1a2726d74798",
+          "firstSeenMs": 823,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": true,
+          "duringLoad": true,
+          "lifetimeDays": 91
+        },
+        {
+          "key": "UID|scorecardresearch.com|/",
+          "name": "UID",
+          "domain": "scorecardresearch.com",
+          "hostOnly": false,
+          "path": "/",
+          "site": "scorecardresearch.com",
+          "session": false,
+          "expires": 1824250002282,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "unspecified",
+          "partitioned": true,
+          "valueLength": 33,
+          "viaHttp": true,
+          "stored": true,
+          "sourceUrl": "https://sb.scorecardresearch.com/b?c1=2&c2=6036356&cs_fpcu=d873abf03b2d4cb0bb9cbc6ed1a44286&cs_it=b1&cv=4.14.0%2B2608070551&ns__t=1790553881323&ns_c=UTF-8&cs_cfg=1111110&cs_gpc=0&c7=https%3A%2F%2Fwww.uol.com.br%2F&c8=UOL%20-%20Seu%20universo%20online&c9=",
+          "firstSeenMs": 3373,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": true,
+          "duringLoad": true,
+          "lifetimeDays": 390.001
+        },
+        {
+          "key": "st_ssp|seedtag.com|/",
+          "name": "st_ssp",
+          "domain": "seedtag.com",
+          "hostOnly": false,
+          "path": "/",
+          "site": "seedtag.com",
+          "session": false,
+          "expires": 1793146001031,
+          "secure": true,
+          "httpOnly": true,
+          "sameSite": "none",
+          "partitioned": true,
+          "valueLength": 232,
+          "viaHttp": true,
+          "stored": true,
+          "sourceUrl": "https://s.seedtag.com/c/hb/bid",
+          "firstSeenMs": 1699,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": true,
+          "duringLoad": true,
+          "lifetimeDays": 30.001
+        },
+        {
+          "key": "st_uid|seedtag.com|/",
+          "name": "st_uid",
+          "domain": "seedtag.com",
+          "hostOnly": false,
+          "path": "/",
+          "site": "seedtag.com",
+          "session": false,
+          "expires": 1822090001031,
+          "secure": true,
+          "httpOnly": false,
+          "sameSite": "none",
+          "partitioned": true,
+          "valueLength": 36,
+          "viaHttp": true,
+          "stored": true,
+          "sourceUrl": "https://s.seedtag.com/c/hb/bid",
+          "firstSeenMs": 1699,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": true,
+          "duringLoad": true,
+          "lifetimeDays": 365.001
+        },
+        {
+          "key": "___nrbi|uol.com.br|/",
+          "name": "___nrbi",
+          "domain": "uol.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "uol.com.br",
+          "session": false,
+          "expires": 1806105883000,
+          "secure": true,
+          "httpOnly": false,
+          "sameSite": "unspecified",
+          "partitioned": false,
+          "valueLength": 315,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 1405,
+          "writers": [
+            "https://sdk.mrf.io/statics/marfeel-sdk.js?id=4196"
+          ],
+          "writersThirdParty": true,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 180
+        },
+        {
+          "key": "___nrbic|uol.com.br|/",
+          "name": "___nrbic",
+          "domain": "uol.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "uol.com.br",
+          "session": false,
+          "expires": 1806105883000,
+          "secure": true,
+          "httpOnly": false,
+          "sameSite": "unspecified",
+          "partitioned": false,
+          "valueLength": 115,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 1405,
+          "writers": [
+            "https://sdk.mrf.io/statics/marfeel-sdk.js?id=4196"
+          ],
+          "writersThirdParty": true,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 180
+        },
+        {
+          "key": "__eoi|uol.com.br|/",
+          "name": "__eoi",
+          "domain": "uol.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "uol.com.br",
+          "session": false,
+          "expires": 1806102297000,
+          "secure": true,
+          "httpOnly": false,
+          "sameSite": "none",
+          "partitioned": false,
+          "valueLength": 77,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 122657,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 179.957
+        },
+        {
+          "key": "__gads|uol.com.br|/",
+          "name": "__gads",
+          "domain": "uol.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "uol.com.br",
+          "session": false,
+          "expires": 1824246297000,
+          "secure": true,
+          "httpOnly": false,
+          "sameSite": "none",
+          "partitioned": false,
+          "valueLength": 83,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 122657,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 389.957
+        },
+        {
+          "key": "__gpi|uol.com.br|/",
+          "name": "__gpi",
+          "domain": "uol.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "uol.com.br",
+          "session": false,
+          "expires": 1824246297000,
+          "secure": true,
+          "httpOnly": false,
+          "sameSite": "none",
+          "partitioned": false,
+          "valueLength": 84,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 122657,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 389.957
+        },
+        {
+          "key": "_cc_id|uol.com.br|/",
+          "name": "_cc_id",
+          "domain": "uol.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "uol.com.br",
+          "session": false,
+          "expires": 1813881882000,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "lax",
+          "partitioned": false,
+          "valueLength": 32,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 3434,
+          "writers": [
+            "https://tags.crwdcntrl.net/lt/c/16589/sync.min.js"
+          ],
+          "writersThirdParty": true,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 270
+        },
+        {
+          "key": "_ga|uol.com.br|/",
+          "name": "_ga",
+          "domain": "uol.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "uol.com.br",
+          "session": false,
+          "expires": 1825113881725,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "unspecified",
+          "partitioned": false,
+          "valueLength": 26,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 2357,
+          "writers": [
+            "https://www.googletagmanager.com/gtag/js?id=G-BS4Q6LCGB1"
+          ],
+          "writersThirdParty": true,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 400
+        },
+        {
+          "key": "_ga_BS4Q6LCGB1|uol.com.br|/",
+          "name": "_ga_BS4Q6LCGB1",
+          "domain": "uol.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "uol.com.br",
+          "session": false,
+          "expires": 1825113881724,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "unspecified",
+          "partitioned": false,
+          "valueLength": 45,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 2357,
+          "writers": [
+            "https://www.googletagmanager.com/gtag/js?id=G-BS4Q6LCGB1"
+          ],
+          "writersThirdParty": true,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 400
+        },
+        {
+          "key": "_lr_geo_location|www.uol.com.br|/",
+          "name": "_lr_geo_location",
+          "domain": "www.uol.com.br",
+          "hostOnly": true,
+          "path": "/",
+          "site": "uol.com.br",
+          "session": false,
+          "expires": 1790726683039,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "unspecified",
+          "partitioned": false,
+          "valueLength": 2,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 3670,
+          "writers": [
+            "https://ats-wrapper.privacymanager.io/ats-modules/559c9d7f-5eb9-48e4-9112-feb12058c445/ats.js"
+          ],
+          "writersThirdParty": true,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 2
+        },
+        {
+          "key": "_lr_geo_location_state|www.uol.com.br|/",
+          "name": "_lr_geo_location_state",
+          "domain": "www.uol.com.br",
+          "hostOnly": true,
+          "path": "/",
+          "site": "uol.com.br",
+          "session": false,
+          "expires": 1790726683039,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "unspecified",
+          "partitioned": false,
+          "valueLength": 2,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 3669,
+          "writers": [
+            "https://ats-wrapper.privacymanager.io/ats-modules/559c9d7f-5eb9-48e4-9112-feb12058c445/ats.js"
+          ],
+          "writersThirdParty": true,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 2
+        },
+        {
+          "key": "_pubcid|uol.com.br|/",
+          "name": "_pubcid",
+          "domain": "uol.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "uol.com.br",
+          "session": false,
+          "expires": 1813881881000,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "lax",
+          "partitioned": false,
+          "valueLength": 36,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 2027,
+          "writers": [
+            "https://tags.crwdcntrl.net/lt/c/16589/sync.min.js"
+          ],
+          "writersThirdParty": true,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 270
+        },
+        {
+          "key": "_rdc1790553880737|www.uol.com.br|/",
+          "name": "_rdc1790553880737",
+          "domain": "www.uol.com.br",
+          "hostOnly": true,
+          "path": "/",
+          "site": "uol.com.br",
+          "session": false,
+          "expires": 1790553890000,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "lax",
+          "partitioned": false,
+          "valueLength": 9,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 1367,
+          "writers": [
+            "https://tm.jsuol.com.br/modules/external/Prebid.js"
+          ],
+          "writersThirdParty": true,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 0
+        },
+        {
+          "key": "_rdc1790553880737|uol.com.br|/",
+          "name": "_rdc1790553880737",
+          "domain": "uol.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "uol.com.br",
+          "session": false,
+          "expires": 1790553890000,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "lax",
+          "partitioned": false,
+          "valueLength": 9,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 1367,
+          "writers": [
+            "https://tm.jsuol.com.br/modules/external/Prebid.js"
+          ],
+          "writersThirdParty": true,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 0
+        },
+        {
+          "key": "_scor_uid|uol.com.br|/",
+          "name": "_scor_uid",
+          "domain": "uol.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "uol.com.br",
+          "session": false,
+          "expires": 1824249881000,
+          "secure": true,
+          "httpOnly": false,
+          "sameSite": "none",
+          "partitioned": false,
+          "valueLength": 32,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 1957,
+          "writers": [
+            "https://sb.scorecardresearch.com/cs/6036356/beacon.js"
+          ],
+          "writersThirdParty": true,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 390
+        },
+        {
+          "key": "compass_uid|uol.com.br|/",
+          "name": "compass_uid",
+          "domain": "uol.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "uol.com.br",
+          "session": false,
+          "expires": 1806105883000,
+          "secure": true,
+          "httpOnly": false,
+          "sameSite": "unspecified",
+          "partitioned": false,
+          "valueLength": 36,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 1405,
+          "writers": [
+            "https://sdk.mrf.io/statics/marfeel-sdk.js?id=4196"
+          ],
+          "writersThirdParty": true,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 180
+        },
+        {
+          "key": "cto_bundle|uol.com.br|/",
+          "name": "cto_bundle",
+          "domain": "uol.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "uol.com.br",
+          "session": false,
+          "expires": 1824249885000,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "unspecified",
+          "partitioned": false,
+          "valueLength": 247,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 5993,
+          "writers": [
+            "https://static.criteo.net/js/ld/publishertag.ids.js"
+          ],
+          "writersThirdParty": true,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 390
+        },
+        {
+          "key": "cto_pub_test_tld|uol.com.br|/",
+          "name": "cto_pub_test_tld",
+          "domain": "uol.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "uol.com.br",
+          "session": false,
+          "expires": 1790557482000,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "unspecified",
+          "partitioned": false,
+          "valueLength": 4,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 3402,
+          "writers": [
+            "https://static.criteo.net/js/ld/publishertag.ids.js"
+          ],
+          "writersThirdParty": true,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 0.042
+        },
+        {
+          "key": "cto_writeable|uol.com.br|/",
+          "name": "cto_writeable",
+          "domain": "uol.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "uol.com.br",
+          "session": false,
+          "expires": 1790557482000,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "unspecified",
+          "partitioned": false,
+          "valueLength": 1,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 3401,
+          "writers": [
+            "https://static.criteo.net/js/ld/publishertag.ids.js"
+          ],
+          "writersThirdParty": true,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 0.042
+        },
+        {
+          "key": "FCCDCF|uol.com.br|/",
+          "name": "FCCDCF",
+          "domain": "uol.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "uol.com.br",
+          "session": false,
+          "expires": 1824249881000,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "unspecified",
+          "partitioned": false,
+          "valueLength": 156,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 803,
+          "writers": [
+            "/_/mss/boq-content-ads-contributor/_/js/k=boq-content-ads-contributor.ContributorServingResponseClientJs.en_US.2wSWc8lws08.es5.O/d=1/rs=AJlcJMwQ3kSZ_EVqug9VobPREUEo2nIkIw/m=kernel_loader,loader_js_executable,monetization_cookie_state_migration_initialization_executable"
+          ],
+          "writersThirdParty": false,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 390
+        },
+        {
+          "key": "FCNEC|uol.com.br|/",
+          "name": "FCNEC",
+          "domain": "uol.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "uol.com.br",
+          "session": false,
+          "expires": 1822089881000,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "unspecified",
+          "partitioned": false,
+          "valueLength": 186,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 2152,
+          "writers": [
+            "/_/mss/boq-content-ads-contributor/_/js/k=boq-content-ads-contributor.ContributorServingResponseClientJs.en_US.2wSWc8lws08.es5.O/d=1/rs=AJlcJMwQ3kSZ_EVqug9VobPREUEo2nIkIw/m=kernel_loader,loader_js_executable,monetization_cookie_state_migration_initialization_executable"
+          ],
+          "writersThirdParty": false,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 365
+        },
+        {
+          "key": "lotame_domain_check|uol.com.br|/",
+          "name": "lotame_domain_check",
+          "domain": "uol.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "uol.com.br",
+          "session": false,
+          "expires": 1790553891000,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "lax",
+          "partitioned": false,
+          "valueLength": 10,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 2027,
+          "writers": [
+            "https://tags.crwdcntrl.net/lt/c/16589/sync.min.js"
+          ],
+          "writersThirdParty": true,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 0
+        },
+        {
+          "key": "mrf_cookie|uol.com.br|/",
+          "name": "mrf_cookie",
+          "domain": "uol.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "uol.com.br",
+          "session": true,
+          "expires": null,
+          "secure": true,
+          "httpOnly": false,
+          "sameSite": "unspecified",
+          "partitioned": false,
+          "valueLength": 2,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 1405,
+          "writers": [
+            "https://sdk.mrf.io/statics/marfeel-sdk.js?id=4196"
+          ],
+          "writersThirdParty": true,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": null
+        },
+        {
+          "key": "panoramaId|uol.com.br|/",
+          "name": "panoramaId",
+          "domain": "uol.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "uol.com.br",
+          "session": false,
+          "expires": 1791158681000,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "lax",
+          "partitioned": false,
+          "valueLength": 64,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 3434,
+          "writers": [
+            "https://tags.crwdcntrl.net/lt/c/16589/sync.min.js"
+          ],
+          "writersThirdParty": true,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 7
+        },
+        {
+          "key": "panoramaId_expiry|uol.com.br|/",
+          "name": "panoramaId_expiry",
+          "domain": "uol.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "uol.com.br",
+          "session": false,
+          "expires": 1791158681000,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "lax",
+          "partitioned": false,
+          "valueLength": 13,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 3434,
+          "writers": [
+            "https://tags.crwdcntrl.net/lt/c/16589/sync.min.js"
+          ],
+          "writersThirdParty": true,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 7
+        },
+        {
+          "key": "panoramaIdType|uol.com.br|/",
+          "name": "panoramaIdType",
+          "domain": "uol.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "uol.com.br",
+          "session": false,
+          "expires": 1791158681000,
+          "secure": false,
+          "httpOnly": false,
+          "sameSite": "lax",
+          "partitioned": false,
+          "valueLength": 10,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 3434,
+          "writers": [
+            "https://tags.crwdcntrl.net/lt/c/16589/sync.min.js"
+          ],
+          "writersThirdParty": true,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 7
+        },
+        {
+          "key": "permutive-id|uol.com.br|/",
+          "name": "permutive-id",
+          "domain": "uol.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "uol.com.br",
+          "session": false,
+          "expires": 1806192279000,
+          "secure": true,
+          "httpOnly": false,
+          "sameSite": "none",
+          "partitioned": false,
+          "valueLength": 36,
+          "viaHttp": false,
+          "stored": true,
+          "sourceUrl": null,
+          "firstSeenMs": 528,
+          "writers": [
+            "https://4b91477e-f67b-4d81-86db-a9742bd41e9c.edge.permutive.app/4b91477e-f67b-4d81-86db-a9742bd41e9c-web.js"
+          ],
+          "writersThirdParty": true,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 181
+        },
+        {
+          "key": "UOLID|udr.uol.com.br|/",
+          "name": "UOLID",
+          "domain": "udr.uol.com.br",
+          "hostOnly": false,
+          "path": "/",
+          "site": "uol.com.br",
+          "session": false,
+          "expires": 1822089881514,
+          "secure": true,
+          "httpOnly": false,
+          "sameSite": "none",
+          "partitioned": false,
+          "valueLength": 38,
+          "viaHttp": true,
+          "stored": true,
+          "sourceUrl": "https://udr.uol.com.br/?incognitoMode=false&cb=1790553879781",
+          "firstSeenMs": 757,
+          "writers": [],
+          "writersThirdParty": false,
+          "thirdParty": false,
+          "duringLoad": true,
+          "lifetimeDays": 365
+        }
+      ]
+    },
+    "storage": {
+      "summary": {
+        "origins": 5,
+        "originsWithData": 1,
+        "thirdPartyOriginsWithData": 0,
+        "items": 48,
+        "localStorageKeys": 41,
+        "localStorageBytes": 16472,
+        "sessionStorageKeys": 5,
+        "sessionStorageBytes": 1474,
+        "indexedDBDatabases": 2,
+        "cacheStorageCaches": 0,
+        "blockedOrigins": 0
+      },
+      "origins": [
+        {
+          "origin": "https://www.uol.com.br",
+          "url": "https://www.uol.com.br/",
+          "isTop": true,
+          "localStorage": {
+            "available": true,
+            "count": 41,
+            "bytes": 16472,
+            "keys": [
+              {
+                "key": "_GESPSK-rtbhouse",
+                "size": 64,
+                "writers": [
+                  "https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m202609210101/pubads_impl.js?cb=122881199"
+                ]
+              },
+              {
+                "key": "_pubcid",
+                "size": 36,
+                "writers": [
+                  "https://tags.crwdcntrl.net/lt/c/16589/sync.min.js"
+                ]
+              },
+              {
+                "key": "_cc_id_update_ts",
+                "size": 13,
+                "writers": [
+                  "https://tags.crwdcntrl.net/lt/c/16589/sync.min.js"
+                ]
+              },
+              {
+                "key": "uolDataLayer",
+                "size": 94,
+                "writers": [
+                  "https://tm.jsuol.com.br/modules/dmp-uol-sync.js"
+                ]
+              },
+              {
+                "key": "cto_bundle",
+                "size": 247,
+                "writers": [
+                  "https://static.criteo.net/js/ld/publishertag.ids.js"
+                ]
+              },
+              {
+                "key": "_GESPSK-permutive-secure-signal",
+                "size": 82,
+                "writers": [
+                  "https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m202609210101/pubads_impl.js?cb=122881199"
+                ]
+              },
+              {
+                "key": "_pssps",
+                "size": 111,
+                "writers": [
+                  "https://4b91477e-f67b-4d81-86db-a9742bd41e9c.edge.permutive.app/4b91477e-f67b-4d81-86db-a9742bd41e9c-web.js"
+                ]
+              },
+              {
+                "key": "permutive-data-misc",
+                "size": 231,
+                "writers": [
+                  "https://4b91477e-f67b-4d81-86db-a9742bd41e9c.edge.permutive.app/4b91477e-f67b-4d81-86db-a9742bd41e9c-web.js"
+                ]
+              },
+              {
+                "key": "_pcrprs",
+                "size": 7,
+                "writers": [
+                  "https://4b91477e-f67b-4d81-86db-a9742bd41e9c.edge.permutive.app/4b91477e-f67b-4d81-86db-a9742bd41e9c-web.js"
+                ]
+              },
+              {
+                "key": "_GUSM",
+                "size": 40,
+                "writers": [
+                  "https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m202609210101/pubads_impl.js?cb=122881199"
+                ]
+              },
+              {
+                "key": "__tp-gaAccount",
+                "size": 15,
+                "writers": []
+              },
+              {
+                "key": "_GESPSK-mygaruID",
+                "size": 156,
+                "writers": [
+                  "https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m202609210101/pubads_impl.js?cb=122881199"
+                ]
+              },
+              {
+                "key": "_GESPSK-yahoo.com",
+                "size": 65,
+                "writers": [
+                  "https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m202609210101/pubads_impl.js?cb=122881199"
+                ]
+              },
+              {
+                "key": "permutive-session",
+                "size": 113,
+                "writers": [
+                  "https://4b91477e-f67b-4d81-86db-a9742bd41e9c.edge.permutive.app/4b91477e-f67b-4d81-86db-a9742bd41e9c-web.js"
+                ]
+              },
+              {
+                "key": "_cc_id",
+                "size": 32,
+                "writers": [
+                  "https://tags.crwdcntrl.net/lt/c/16589/sync.min.js"
+                ]
+              },
+              {
+                "key": "_GESPSK-intimatemerger.com",
+                "size": 77,
+                "writers": [
+                  "https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m202609210101/pubads_impl.js?cb=122881199"
+                ]
+              },
+              {
+                "key": "_pdfps",
+                "size": 43,
+                "writers": [
+                  "https://4b91477e-f67b-4d81-86db-a9742bd41e9c.edge.permutive.app/4b91477e-f67b-4d81-86db-a9742bd41e9c-web.js"
+                ]
+              },
+              {
+                "key": "panoramaIdType",
+                "size": 10,
+                "writers": [
+                  "https://tags.crwdcntrl.net/lt/c/16589/sync.min.js"
+                ]
+              },
+              {
+                "key": "permutive-app",
+                "size": 3609,
+                "writers": [
+                  "https://4b91477e-f67b-4d81-86db-a9742bd41e9c.edge.permutive.app/4b91477e-f67b-4d81-86db-a9742bd41e9c-web.js"
+                ]
+              },
+              {
+                "key": "_GSD",
+                "size": 1,
+                "writers": [
+                  "https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m202609210101/pubads_impl.js?cb=122881199"
+                ]
+              },
+              {
+                "key": "_ls_ttl",
+                "size": 29,
+                "writers": []
+              },
+              {
+                "key": "permutive-prebid-rtd",
+                "size": 16,
+                "writers": [
+                  "https://4b91477e-f67b-4d81-86db-a9742bd41e9c.edge.permutive.app/4b91477e-f67b-4d81-86db-a9742bd41e9c-web.js"
+                ]
+              },
+              {
+                "key": "permutive-id",
+                "size": 36,
+                "writers": [
+                  "https://4b91477e-f67b-4d81-86db-a9742bd41e9c.edge.permutive.app/4b91477e-f67b-4d81-86db-a9742bd41e9c-web.js"
+                ]
+              },
+              {
+                "key": "_GESPSK-openx",
+                "size": 61,
+                "writers": [
+                  "https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m202609210101/pubads_impl.js?cb=122881199"
+                ]
+              },
+              {
+                "key": "UDR.DATA",
+                "size": 142,
+                "writers": [
+                  "https://tm.jsuol.com.br/modules/dmp-uol-sync.js"
+                ]
+              },
+              {
+                "key": "marfeel-sdk-store",
+                "size": 1016,
+                "writers": [
+                  "https://sdk.mrf.io/statics/marfeel-sdk.js?id=4196"
+                ]
+              },
+              {
+                "key": "_psegs",
+                "size": 36,
+                "writers": [
+                  "https://4b91477e-f67b-4d81-86db-a9742bd41e9c.edge.permutive.app/4b91477e-f67b-4d81-86db-a9742bd41e9c-web.js"
+                ]
+              },
+              {
+                "key": "permutive-consent",
+                "size": 43,
+                "writers": [
+                  "https://4b91477e-f67b-4d81-86db-a9742bd41e9c.edge.permutive.app/4b91477e-f67b-4d81-86db-a9742bd41e9c-web.js"
+                ]
+              },
+              {
+                "key": "_cX_atfr",
+                "size": 117,
+                "writers": []
+              },
+              {
+                "key": "panoramaId_expiry",
+                "size": 13,
+                "writers": [
+                  "https://tags.crwdcntrl.net/lt/c/16589/sync.min.js"
+                ]
+              },
+              {
+                "key": "permutive-data-queries",
+                "size": 58,
+                "writers": [
+                  "https://4b91477e-f67b-4d81-86db-a9742bd41e9c.edge.permutive.app/4b91477e-f67b-4d81-86db-a9742bd41e9c-web.js"
+                ]
+              },
+              {
+                "key": "panoramaId",
+                "size": 64,
+                "writers": [
+                  "https://tags.crwdcntrl.net/lt/c/16589/sync.min.js"
+                ]
+              },
+              {
+                "key": "_GESPSK-crwdcntrl.net",
+                "size": 125,
+                "writers": [
+                  "https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m202609210101/pubads_impl.js?cb=122881199"
+                ]
+              },
+              {
+                "key": "aps:0e1ab0a1-d93f-4bdc-b304-e76a53464e72:idVendors/enabled",
+                "size": 261,
+                "writers": [
+                  "https://c.amazon-adsystem.com/aax2/apstag.js"
+                ]
+              },
+              {
+                "key": "_GESPSK-esp.criteo.com",
+                "size": 73,
+                "writers": [
+                  "https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m202609210101/pubads_impl.js?cb=122881199"
+                ]
+              },
+              {
+                "key": "_GESPSK-id5-sync.com",
+                "size": 68,
+                "writers": [
+                  "https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m202609210101/pubads_impl.js?cb=122881199"
+                ]
+              },
+              {
+                "key": "geo-location",
+                "size": 72,
+                "writers": [
+                  "https://launchpad.privacymanager.io/latest/launchpad.bundle.js"
+                ]
+              },
+              {
+                "key": "aps:0e1ab0a1-d93f-4bdc-b304-e76a53464e72:sessionMarker/marker",
+                "size": 61,
+                "writers": [
+                  "https://c.amazon-adsystem.com/aax2/apstag.js"
+                ]
+              },
+              {
+                "key": "_papns",
+                "size": 8,
+                "writers": [
+                  "https://4b91477e-f67b-4d81-86db-a9742bd41e9c.edge.permutive.app/4b91477e-f67b-4d81-86db-a9742bd41e9c-web.js"
+                ]
+              },
+              {
+                "key": "myg_otp",
+                "size": 177,
+                "writers": [
+                  "https://cdn.mgaru.dev/static/myGaruStandalone.js"
+                ]
+              },
+              {
+                "key": "_GESPSK-esp.pubmatic.com",
+                "size": 64,
+                "writers": [
+                  "https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m202609210101/pubads_impl.js?cb=122881199"
+                ]
+              }
+            ]
+          },
+          "sessionStorage": {
+            "available": true,
+            "count": 5,
+            "bytes": 1474,
+            "keys": [
+              {
+                "key": "compass_rfv_4196",
+                "size": 67,
+                "writers": [
+                  "https://sdk.mrf.io/statics/marfeel-sdk.js?id=4196"
+                ]
+              },
+              {
+                "key": "_GSD",
+                "size": 1,
+                "writers": [
+                  "https://securepubads.g.doubleclick.net/pagead/managed/js/gpt/m202609210101/pubads_impl.js?cb=122881199"
+                ]
+              },
+              {
+                "key": "__permutiveConfigQueryParams",
+                "size": 2,
+                "writers": [
+                  "https://4b91477e-f67b-4d81-86db-a9742bd41e9c.edge.permutive.app/4b91477e-f67b-4d81-86db-a9742bd41e9c-web.js"
+                ]
+              },
+              {
+                "key": "___nrbi",
+                "size": 325,
+                "writers": [
+                  "https://sdk.mrf.io/statics/marfeel-sdk.js?id=4196"
+                ]
+              },
+              {
+                "key": "___nrbic",
+                "size": 279,
+                "writers": [
+                  "https://sdk.mrf.io/statics/marfeel-sdk.js?id=4196"
+                ]
+              }
+            ]
+          },
+          "indexedDB": {
+            "available": true,
+            "count": 2,
+            "databases": [
+              {
+                "name": "4b91477e-f67b-4d81-86db-a9742bd41e9c",
+                "version": 3
+              },
+              {
+                "name": "worker_4b91477e-f67b-4d81-86db-a9742bd41e9c",
+                "version": 4
+              }
+            ]
+          },
+          "cacheStorage": {
+            "available": true,
+            "count": 0,
+            "names": []
+          },
+          "collectedAt": 1790554001946,
+          "site": "uol.com.br",
+          "thirdParty": false,
+          "items": 48
+        },
+        {
+          "origin": "https://tm.uol.com.br",
+          "url": "https://tm.uol.com.br/mercurio.html",
+          "isTop": false,
+          "localStorage": {
+            "available": true,
+            "count": 0,
+            "bytes": 0,
+            "keys": []
+          },
+          "sessionStorage": {
+            "available": true,
+            "count": 0,
+            "bytes": 0,
+            "keys": []
+          },
+          "indexedDB": {
+            "available": true,
+            "count": 0,
+            "databases": []
+          },
+          "cacheStorage": {
+            "available": true,
+            "count": 0,
+            "names": []
+          },
+          "collectedAt": 1790553879952,
+          "site": "uol.com.br",
+          "thirdParty": false,
+          "items": 0
+        },
+        {
+          "origin": "https://9fcd40dbcd5629e7510839ba8a77b1ec.safeframe.googlesyndication.com",
+          "url": "https://9fcd40dbcd5629e7510839ba8a77b1ec.safeframe.googlesyndication.com/safeframe/1-0-45/html/container.html",
+          "isTop": false,
+          "localStorage": {
+            "available": true,
+            "count": 0,
+            "bytes": 0,
+            "keys": []
+          },
+          "sessionStorage": {
+            "available": true,
+            "count": 0,
+            "bytes": 0,
+            "keys": []
+          },
+          "indexedDB": {
+            "available": true,
+            "count": 0,
+            "databases": []
+          },
+          "cacheStorage": {
+            "available": true,
+            "count": 0,
+            "names": []
+          },
+          "collectedAt": 1790553883410,
+          "site": "googlesyndication.com",
+          "thirdParty": true,
+          "items": 0
+        },
+        {
+          "origin": "https://gum.criteo.com",
+          "url": "https://gum.criteo.com/syncframe?origin=publishertagids&topUrl=www.uol.com.br&gdpr=0&gdpr_consent=#{%22bundle%22:{%22origin%22:0},%22optout%22:{%22value%22:false,%22origin%22:0},%22tld%22:%22uol.com.br%22,%22topUrl%22:%22www.uol.com.br%22,%22version%22:109327,%22origin%22:%22publishertagids%22,%22requestId%22:%220.7762692633440818%22}",
+          "isTop": false,
+          "localStorage": {
+            "available": true,
+            "count": 0,
+            "bytes": 0,
+            "keys": []
+          },
+          "sessionStorage": {
+            "available": true,
+            "count": 0,
+            "bytes": 0,
+            "keys": []
+          },
+          "indexedDB": {
+            "available": true,
+            "count": 0,
+            "databases": []
+          },
+          "cacheStorage": {
+            "available": true,
+            "count": 0,
+            "names": []
+          },
+          "collectedAt": 1790553883386,
+          "site": "criteo.com",
+          "thirdParty": true,
+          "items": 0
+        },
+        {
+          "origin": "https://tm.jsuol.com.br",
+          "url": "https://tm.jsuol.com.br/modules/external/admanager/third-cookies.html",
+          "isTop": false,
+          "localStorage": {
+            "available": true,
+            "count": 0,
+            "bytes": 0,
+            "keys": []
+          },
+          "sessionStorage": {
+            "available": true,
+            "count": 0,
+            "bytes": 0,
+            "keys": []
+          },
+          "indexedDB": {
+            "available": true,
+            "count": 0,
+            "databases": []
+          },
+          "cacheStorage": {
+            "available": true,
+            "count": 0,
+            "names": []
+          },
+          "collectedAt": 1790553879973,
+          "site": "jsuol.com.br",
+          "thirdParty": true,
+          "items": 0
+        }
+      ]
+    },
+    "fingerprinting": {
+      "summary": {
+        "detections": 0,
+        "scripts": 0,
+        "thirdPartyScripts": 0,
+        "byTechnique": {},
+        "discarded": 0
+      },
+      "detections": [],
+      "discarded": []
+    }
+  }
+}

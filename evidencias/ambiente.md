@@ -29,3 +29,4 @@ iframes de terceiros particionados).
 | 26/09/2026 22:42 | DDG Storage blocking (Store) | 0.2.1 | `store-cookies.png`, `plugin-store.json` (matriz corrigida) |
 | 27/09/2026 17:22–17:23 | DDG Fingerprinting | 0.3.0 | `alertas.png`, `plugin.json` (6 detecções), `resultados.json` |
 | 27/09/2026 19:53–20:45 | Sites reais: plugin + HAR, depois uBO, depois Blacklight | 0.3.0 | ver `sites/<site>/notas.md`; HAR do UOL refeito |
+| 27/09/2026 21:04–21:07 | UOL: plugin + HAR refeitos (DevTools aberto antes da URL, gravação pausada aos 30 s) | 0.3.0 | substitui a coleta de 20:09 |
