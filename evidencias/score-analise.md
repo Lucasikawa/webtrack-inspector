@@ -2,8 +2,8 @@
 
 Tabelas completas (descontos por critério, ocorrências, sensibilidade e comparação
 teste a teste) em [`score.md`](score.md), gerado por `npm run score` a partir da
-coleta final de cada site (`sites/<site>/final/`). Metodologia no README
-(seção **Pontuação de privacidade**).
+coleta final de cada site (`sites/<site>/final/`). Metodologia na seção 5.1 do
+relatório (`relatorio/relatorio.pdf`).
 
 ## Resultado
 
@@ -131,8 +131,8 @@ aponta essa substituição em **Sequestro do navegador** (`hijack.globals.overri
 Depois dela, o chamador imediato de todo `addEventListener` é o wrapper do Sentry, e
 o plugin atribui a autoria pelo chamador imediato.
 
-É uma limitação da atribuição pela pilha, já listada no README para SDKs
-empacotados. Custaria 3 pontos (score 60).
+É uma limitação da atribuição pela pilha, a mesma dos SDKs empacotados no
+JavaScript do site. Custaria 3 pontos (score 60).
 
 ### 6. Cookies num sufixo público (sp.gov.br): erro do plugin corrigido
 

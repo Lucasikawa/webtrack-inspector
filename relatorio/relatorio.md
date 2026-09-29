@@ -52,8 +52,8 @@ nos testes e está registrada em `evidencias/ambiente.md`.
 
 ## 1.2 Como o plugin detecta
 
-A tabela resume o método de cada detecção. A descrição completa está no README do
-repositório.
+A tabela resume o método de cada detecção. O código de cada uma está em
+`extension/background/` e `extension/content/`.
 
 | Detecção | Método |
 |--------------|-------------------------------------------------------------|
