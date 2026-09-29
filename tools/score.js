@@ -213,7 +213,6 @@ function main() {
   const L = (...xs) => lines.push(...xs);
 
   L('# Score de privacidade dos sites analisados', '');
-  L('Análise crítica e comparação com o Blacklight: [`score-analise.md`](score-analise.md).', '');
   L('Gerado por `tools/score.js` com a metodologia de `extension/background/score.js`', '(a mesma do popup). Parte de 100 e desconta pontos em 7 critérios; cada critério tem', 'teto, e os tetos somam 100. Só entra o que foi observado nos primeiros 30 s.', '');
   L('## Metodologia', '');
   L('| Critério | Teto | Regra | Teste equivalente no Blacklight |', '|---|---|---|---|');

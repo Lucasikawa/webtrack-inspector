@@ -8,6 +8,6 @@ web-ext-artifacts/
 .venv/
 __pycache__/
 
-# Relatório: imagens reduzidas e HTML intermediário (gerados por relatorio/build.sh)
-relatorio/img/
-relatorio/relatorio.html
+# Saídas de npm run reconcile e npm run score
+evidencias/score.md
+evidencias/sites/*/reconciliacao.md
